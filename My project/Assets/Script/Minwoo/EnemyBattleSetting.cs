@@ -17,6 +17,8 @@ public class EnemyBattleSetting : MonoBehaviour
     public List<Animator> animator;
     public List<GameObject> enemyhpPrefab;
     public List<GameObject> enemyhpinstance;
+    public List<GameObject> enemyInfoPrefab;
+    public List<GameObject> enemyinfoinstance;
     public GameObject canvas;
 
     public void SpawnEnemy()
@@ -24,7 +26,7 @@ public class EnemyBattleSetting : MonoBehaviour
         animator = new List<Animator>();
         var database = BGRepo.I;
         var animaTable = database.GetMeta("Anima");
-        canvas = GameObject.Find("BattleCanvas");
+        canvas = GameObject.Find("Main Battle UI");
         if (objectfileList != null)
         {
             objectfileList.Clear();
@@ -44,6 +46,8 @@ public class EnemyBattleSetting : MonoBehaviour
             enemyinstance = new List<GameObject>();
             enemyhpPrefab = new List<GameObject>();
             enemyhpinstance = new List<GameObject>();
+            enemyinfoinstance = new List<GameObject>();
+            enemyInfoPrefab = new List<GameObject>();
             damagex = new List<float>();
             damagey = new List<float>();
             battleEnemyAnima = new List<string>();
@@ -54,13 +58,14 @@ public class EnemyBattleSetting : MonoBehaviour
         {
             objectfileList.Add(entity.Get<string>("Objectfile"));
         });
-        int numberOfObjectsToAdd = Random.Range(1, 2); 
+        int numberOfObjectsToAdd = Random.Range(1, 4); 
 
         for (int i = 0; i < numberOfObjectsToAdd; i++)
         {
-            int randomIndex = Random.Range(0, 2);
+            int randomIndex = Random.Range(1, 2);
             enemyobjPrefab.Add(Resources.Load<GameObject>("Minwoo/" + objectfileList[randomIndex]));
             enemyhpPrefab.Add(Resources.Load<GameObject>("Minwoo/EnemyAnimaHP"));
+            enemyInfoPrefab.Add(Resources.Load<GameObject>($"Minwoo/Enemy{i}"));
             battleEnemyAnima.Add(objectfileList[randomIndex]);
         }
 
@@ -69,13 +74,13 @@ public class EnemyBattleSetting : MonoBehaviour
         {
             for (int i = 0; i < enemyobjPrefab.Count; i++)
             {
-                enemyinstance.Add(Instantiate(enemyobjPrefab[i], new Vector3(5.7f,0.75f, 0), Quaternion.identity));
+                enemyinstance.Add(Instantiate(enemyobjPrefab[i], new Vector3(5.25f*Mathf.Pow(i,2)-(8.75f*i),1.2f, 0), Quaternion.identity));
                 enemyinstance[i].transform.Rotate(0, 180f, 0);
                 damagex.Add(Random.Range(4.5f * Mathf.Pow(i, 2) - 8.5f * i + 10.5f-1.5f, 4.5f * Mathf.Pow(i, 2) - 8.5f * i + 10.5f-0.5f));
                 damagey.Add(Random.Range(y - 2.5f * i + 0.25f, y - 2.5f * i + 1.25f));
-                enemyinstance[i].transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
-                //enemyhpinstance.Add(Instantiate(enemyhpPrefab[i], new Vector2(-4.3f, 0.74f), Quaternion.identity, canvas.transform));
-                enemyhpinstance.Add(Instantiate(enemyhpPrefab[i], new Vector2(960f+270f * Mathf.Pow(i, 2) - 510f * i + 639f, hpy +540f - 150f * i),Quaternion.identity, canvas.transform));
+                enemyinstance[i].transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                enemyhpinstance.Add(Instantiate(enemyhpPrefab[i], new Vector2(598.5f * Mathf.Pow(i, 2) - (997.5f * i) + 951f, 530f),Quaternion.identity, canvas.transform));
+                enemyinfoinstance.Add(Instantiate(enemyInfoPrefab[i]));
                 int index = enemyhpinstance[i].name.IndexOf("(Clone)");
                 enemyhpinstance[i].name = enemyhpinstance[i].name.Substring(0, index) + "" + i;
                 animator.Add(enemyinstance[i].GetComponent<Animator>()); 

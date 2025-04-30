@@ -8,7 +8,7 @@ public class AnimaDataSO : ScriptableObject
     public bool haveTurn = true;
     public bool Animadie = false;
     public bool isAlly = false;
-    public int level = 18;
+    public int level = 1;
     public string Name; 
     public float Maxstamina = 1;
     public float Stamina = 1;

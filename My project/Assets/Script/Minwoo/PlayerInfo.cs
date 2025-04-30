@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using BansheeGz.BGDatabase;
+using UnityEditor.Analytics;
 using UnityEngine;
 
 
@@ -18,8 +19,14 @@ public class PlayerInfo : ScriptableObject
         animaData = ScriptableObject.CreateInstance<AnimaDataSO>();
 
         animaData.Initialize(animaTable[Random.Range(0, 1)].Get<string>("name"));
+        animaData.location = 0;
         GetAnima(animaData);
         BattleSetting(haveAnima[0]);
+
+        animaData.Initialize(animaTable[Random.Range(0, 1)].Get<string>("name"));
+        animaData.location = 1;
+        GetAnima(animaData);
+        BattleSetting(haveAnima[1]);
 
     }
 
