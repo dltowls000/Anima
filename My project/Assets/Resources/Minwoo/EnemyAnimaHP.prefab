@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2137666135841784389}
   - component: {fileID: 7211399463885461701}
   - component: {fileID: 6607676262003849255}
+  - component: {fileID: 8936204723303146041}
   m_Layer: 5
   m_Name: EnemyAnimaHP
   m_TagString: Untagged
@@ -35,7 +36,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -500.78616, y: -428.80078}
+  m_AnchoredPosition: {x: -795.26843, y: -372.46338}
   m_SizeDelta: {x: 256.9225, y: 23.2823}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2137666135841784389
@@ -89,3 +90,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthBarFill: {fileID: 7211399463885461701}
+--- !u!114 &8936204723303146041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6875313728272493180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e390ec5670842d74f9200960f4048472, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthBarController: {fileID: 6607676262003849255}
+  maxHealth: 0
+  currentHealth: 0

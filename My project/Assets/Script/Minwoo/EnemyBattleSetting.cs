@@ -24,7 +24,7 @@ public class EnemyBattleSetting : MonoBehaviour
         animator = new List<Animator>();
         var database = BGRepo.I;
         var animaTable = database.GetMeta("Anima");
-        canvas = GameObject.Find("Main Battle UI");
+        canvas = GameObject.Find("BattleCanvas");
         if (objectfileList != null)
         {
             objectfileList.Clear();
@@ -59,8 +59,8 @@ public class EnemyBattleSetting : MonoBehaviour
         for (int i = 0; i < numberOfObjectsToAdd; i++)
         {
             int randomIndex = Random.Range(0, 2);
-            enemyobjPrefab.Add(Resources.Load<GameObject>(objectfileList[randomIndex]));
-            enemyhpPrefab.Add(Resources.Load<GameObject>("HP_Bar"));
+            enemyobjPrefab.Add(Resources.Load<GameObject>("Minwoo/" + objectfileList[randomIndex]));
+            enemyhpPrefab.Add(Resources.Load<GameObject>("Minwoo/EnemyAnimaHP"));
             battleEnemyAnima.Add(objectfileList[randomIndex]);
         }
 
@@ -69,12 +69,13 @@ public class EnemyBattleSetting : MonoBehaviour
         {
             for (int i = 0; i < enemyobjPrefab.Count; i++)
             {
-                enemyinstance.Add(Instantiate(enemyobjPrefab[i], new Vector3(4.5f * Mathf.Pow(i, 2) - 8.5f * i + 10.5f, y - 2.5f * i, 0), Quaternion.identity));
+                enemyinstance.Add(Instantiate(enemyobjPrefab[i], new Vector3(5.7f,0.75f, 0), Quaternion.identity));
                 enemyinstance[i].transform.Rotate(0, 180f, 0);
                 damagex.Add(Random.Range(4.5f * Mathf.Pow(i, 2) - 8.5f * i + 10.5f-1.5f, 4.5f * Mathf.Pow(i, 2) - 8.5f * i + 10.5f-0.5f));
                 damagey.Add(Random.Range(y - 2.5f * i + 0.25f, y - 2.5f * i + 1.25f));
-                enemyhpinstance.Add(Instantiate(enemyhpPrefab[i], new Vector2(-4.3f, 0.74f), Quaternion.identity, canvas.transform));
-                //enemyhpinstance.Add(Instantiate(enemyhpPrefab[i], new Vector2(960f+270f * Mathf.Pow(i, 2) - 510f * i + 639f, hpy +540f - 150f * i),Quaternion.identity, canvas.transform));
+                enemyinstance[i].transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
+                //enemyhpinstance.Add(Instantiate(enemyhpPrefab[i], new Vector2(-4.3f, 0.74f), Quaternion.identity, canvas.transform));
+                enemyhpinstance.Add(Instantiate(enemyhpPrefab[i], new Vector2(960f+270f * Mathf.Pow(i, 2) - 510f * i + 639f, hpy +540f - 150f * i),Quaternion.identity, canvas.transform));
                 int index = enemyhpinstance[i].name.IndexOf("(Clone)");
                 enemyhpinstance[i].name = enemyhpinstance[i].name.Substring(0, index) + "" + i;
                 animator.Add(enemyinstance[i].GetComponent<Animator>()); 
@@ -103,9 +104,9 @@ public class EnemyBattleSetting : MonoBehaviour
 
         enemyobjPrefab = new List<GameObject>();
 
-            int randomIndex = Random.Range(32, 33);
-            enemyobjPrefab.Add(Resources.Load<GameObject>("Anima/" + objectfileList[randomIndex]));
-            enemyhpPrefab.Add(Resources.Load<GameObject>("Anima/EnemyAnimaInfo"));
+            int randomIndex = Random.Range(1, 2);
+            enemyobjPrefab.Add(Resources.Load<GameObject>("Minwoo/" + objectfileList[randomIndex]));
+            enemyhpPrefab.Add(Resources.Load<GameObject>("Minwoo/EnemyAnimaHP"));
             battleEnemyAnima.Add(objectfileList[randomIndex]);
        
 
@@ -114,11 +115,11 @@ public class EnemyBattleSetting : MonoBehaviour
         {
             for (int i = 0; i < enemyobjPrefab.Count; i++)
             {
-                enemyinstance.Add(Instantiate(enemyobjPrefab[i], new Vector3(4.5f * Mathf.Pow(i, 2) - 8.5f * i + 10.5f, y - 2.5f * i, 0), Quaternion.identity));
+                enemyinstance.Add(Instantiate(enemyobjPrefab[i], new Vector3(0f, 0.75f, 0f), Quaternion.identity));
                 enemyinstance[i].transform.Rotate(0, 180f, 0);
                 damagex.Add(Random.Range(4.5f * Mathf.Pow(i, 2) - 8.5f * i + 10.5f - 1.5f, 4.5f * Mathf.Pow(i, 2) - 8.5f * i + 10.5f - 0.5f));
                 damagey.Add(Random.Range(y - 2.5f * i + 0.25f, y - 2.5f * i + 1.25f));
-                //enemyinstance[i].transform.localScale = new Vector3(scale, scale, scale);
+                enemyinstance[i].transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
                 enemyhpinstance.Add(Instantiate(enemyhpPrefab[i], new Vector2(960f + 270f * Mathf.Pow(i, 2) - 510f * i + 639f, hpy + 900f - 150f * i), Quaternion.identity, canvas.transform));
                 int index = enemyhpinstance[i].name.IndexOf("(Clone)");
                 enemyhpinstance[i].name = enemyhpinstance[i].name.Substring(0, index) + "" + i;
