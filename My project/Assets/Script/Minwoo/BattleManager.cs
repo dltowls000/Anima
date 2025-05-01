@@ -175,7 +175,11 @@ public class BattleManager : MonoBehaviour
         {
             allyActions[i].animaData = allyBattleSetting.playerinfo.battleAnima[i];
             allyActions[i].animaData.isAlly = true;
-            GameObject.Find($"Ally{i}(Clone)").transform.Find("Image").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Minwoo/Portrait/" + allyActions[i].animaData.Image);
+            var allyStatus = GameObject.Find($"Ally{i}(Clone)");
+            allyStatus.transform.Find("Image").GetComponent<UnityEngine.UI.Image>().sprite= Resources.Load<Sprite>("Minwoo/Portrait/" + allyActions[i].animaData.Image);
+            allyStatus.transform.Find("Status").transform.Find("Name").GetComponent<TextMeshProUGUI>().text = allyActions[i].animaData.Name;
+            allyStatus.transform.Find("Status").transform.Find("Level").GetComponent<TextMeshProUGUI>().text = "Lv. " + allyActions[i].animaData.level.ToString();
+            allyStatus.transform.Find("Status").transform.Find("Exp").GetComponent<TextMeshProUGUI>().text = allyActions[i].animaData.EXP.ToString();
             allyHealthBar.Add(GameObject.Find($"AllyAnimaHP{i}").transform.Find("HP").GetComponent<HealthBar>());
             allyHealthBar[i].Initialize(allyActions[i].animaData.Stamina);
             GameObject.Find($"AllyAnimaHP{i}").transform.Find("LV UI").transform.Find("Current LV").GetComponent<TextMeshProUGUI>().text = allyActions[i].animaData.level.ToString();
@@ -189,7 +193,11 @@ public class BattleManager : MonoBehaviour
         {
             enemyActions[i].animaData = ScriptableObject.CreateInstance<AnimaDataSO>();
             enemyActions[i].animaData.Initialize(enemyBattleSetting.battleEnemyAnima[i]);
-            GameObject.Find($"Enemy{i}(Clone)").transform.Find("Image").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Minwoo/Portrait/" + enemyActions[i].animaData.Image);
+            var allyStatus = GameObject.Find($"Enemy{i}(Clone)");
+            allyStatus.transform.Find("Image").GetComponent<UnityEngine.UI.Image>().sprite = Resources.Load<Sprite>("Minwoo/Portrait/" + enemyActions[i].animaData.Image);
+            allyStatus.transform.Find("Status").transform.Find("Name").GetComponent<TextMeshProUGUI>().text =enemyActions[i].animaData.Name;
+            allyStatus.transform.Find("Status").transform.Find("Level").GetComponent<TextMeshProUGUI>().text = "Lv. " + enemyActions[i].animaData.level.ToString();
+            allyStatus.transform.Find("Status").transform.Find("Exp").GetComponent<TextMeshProUGUI>().text = enemyActions[i].animaData.EXP.ToString();
             enemyHealthBar.Add(GameObject.Find($"EnemyAnimaHP{i}").transform.Find("HP").GetComponent<HealthBar>());
             enemyHealthBar[i].Initialize(enemyActions[i].animaData.Stamina);
             GameObject.Find($"EnemyAnimaHP{i}").transform.Find("LV UI").transform.Find("Current LV").GetComponent<TextMeshProUGUI>().text = enemyActions[i].animaData.level.ToString();

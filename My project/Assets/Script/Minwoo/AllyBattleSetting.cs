@@ -44,7 +44,7 @@ public class AllyBattleSetting : MonoBehaviour
         {
             allyobjPrefab.Add(Resources.Load<GameObject>("Minwoo/" + playerinfo.battleAnima[i].Objectfile));
             allyhpPrefab.Add(Resources.Load<GameObject>("Minwoo/AllyAnimaHP"));
-            allyInfoPrefab.Add(Resources.Load<GameObject>($"Minwoo/Ally{i}"));
+            allyInfoPrefab.Add(Instantiate(Resources.Load<GameObject>($"Minwoo/Ally{i}") , canvas.transform));
         }
         if (allyobjPrefab != null)
         {

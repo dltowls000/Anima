@@ -65,7 +65,7 @@ public class EnemyBattleSetting : MonoBehaviour
             int randomIndex = Random.Range(1, 2);
             enemyobjPrefab.Add(Resources.Load<GameObject>("Minwoo/" + objectfileList[randomIndex]));
             enemyhpPrefab.Add(Resources.Load<GameObject>("Minwoo/EnemyAnimaHP"));
-            enemyInfoPrefab.Add(Resources.Load<GameObject>($"Minwoo/Enemy{i}"));
+            enemyInfoPrefab.Add(Instantiate(Resources.Load<GameObject>($"Minwoo/Enemy{i}"), canvas.transform));
             battleEnemyAnima.Add(objectfileList[randomIndex]);
         }
 

@@ -333,6 +333,19 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -2109,7 +2122,87 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Keyboard_UI_01_0: -4974851592436847448
+      Keyboard_UI_01_1: -6442349031326288508
+      Keyboard_UI_01_10: 2107483915728380953
+      Keyboard_UI_01_11: 6351727424910559773
+      Keyboard_UI_01_12: -7513194289582094718
+      Keyboard_UI_01_13: 5505845445397029857
+      Keyboard_UI_01_14: 2928534748963685327
+      Keyboard_UI_01_15: -8927872003117264166
+      Keyboard_UI_01_16: -6452787106229053084
+      Keyboard_UI_01_17: -6706876236512319369
+      Keyboard_UI_01_18: -8245607278146770700
+      Keyboard_UI_01_19: -8856015072049880092
+      Keyboard_UI_01_2: -772452173575643319
+      Keyboard_UI_01_20: 2065974548811707800
+      Keyboard_UI_01_21: 6107328668204888844
+      Keyboard_UI_01_22: -8127428720895645079
+      Keyboard_UI_01_23: 5355261426665490927
+      Keyboard_UI_01_24: 4213564759276634609
+      Keyboard_UI_01_25: 8743789493833633535
+      Keyboard_UI_01_26: -8954342258432737936
+      Keyboard_UI_01_27: -2332602754569614546
+      Keyboard_UI_01_28: 4727717291815410424
+      Keyboard_UI_01_29: -3604640877867768743
+      Keyboard_UI_01_3: 8668087738095873621
+      Keyboard_UI_01_30: 2624077533988682859
+      Keyboard_UI_01_31: -2851081784834922598
+      Keyboard_UI_01_32: -8071424320201651746
+      Keyboard_UI_01_33: 6888533395152191894
+      Keyboard_UI_01_34: 1465164881597031708
+      Keyboard_UI_01_35: -34108299467274991
+      Keyboard_UI_01_36: 8631452555307965358
+      Keyboard_UI_01_37: 5879777683007715495
+      Keyboard_UI_01_38: 6141646574875263582
+      Keyboard_UI_01_39: 2529449485276164594
+      Keyboard_UI_01_4: -1140073284783568659
+      Keyboard_UI_01_40: 6284898903947864117
+      Keyboard_UI_01_41: -6383474196381455505
+      Keyboard_UI_01_42: 4648168077797842188
+      Keyboard_UI_01_43: 2867233872219307430
+      Keyboard_UI_01_44: 6995000334783798338
+      Keyboard_UI_01_45: -6491978839219379452
+      Keyboard_UI_01_46: 3381982172235258869
+      Keyboard_UI_01_47: 7170990094990111228
+      Keyboard_UI_01_48: -3750774395528549890
+      Keyboard_UI_01_49: -6607457595777433639
+      Keyboard_UI_01_5: -3442891980748739185
+      Keyboard_UI_01_50: 1346178539895268685
+      Keyboard_UI_01_51: 3851979608654427335
+      Keyboard_UI_01_52: 3019136480025921339
+      Keyboard_UI_01_53: 4403366747167641106
+      Keyboard_UI_01_54: -3492420660486537616
+      Keyboard_UI_01_55: 5091851808445148806
+      Keyboard_UI_01_56: 1527843724726826397
+      Keyboard_UI_01_57: 2736007313616584863
+      Keyboard_UI_01_58: -5668464618660665673
+      Keyboard_UI_01_59: 2713571827512197720
+      Keyboard_UI_01_6: -5575102690002758529
+      Keyboard_UI_01_60: 6577404066995016653
+      Keyboard_UI_01_61: -1497800095672445031
+      Keyboard_UI_01_62: 5680447236095906216
+      Keyboard_UI_01_63: -5908757877119363915
+      Keyboard_UI_01_64: 7250304207732502736
+      Keyboard_UI_01_65: 1453099443491586571
+      Keyboard_UI_01_66: 3245765967601014472
+      Keyboard_UI_01_67: 7779347364155439515
+      Keyboard_UI_01_68: 2005318983179336269
+      Keyboard_UI_01_69: 8557022481617798378
+      Keyboard_UI_01_7: -7997181571855046243
+      Keyboard_UI_01_70: -2811482322319581025
+      Keyboard_UI_01_71: -7926327761101732037
+      Keyboard_UI_01_72: 7721847800410309396
+      Keyboard_UI_01_73: -5696997634332409940
+      Keyboard_UI_01_74: -3936765005650157617
+      Keyboard_UI_01_75: 689576412350010812
+      Keyboard_UI_01_76: 4879256531202145200
+      Keyboard_UI_01_77: 1076557584678827340
+      Keyboard_UI_01_78: 6740656298753641891
+      Keyboard_UI_01_79: 298044848786749130
+      Keyboard_UI_01_8: -577759383035392081
+      Keyboard_UI_01_9: -430850338905959355
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
