@@ -11,7 +11,7 @@ using System.Collections;
 using System;
 public class BattleManager : MonoBehaviour
 {
-
+    CameraManager cameraManager;
     PointerEventData pointerEventData;
     Coroutine runningCoroutine = null;
     State state;
@@ -21,14 +21,14 @@ public class BattleManager : MonoBehaviour
     List<HealthBar> allyHealthBar;
     List<HealthBar> enemyHealthBar;
     
-    EnemyBattleSetting enemyBattleSetting;
-    AllyBattleSetting allyBattleSetting;
+    protected EnemyBattleSetting enemyBattleSetting;
+    protected AllyBattleSetting allyBattleSetting;
     
-    List<AnimaActions> allyActions;
-    List<EnemyActions> enemyActions;
+    protected List<AnimaActions> allyActions;
+    protected List<EnemyActions> enemyActions;
     
-    List<GameObject> ally;
-    List<GameObject> enemy;
+    protected List<GameObject> ally;
+    protected List<GameObject> enemy;
     
     List<int> dieAllyAnima;
     DamageNumber damageNumber;
@@ -63,6 +63,7 @@ public class BattleManager : MonoBehaviour
     int selectEnemy = 0;
     void Start()
     {
+        cameraManager = GameObject.Find("CameraManager").GetComponent<CameraManager>();
         playerInfo = ScriptableObject.CreateInstance<PlayerInfo>();
         playerInfo.Initialize();
 
@@ -175,11 +176,8 @@ public class BattleManager : MonoBehaviour
         {
             allyActions[i].animaData = allyBattleSetting.playerinfo.battleAnima[i];
             allyActions[i].animaData.isAlly = true;
-            var allyStatus = GameObject.Find($"Ally{i}(Clone)");
+            var allyStatus = GameObject.Find($"Ally{i}");
             allyStatus.transform.Find("Image").GetComponent<UnityEngine.UI.Image>().sprite= Resources.Load<Sprite>("Minwoo/Portrait/" + allyActions[i].animaData.Image);
-            allyStatus.transform.Find("Status").transform.Find("Name").GetComponent<TextMeshProUGUI>().text = allyActions[i].animaData.Name;
-            allyStatus.transform.Find("Status").transform.Find("Level").GetComponent<TextMeshProUGUI>().text = "Lv. " + allyActions[i].animaData.level.ToString();
-            allyStatus.transform.Find("Status").transform.Find("Exp").GetComponent<TextMeshProUGUI>().text = allyActions[i].animaData.EXP.ToString();
             allyHealthBar.Add(GameObject.Find($"AllyAnimaHP{i}").transform.Find("HP").GetComponent<HealthBar>());
             allyHealthBar[i].Initialize(allyActions[i].animaData.Stamina);
             GameObject.Find($"AllyAnimaHP{i}").transform.Find("LV UI").transform.Find("Current LV").GetComponent<TextMeshProUGUI>().text = allyActions[i].animaData.level.ToString();
@@ -193,11 +191,9 @@ public class BattleManager : MonoBehaviour
         {
             enemyActions[i].animaData = ScriptableObject.CreateInstance<AnimaDataSO>();
             enemyActions[i].animaData.Initialize(enemyBattleSetting.battleEnemyAnima[i]);
-            var allyStatus = GameObject.Find($"Enemy{i}(Clone)");
+            enemyActions[i].animaData.location = i;
+            var allyStatus = GameObject.Find($"Enemy{i}");
             allyStatus.transform.Find("Image").GetComponent<UnityEngine.UI.Image>().sprite = Resources.Load<Sprite>("Minwoo/Portrait/" + enemyActions[i].animaData.Image);
-            allyStatus.transform.Find("Status").transform.Find("Name").GetComponent<TextMeshProUGUI>().text =enemyActions[i].animaData.Name;
-            allyStatus.transform.Find("Status").transform.Find("Level").GetComponent<TextMeshProUGUI>().text = "Lv. " + enemyActions[i].animaData.level.ToString();
-            allyStatus.transform.Find("Status").transform.Find("Exp").GetComponent<TextMeshProUGUI>().text = enemyActions[i].animaData.EXP.ToString();
             enemyHealthBar.Add(GameObject.Find($"EnemyAnimaHP{i}").transform.Find("HP").GetComponent<HealthBar>());
             enemyHealthBar[i].Initialize(enemyActions[i].animaData.Stamina);
             GameObject.Find($"EnemyAnimaHP{i}").transform.Find("LV UI").transform.Find("Current LV").GetComponent<TextMeshProUGUI>().text = enemyActions[i].animaData.level.ToString();
@@ -290,7 +286,7 @@ public class BattleManager : MonoBehaviour
     }
     void SetState(List<AnimaDataSO> turnList)
     {
-        if (turnList[0].isAlly && !allyBattleSetting.playerinfo.onBossStage)
+        if (turnList[0].isAlly)
         {
 
             animaActionUI.SetActive(true);
@@ -300,6 +296,7 @@ public class BattleManager : MonoBehaviour
             {
                 if (ReferenceEquals(turnList[0], allyActions[i].animaData))
                 {
+                    Debug.Log("이새끼 같음");
                     index = i;
                 }
             }
@@ -319,7 +316,7 @@ public class BattleManager : MonoBehaviour
             state = State.playerTurn;
         }
         
-        else if ( !allyBattleSetting.playerinfo.onBossStage)
+        else
         {
             state = State.enemyTurn;
             isTurn[turnIndex].SetActive(true);
@@ -354,12 +351,12 @@ public class BattleManager : MonoBehaviour
         arrow = GameObject.Find("Arrow_down(Clone)");
         while (true)
         {
-            if (index < (enemyAnimaNum - 1) && Input.GetKeyDown(KeyCode.DownArrow))
+            if (index != 2 && index < (enemyAnimaNum - 1) && Input.GetKeyUp(KeyCode.RightArrow))
             {
                 index++;
                 GameObject.Find("Arrow_down(Clone)").transform.position = new Vector2(enemyBattleSetting.enemyinstance[index].transform.position.x, enemyBattleSetting.enemyinstance[index].transform.position.y + 1.65f);
             }
-            if (index != 0 && Input.GetKeyDown(KeyCode.UpArrow))
+            if (index != 0 && Input.GetKeyUp(KeyCode.LeftArrow))
             {
                 index--;
                 GameObject.Find("Arrow_down(Clone)").transform.position = new Vector2(enemyBattleSetting.enemyinstance[index].transform.position.x, enemyBattleSetting.enemyinstance[index].transform.position.y + 1.65f);
@@ -398,14 +395,21 @@ public class BattleManager : MonoBehaviour
                 attackButton.interactable = true;
                 skillButton.interactable = true;
                 animaActionUI.SetActive(false);
-                allyBattleSetting.animator[anima.animaData.location].SetTrigger("IdletoWalk");
-                yield return new WaitForSeconds(0.5f);
-                originPoint = allyBattleSetting.allyinstance[anima.animaData.location].transform.position;
-                //StartCoroutine(AllyToEnemy(anima, selectEnemy, OnCoroutineCompleted));
-                yield return new WaitForSeconds(5f);
-                //allyBattleSetting.allyinstance[anima.animaData.location].transform.position = Vector3.Lerp(allyattackPoint, originPoint, 1f);
                 isTurn[turnIndex].SetActive(false);
                 turnList.RemoveAt(0);
+                canvas.SetActive(false);//체력 바 동기화 문제 발생 예상
+                /* Attack */
+
+                cameraManager.ZoomIn(allyBattleSetting.allyinstance[allyActions.IndexOf(anima)].transform);
+
+                /* Animation */
+                
+                yield return new WaitForSeconds(3f);
+                cameraManager.CameraMove(allyBattleSetting.allyinstance[allyActions.IndexOf(anima)].transform, enemyBattleSetting.enemyinstance[selectEnemy].transform);
+                yield return new WaitForSeconds(3f);
+                cameraManager.ZoomOut();
+                canvas.SetActive(true);
+                anima.Attack(anima, enemyActions[selectEnemy], enemyHealthBar[selectEnemy]);
                 if (enemyActions[selectEnemy].animaData.Animadie)
                 {
                     if (anima.animaData.Speed <= enemyActions[selectEnemy].animaData.Speed)
@@ -424,13 +428,11 @@ public class BattleManager : MonoBehaviour
                             tmpturnList.RemoveAt(i);
                             turn.RemoveAt(i);
                             isTurn.RemoveAt(i);
-                            //gold += enemyActions[selectEnemy].animaData.DropGold;
                             if (UnityEngine.Random.Range(0, 101) <= enemyActions[selectEnemy].animaData.DropRate)
                             {
                                 AnimaDataSO animadata = ScriptableObject.CreateInstance<AnimaDataSO>();
                                 animadata.GetAnima(enemyActions[selectEnemy].animaData.Name);
                                 allyBattleSetting.playerinfo.GetAnima(animadata);
-                                //dropAnima.Add(animadata);
                             }
                         }
                     }
@@ -465,7 +467,6 @@ public class BattleManager : MonoBehaviour
                 break;
             }
         }
-        //공격 스킬, 데미지 등 코드 작성
         if (enemyActions.Count > 0 && turnList.Count == 0)
         {
             runningCoroutine = null;
@@ -478,4 +479,15 @@ public class BattleManager : MonoBehaviour
         }
 
     }
+    public List<AnimaActions> getAlly()
+    {
+        return allyActions;
+    }
+    public List<EnemyActions> getEnemy()
+    {
+        return enemyActions;
+    }
 }
+
+
+
