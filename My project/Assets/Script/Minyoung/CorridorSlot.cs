@@ -8,9 +8,9 @@ public class CorridorSlot : MonoBehaviour
     public Image animaImage;
     public TextMeshProUGUI nameText;
     public Material grayscaleMaterial; //흑백처리용도
-    
-    private CorridorEntry currentEntry;
-    private bool isCollected;
+
+    public CorridorEntry currentEntry { get; private set; }
+    public bool isCollected { get; private set; }
 
     public void Initialize(CorridorEntry entry, bool collected)
     {
@@ -32,11 +32,9 @@ public class CorridorSlot : MonoBehaviour
 
         }
     }
+
     public void OnSlotClicked()
     {
-        if (isCollected)
-        {
-            CorridorDetailUI.Instance.ShowEntry(currentEntry);
-        }
+        CorridorManager.instance.OnSlotSelected(this);
     }
 }

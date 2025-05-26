@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a0315b5b497ecc047a6e50b880716f6b, type: 3}
-  m_Name: Anima1
+  m_Name: NewAnima 7
   m_EditorClassIdentifier: 
-  animaName: Vanitas1
-  colorImage: {fileID: -6602311149190706402, guid: 6b5c6ca5da74c8940824a8af5d6a199e, type: 3}
-  description: Vanitas1
+  animaName: Gaudium7
+  colorImage: {fileID: 2693213388213282755, guid: 5aee05fc42fe6e44daceebb57ae5a627, type: 3}
+  description: Gaudium7
