@@ -61,11 +61,13 @@ public class AllyBattleSetting : MonoBehaviour
                 for (int i = 0; i < allyobjPrefab.Count; i++)
                 {
                     allyinstance.Add(Instantiate(allyobjPrefab[i], new Vector3((i * 3.5f) - 3.5f, -2.2f, 0f), Quaternion.identity));
+                    int index = allyinstance[i].name.IndexOf("(Clone)");
+                    allyinstance[i].name = allyinstance[i].name.Substring(0, index) + i;
                     allyinstance[i].transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
                     //damagex.Add(Random.Range(-4.5f * Mathf.Pow(i, 2) + 8.5f *i - 10.5f + 0.5f, -4.5f * Mathf.Pow(i, 2) + 8.5f *i - 10.5f + 1.5f));
                     //damagey.Add(Random.Range(y - 2.5f *i + 0.25f, y - 2.5f *i + 1.25f));
                     allyhpinstance.Add(Instantiate(allyhpPrefab[i], new Vector2((i * 399f) + 552f, 158f), Quaternion.identity, canvas.transform));
-                    int index = allyhpinstance[i].name.IndexOf("(Clone)");
+                    index = allyhpinstance[i].name.IndexOf("(Clone)");
                     allyhpinstance[i].name = allyhpinstance[i].name.Substring(0, index) + i;
                     allyInfoInstance.Add(Instantiate(allyInfoPrefab[i], canvas.transform));
                     index = allyInfoInstance[i].name.IndexOf("(Clone)");
@@ -81,11 +83,13 @@ public class AllyBattleSetting : MonoBehaviour
                 for (int i = 0; i < allyobjPrefab.Count; i++)
                 {
                     allyinstance.Add(Instantiate(allyobjPrefab[i], new Vector3((i * 3.5f) - 1.75f, -2.2f, 0f), Quaternion.identity));
+                    int index = allyinstance[i].name.IndexOf("(Clone)");
+                    allyinstance[i].name = allyinstance[i].name.Substring(0, index) + i;
                     allyinstance[i].transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
                     //damagex.Add(Random.Range(-4.5f * Mathf.Pow(i, 2) + 8.5f *i - 10.5f + 0.5f, -4.5f * Mathf.Pow(i, 2) + 8.5f *i - 10.5f + 1.5f));
                     //damagey.Add(Random.Range(y - 2.5f *i + 0.25f, y - 2.5f *i + 1.25f));
                     allyhpinstance.Add(Instantiate(allyhpPrefab[i], new Vector2((i * 380f) + 765f, 158f), Quaternion.identity, canvas.transform));
-                    int index = allyhpinstance[i].name.IndexOf("(Clone)");
+                    index = allyhpinstance[i].name.IndexOf("(Clone)");
                     allyhpinstance[i].name = allyhpinstance[i].name.Substring(0, index) + i;
                     allyInfoInstance.Add(Instantiate(allyInfoPrefab[i], canvas.transform));
                     index = allyInfoInstance[i].name.IndexOf("(Clone)");
@@ -99,12 +103,14 @@ public class AllyBattleSetting : MonoBehaviour
             else
             {
                 allyinstance.Add(Instantiate(allyobjPrefab[0], new Vector3(0f, 1.2f, 0), Quaternion.identity));
+                int index = allyinstance[0].name.IndexOf("(Clone)");
+                allyinstance[0].name = allyinstance[0].name.Substring(0, index) + 0;
                 allyinstance[0].transform.Rotate(0, 180f, 0);
                 //damagex.Add(Random.Range(4.5f * Mathf.Pow(0, 2) - 8.5f * 0 + 10.5f - 1.5f, 4.5f * Mathf.Pow(0, 2) - 8.5f * i + 10.5f - 0.5f));
                 //damagey.Add(Random.Range(y - 2.5f * i + 0.25f, y - 2.5f * i + 1.25f));
                 allyinstance[0].transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);//-195f 185f 
                 allyhpinstance.Add(Instantiate(allyhpPrefab[0], new Vector2(951f, 530f), Quaternion.identity, canvas.transform));
-                int index = allyhpinstance[0].name.IndexOf("(Clone)");
+                index = allyhpinstance[0].name.IndexOf("(Clone)");
                 allyhpinstance[0].name = allyhpinstance[0].name.Substring(0, index) + 0;
                 allyInfoInstance.Add(Instantiate(allyInfoPrefab[0], canvas.transform));
                 index = allyInfoInstance[0].name.IndexOf("(Clone)");

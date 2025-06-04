@@ -1,31 +1,43 @@
+using DG.Tweening;
+using System.Collections;
+using System.Xml;
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class CameraManager : MonoBehaviour
 {
+    [SerializeField]
+    Animator animator;
+    [SerializeField]
+    CinemachineCamera allyAttackCam;
+    [SerializeField]
+    CinemachineCamera enemyAttackCam;
     public Camera mainCamera;
-    Transform attackTransform;
-    Transform targetTransform;
     Transform objectTransform;
     float cameraposx = 0f;
     float cameraposy = 0f;
     float cameraposz = -10f;
     public float speed;
-    
-    public void ZoomIn( Transform obj )
+    public AnimatorController animatorController;
+    public IEnumerator ZoomIn(Transform obj, bool isAlly)
     {
         objectTransform = obj;
-        mainCamera.orthographicSize = 2;
-        mainCamera.transform.position = new Vector3(objectTransform.position.x, objectTransform.position.y, cameraposz);
-    }
-    public void ZoomOut()
-    {
-        mainCamera.orthographicSize = 5;
-        mainCamera.transform.position = new Vector3(cameraposx,cameraposy, cameraposz);
-    }
-    public void CameraMove(Transform attacker , Transform hitted)
-    {
-        attackTransform = attacker;
-        targetTransform = hitted;
-        mainCamera.transform.position = Vector3.Lerp( new Vector3(attacker.position.x,attacker.position.y, cameraposz), new Vector3(hitted.position.x, hitted.position.y, cameraposz), 1f);
+        
+        if (isAlly)
+        {
+            allyAttackCam.ForceCameraPosition(new Vector3(objectTransform.position.x, objectTransform.position.y, cameraposz), allyAttackCam.transform.rotation);
+            animator.SetTrigger("AllyAttack");
+            yield return animatorController.WaitForAnimationEnd();
+            yield return new WaitForSeconds(3f);
+
+        }
+        else
+        {
+            enemyAttackCam.ForceCameraPosition(new Vector3(objectTransform.position.x, objectTransform.position.y, cameraposz), enemyAttackCam.transform.rotation);
+            animator.SetTrigger("EnemyAttack");
+            yield return animatorController.WaitForAnimationEnd();
+            yield return new WaitForSeconds(3f);
+        }
+
     }
 }

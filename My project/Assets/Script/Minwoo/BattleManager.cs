@@ -464,14 +464,9 @@ public class BattleManager : MonoBehaviour
                 canvas.SetActive(false);//체력 바 동기화 문제 발생 예상
                 /* Attack */
 
-                cameraManager.ZoomIn(allyBattleSetting.allyinstance[allyActions.IndexOf(anima)].transform);
 
                 /* Animation */
-                
-                yield return new WaitForSeconds(2f);
-                cameraManager.CameraMove(allyBattleSetting.allyinstance[allyActions.IndexOf(anima)].transform, enemyBattleSetting.enemyinstance[selectEnemy].transform);
-                yield return new WaitForSeconds(2f);
-                cameraManager.ZoomOut();
+                yield return cameraManager.ZoomIn(allyBattleSetting.allyinstance[allyActions.IndexOf(anima)].transform, true);
                 canvas.SetActive(true);
                 yield return anima.Attack(anima, enemyActions[selectEnemy], enemyHealthBar[selectEnemy], allyDamageBar[allyActions.IndexOf(anima)]);
                 battleLogManager.AddLog($"{anima.animaData.Name} hit {enemyActions[selectEnemy].animaData.Name} for {Mathf.Ceil(enemyActions[selectEnemy].damage)}damage", true);
@@ -640,14 +635,9 @@ public class BattleManager : MonoBehaviour
                 canvas.SetActive(false);//체력 바 동기화 문제 발생 예상
                 /* Attack */
 
-                cameraManager.ZoomIn(allyBattleSetting.allyinstance[allyActions.IndexOf(anima)].transform);
+                yield return cameraManager.ZoomIn(allyBattleSetting.allyinstance[allyActions.IndexOf(anima)].transform, true);
 
                 /* Animation */
-
-                yield return new WaitForSeconds(2f);
-                cameraManager.CameraMove(allyBattleSetting.allyinstance[allyActions.IndexOf(anima)].transform, enemyBattleSetting.enemyinstance[selectEnemy].transform);
-                yield return new WaitForSeconds(2f);
-                cameraManager.ZoomOut();
                 canvas.SetActive(true);
                 yield return anima.Skill(anima, enemyActions[selectEnemy], enemyHealthBar[selectEnemy], allyDamageBar[allyActions.IndexOf(anima)]);
                 battleLogManager.AddLog($"{anima.animaData.Name} used \"{ anima.animaData.skillName}\" on {enemyActions[selectEnemy].animaData.Name} for {Mathf.Ceil(enemyActions[selectEnemy].damage)}damage", true);
@@ -780,15 +770,11 @@ public class BattleManager : MonoBehaviour
                     canvas.SetActive(false);//체력 바 동기화 문제 발생 예상
                     /* Attack */
 
-                    cameraManager.ZoomIn(enemyBattleSetting.enemyinstance[enemyActions.IndexOf(enemy)].transform);
 
                     /* Animation */
-
-                    yield return new WaitForSeconds(2f);
-                    cameraManager.CameraMove(enemyBattleSetting.enemyinstance[enemyActions.IndexOf(enemy)].transform, allyBattleSetting.allyinstance[selectAlly].transform);
-                    yield return new WaitForSeconds(2f);
+                    yield return cameraManager.ZoomIn(enemyBattleSetting.enemyinstance[enemyActions.IndexOf(enemy)].transform, false);
                     canvas.SetActive(true);
-                    cameraManager.ZoomOut();
+                    
                     yield return enemy.Attack(enemy, allyActions[selectAlly], allyHealthBar[selectAlly], enemyDamageBar[enemy.animaData.enemyIndex]);
                     battleLogManager.AddLog($"{enemy.animaData.Name} hit {allyActions[selectAlly].animaData.Name} for {Mathf.Ceil(allyActions[selectAlly].damage)} damage", false);
                     enemyDamageText[enemy.animaData.enemyIndex].text = Mathf.Ceil(enemyDamageBar[enemy.animaData.enemyIndex].thisPoint).ToString();
@@ -881,14 +867,10 @@ public class BattleManager : MonoBehaviour
                     canvas.SetActive(false);//체력 바 동기화 문제 발생 예상
                     /* Attack */
 
-                    cameraManager.ZoomIn(enemyBattleSetting.enemyinstance[enemyActions.IndexOf(enemy)].transform);
 
                     /* Animation */
 
-                    yield return new WaitForSeconds(3f);
-                    cameraManager.CameraMove(enemyBattleSetting.enemyinstance[enemyActions.IndexOf(enemy)].transform, allyBattleSetting.allyinstance[selectAlly].transform);
-                    yield return new WaitForSeconds(3f);
-                    cameraManager.ZoomOut();
+                    yield return cameraManager.ZoomIn(enemyBattleSetting.enemyinstance[enemyActions.IndexOf(enemy)].transform, false);
                     canvas.SetActive(true);
                     yield return enemy.Skill(enemy, allyActions[selectAlly], allyHealthBar[selectAlly], enemyDamageBar[enemy.animaData.enemyIndex]);
                     battleLogManager.AddLog($"{enemy.animaData.Name} used \"{enemy.animaData.skillName}\" on {allyActions[selectAlly].animaData.Name} for {Mathf.Ceil(allyActions[selectAlly].damage)} damage", false);

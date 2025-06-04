@@ -79,13 +79,15 @@ public class EnemyBattleSetting : MonoBehaviour
             for (int i = 0; i < enemyobjPrefab.Count; i++)
             {
                 enemyinstance.Add(Instantiate(enemyobjPrefab[i], new Vector3((i * 3.5f) - 3.5f, 1.2f, 0), Quaternion.identity));
+                int index = enemyinstance[i].name.IndexOf("(Clone)");
+                enemyinstance[i].name = enemyinstance[i].name.Substring(0, index) + (i+3);
                 //enemyinstance[i].transform.Rotate(0, 180f, 0);
                 //damagex.Add(Random.Range(4.5f * Mathf.Pow(i, 2) - 8.5f * i + 10.5f-1.5f, 4.5f * Mathf.Pow(i, 2) - 8.5f * i + 10.5f-0.5f));
                 //damagey.Add(Random.Range(y - 2.5f * i + 0.25f, y - 2.5f * i + 1.25f));
                 enemyinstance[i].transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
                 enemyhpinstance.Add(Instantiate(enemyhpPrefab[i], new Vector2((i * 399f) + 552f, 530f), Quaternion.identity, canvas.transform));
                 enemyInfoInstance.Add(Instantiate(enemyInfoPrefab[i],canvas.transform));
-                int index = enemyhpinstance[i].name.IndexOf("(Clone)");
+                index = enemyhpinstance[i].name.IndexOf("(Clone)");
                 enemyhpinstance[i].name = enemyhpinstance[i].name.Substring(0, index) + i;
                 index = enemyInfoInstance[i].name.IndexOf("(Clone)");
                 enemyInfoInstance[i].name = enemyInfoInstance[i].name.Substring(0, index);
@@ -101,13 +103,15 @@ public class EnemyBattleSetting : MonoBehaviour
             for (int i = 0; i < enemyobjPrefab.Count; i++)
             {
                 enemyinstance.Add(Instantiate(enemyobjPrefab[i], new Vector3( ( i * 3.5f ) - 1.75f, 1.2f, 0), Quaternion.identity));
+                int index = enemyinstance[i].name.IndexOf("(Clone)");
+                enemyinstance[i].name = enemyinstance[i].name.Substring(0, index) + (i + 3);
                 //enemyinstance[i].transform.Rotate(0, 180f, 0);
                 //damagex.Add(Random.Range(4.5f * Mathf.Pow(i, 2) - 8.5f * i + 10.5f - 1.5f, 4.5f * Mathf.Pow(i, 2) - 8.5f * i + 10.5f - 0.5f));
                 //damagey.Add(Random.Range(y - 2.5f * i + 0.25f, y - 2.5f * i + 1.25f));
                 enemyinstance[i].transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
                 enemyhpinstance.Add(Instantiate(enemyhpPrefab[i], new Vector2((i * 380f) + 765f, 530f), Quaternion.identity, canvas.transform));
                 enemyInfoInstance.Add(Instantiate(enemyInfoPrefab[i],canvas.transform));
-                int index = enemyhpinstance[i].name.IndexOf("(Clone)");
+                index = enemyhpinstance[i].name.IndexOf("(Clone)");
                 enemyhpinstance[i].name = enemyhpinstance[i].name.Substring(0, index) + i;
                 index = enemyInfoInstance[i].name.IndexOf("(Clone)");
                 enemyInfoInstance[i].name = enemyInfoInstance[i].name.Substring(0, index);
@@ -121,13 +125,15 @@ public class EnemyBattleSetting : MonoBehaviour
         else if (enemyobjPrefab.Count == 1 &&enemyobjPrefab != null && enemyhpPrefab != null)
         {
             enemyinstance.Add(Instantiate(enemyobjPrefab[0], new Vector3(0f, 1.2f, 0), Quaternion.identity));
+            int index = enemyinstance[0].name.IndexOf("(Clone)");
+            enemyinstance[0].name = enemyinstance[0].name.Substring(0, index) + 3;
             //enemyinstance[0].transform.Rotate(0, 180f, 0);
             //damagex.Add(Random.Range(4.5f * Mathf.Pow(0, 2) - 8.5f * 0 + 10.5f - 1.5f, 4.5f * Mathf.Pow(0, 2) - 8.5f * i + 10.5f - 0.5f));
             //damagey.Add(Random.Range(y - 2.5f * i + 0.25f, y - 2.5f * i + 1.25f));
             enemyinstance[0].transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);//-195f 185f 
             enemyhpinstance.Add(Instantiate(enemyhpPrefab[0], new Vector2(951f, 530f), Quaternion.identity, canvas.transform));
             enemyInfoInstance.Add(Instantiate(enemyInfoPrefab[0],canvas.transform));
-            int index = enemyhpinstance[0].name.IndexOf("(Clone)");
+            index = enemyhpinstance[0].name.IndexOf("(Clone)");
             enemyhpinstance[0].name = enemyhpinstance[0].name.Substring(0, index) + 0;
             index = enemyInfoInstance[0].name.IndexOf("(Clone)");
             enemyInfoInstance[0].name = enemyInfoInstance[0].name.Substring(0, index);
