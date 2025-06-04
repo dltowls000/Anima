@@ -26,6 +26,6 @@ public class CameraManager : MonoBehaviour
     {
         attackTransform = attacker;
         targetTransform = hitted;
-        mainCamera.transform.position = Vector3.MoveTowards( new Vector3(attacker.position.x,attacker.position.y, cameraposz), new Vector3(hitted.position.x, hitted.position.y, cameraposz), 1f);
+        mainCamera.transform.position = Vector3.Lerp( new Vector3(attacker.position.x,attacker.position.y, cameraposz), new Vector3(hitted.position.x, hitted.position.y, cameraposz), 1f);
     }
 }

@@ -7,10 +7,7 @@ public class EnemyActions : MonoBehaviour
 {
     public AnimaDataSO animaData;
     public enum ActionType { Attack, UseSkill }
-    public HealthBar healthBar;
     public List<ActionWeight> actionWeights;
-    public float currentHealth;
-    public float maxHealth;
     public string performance = "";
     public float damage;
     public class ActionWeight
@@ -68,25 +65,27 @@ public class EnemyActions : MonoBehaviour
                 break;
         }
     }
-    public float Attack(EnemyActions enemy, AnimaActions ally, HealthBar allyHealthBar)
+    public IEnumerator Attack(EnemyActions enemy, AnimaActions ally, HealthBar allyHealthBar, ParserBar damageBar)
     {
         if (!enemy.animaData.Animadie && !ally.animaData.Animadie)
         {
             damage = CalcAttackDamage(enemy.animaData.Damage, ally);
+            yield return allyHealthBar.TakeDamage(damage);
             ally.TakeDamage(damage);
-            allyHealthBar.TakeDamage(damage);
+            yield return damageBar.PutDamage(damage);
         }
-        return damage;
+        
     }
-    public float Skill(EnemyActions enemy, AnimaActions ally, HealthBar allyHealthBar)
+    public IEnumerator Skill(EnemyActions enemy, AnimaActions ally, HealthBar allyHealthBar, ParserBar damageBar)
     {
         if (!enemy.animaData.Animadie && !ally.animaData.Animadie)
         {
             damage = CalcSkillDamage(enemy.animaData.Damage, ally);
+            yield return allyHealthBar.TakeDamage(damage);
             ally.TakeSkillDamage(damage);
-            allyHealthBar.TakeDamage(damage);
+            yield return damageBar.PutDamage(damage);
         }
-        return damage;
+        
     }
     public float CalcAttackDamage(float damage, AnimaActions ally)
     {
@@ -128,23 +127,25 @@ public class EnemyActions : MonoBehaviour
     }
     public float TakeSkillDamage(float damage)
     {
-        float resdamage = damage;
+        this.damage = damage;
         this.animaData.Stamina -= damage;
 
         if (animaData.Stamina <= 0)
         {
             Die();
         }
-        return resdamage;
+        return damage;
     }
-    public void TakeDamage(float damage)
+    public float TakeDamage(float damage)
     {
+        this.damage = damage;
         this.animaData.Stamina -= damage;
         
         if (animaData.Stamina <= 0)
         {
             Die();
         }
+        return damage;
     }
     public void Die()
     {

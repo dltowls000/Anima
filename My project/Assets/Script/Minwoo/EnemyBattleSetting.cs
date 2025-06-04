@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class EnemyBattleSetting : MonoBehaviour
 {
-    private float y = 0.75f;
-    private float hpy = -99f;
     public List<float> damagex;
     public List<float> damagey;
     public List<GameObject> enemyobjPrefab;
@@ -19,8 +17,10 @@ public class EnemyBattleSetting : MonoBehaviour
     public List<GameObject> enemyhpinstance;
     public List<GameObject> enemyInfoPrefab;
     public List<GameObject> enemyInfoInstance;
+    List<GameObject> enemyParserPrefab;
+    List<GameObject> enemyParserInstance;
     public GameObject canvas;
-
+    GameObject battleParser;
     public void SpawnEnemy()
     {
         animator = new List<Animator>();
@@ -48,17 +48,20 @@ public class EnemyBattleSetting : MonoBehaviour
             enemyhpinstance = new List<GameObject>();
             enemyInfoInstance = new List<GameObject>();
             enemyInfoPrefab = new List<GameObject>();
+            enemyParserPrefab = new List<GameObject>();
+            enemyParserInstance = new List<GameObject>();
             damagex = new List<float>();
             damagey = new List<float>();
             battleEnemyAnima = new List<string>();
             enemyobjPrefab = new List<GameObject>();
+            battleParser = GameObject.Find("Battle Parser");
         }
         
         animaTable.ForEachEntity(entity =>
         {
             objectfileList.Add(entity.Get<string>("Objectfile"));
         });
-        int numberOfObjectsToAdd = Random.Range(3, 4); 
+        int numberOfObjectsToAdd = Random.Range(1, 4); 
 
         for (int i = 0; i < numberOfObjectsToAdd; i++)
         {
@@ -66,6 +69,7 @@ public class EnemyBattleSetting : MonoBehaviour
             enemyobjPrefab.Add(Resources.Load<GameObject>("Minwoo/" + objectfileList[randomIndex]));
             enemyhpPrefab.Add(Resources.Load<GameObject>("Minwoo/EnemyAnimaHP"));
             enemyInfoPrefab.Add(Resources.Load<GameObject>($"Minwoo/Enemy{i}"));
+            enemyParserPrefab.Add(Resources.Load<GameObject>($"Minwoo/Battle Parser/Enemy{i}Name"));
             battleEnemyAnima.Add(objectfileList[randomIndex]);
         }
 
@@ -85,6 +89,9 @@ public class EnemyBattleSetting : MonoBehaviour
                 enemyhpinstance[i].name = enemyhpinstance[i].name.Substring(0, index) + i;
                 index = enemyInfoInstance[i].name.IndexOf("(Clone)");
                 enemyInfoInstance[i].name = enemyInfoInstance[i].name.Substring(0, index);
+                enemyParserInstance.Add(Instantiate(enemyParserPrefab[i], battleParser.transform));
+                index = enemyParserInstance[i].name.IndexOf("(Clone)");
+                enemyParserInstance[i].name = enemyParserInstance[i].name.Substring(0, index);
                 animator.Add(enemyinstance[i].GetComponent<Animator>()); 
             }
 
@@ -104,6 +111,9 @@ public class EnemyBattleSetting : MonoBehaviour
                 enemyhpinstance[i].name = enemyhpinstance[i].name.Substring(0, index) + i;
                 index = enemyInfoInstance[i].name.IndexOf("(Clone)");
                 enemyInfoInstance[i].name = enemyInfoInstance[i].name.Substring(0, index);
+                enemyParserInstance.Add(Instantiate(enemyParserPrefab[i], battleParser.transform));
+                index = enemyParserInstance[i].name.IndexOf("(Clone)");
+                enemyParserInstance[i].name = enemyParserInstance[i].name.Substring(0, index);
                 animator.Add(enemyinstance[i].GetComponent<Animator>());
             }
 
@@ -121,6 +131,9 @@ public class EnemyBattleSetting : MonoBehaviour
             enemyhpinstance[0].name = enemyhpinstance[0].name.Substring(0, index) + 0;
             index = enemyInfoInstance[0].name.IndexOf("(Clone)");
             enemyInfoInstance[0].name = enemyInfoInstance[0].name.Substring(0, index);
+            enemyParserInstance.Add(Instantiate(enemyParserPrefab[0], battleParser.transform));
+            index = enemyParserInstance[0].name.IndexOf("(Clone)");
+            enemyParserInstance[0].name = enemyParserInstance[0].name.Substring(0, index);
             animator.Add(enemyinstance[0].GetComponent<Animator>());
             
 

@@ -20,6 +20,9 @@ public class AllyBattleSetting : MonoBehaviour
     public List<float> damagex;
     public List<float> damagey;
     BattleManager battleManager;
+    List<GameObject> allyParserPrefab;
+    List<GameObject> allyParserInstance;
+    GameObject battleParser;
     //public SlotManager slotManager;
     public void initialize()
     {
@@ -29,10 +32,13 @@ public class AllyBattleSetting : MonoBehaviour
         allyhpinstance = new List<GameObject>();
         allyInfoInstance = new List<GameObject>();
         allyInfoPrefab = new List<GameObject>();
+        allyParserPrefab = new List<GameObject>();
+        allyParserInstance = new List<GameObject>();
         animator = new List<Animator>();
         damagex = new List<float>();
         damagey = new List<float>();
         battleManager = GameObject.Find("BattleManager").GetComponent<BattleManager>();
+        battleParser = GameObject.Find("Battle Parser");
         playerinfo = battleManager.playerInfo; 
         canvas = GameObject.Find("Main Battle UI");
     }
@@ -45,6 +51,8 @@ public class AllyBattleSetting : MonoBehaviour
             allyobjPrefab.Add(Resources.Load<GameObject>("Minwoo/" + playerinfo.battleAnima[i].Objectfile));
             allyhpPrefab.Add(Resources.Load<GameObject>("Minwoo/AllyAnimaHP"));
             allyInfoPrefab.Add(Resources.Load<GameObject>($"Minwoo/Ally{i}"));
+            allyParserPrefab.Add(Resources.Load<GameObject>($"Minwoo/Battle Parser/Ally{i}Name"));
+            
         }
         if (allyobjPrefab != null)
         {
@@ -62,6 +70,9 @@ public class AllyBattleSetting : MonoBehaviour
                     allyInfoInstance.Add(Instantiate(allyInfoPrefab[i], canvas.transform));
                     index = allyInfoInstance[i].name.IndexOf("(Clone)");
                     allyInfoInstance[i].name = allyInfoInstance[i].name.Substring(0, index);
+                    allyParserInstance.Add(Instantiate(allyParserPrefab[i], battleParser.transform));
+                    index = allyParserInstance[i].name.IndexOf("(Clone)");
+                    allyParserInstance[i].name = allyParserInstance[i].name.Substring(0, index);
                     animator.Add(allyinstance[i].GetComponent<Animator>());
                 }
             }
@@ -79,6 +90,9 @@ public class AllyBattleSetting : MonoBehaviour
                     allyInfoInstance.Add(Instantiate(allyInfoPrefab[i], canvas.transform));
                     index = allyInfoInstance[i].name.IndexOf("(Clone)");
                     allyInfoInstance[i].name = allyInfoInstance[i].name.Substring(0, index);
+                    allyParserInstance.Add(Instantiate(allyParserPrefab[i], battleParser.transform));
+                    index = allyParserInstance[i].name.IndexOf("(Clone)");
+                    allyParserInstance[i].name = allyParserInstance[i].name.Substring(0, index);
                     animator.Add(allyinstance[i].GetComponent<Animator>());
                 }
             }
@@ -95,6 +109,9 @@ public class AllyBattleSetting : MonoBehaviour
                 allyInfoInstance.Add(Instantiate(allyInfoPrefab[0], canvas.transform));
                 index = allyInfoInstance[0].name.IndexOf("(Clone)");
                 allyInfoInstance[0].name = allyInfoInstance[0].name.Substring(0, index);
+                allyParserInstance.Add(Instantiate(allyParserPrefab[0], battleParser.transform));
+                index = allyParserInstance[0].name.IndexOf("(Clone)");
+                allyParserInstance[0].name = allyParserInstance[0].name.Substring(0, index);
                 animator.Add(allyinstance[0].GetComponent<Animator>());
             }
         }
