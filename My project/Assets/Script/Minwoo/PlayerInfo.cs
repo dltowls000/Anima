@@ -16,17 +16,16 @@ public class PlayerInfo : ScriptableObject
     {
         var database = BGRepo.I;
         var animaTable = database.GetMeta("Anima");
-        animaData = ScriptableObject.CreateInstance<AnimaDataSO>();
+        
 
-        animaData.Initialize(animaTable[Random.Range(0, 1)].Get<string>("name"));
-        animaData.location = 0;
-        GetAnima(animaData);
-        BattleSetting(haveAnima[0]);
-
-        animaData.Initialize(animaTable[Random.Range(0, 1)].Get<string>("name"));
-        animaData.location = 1;
-        GetAnima(animaData);
-        BattleSetting(haveAnima[1]);
+        for(int i = 0; i < 3 ; i++)
+        {
+            animaData = ScriptableObject.CreateInstance<AnimaDataSO>();
+            animaData.Initialize(animaTable[Random.Range(0, 1)].Get<string>("name"));
+            animaData.location = i;
+            GetAnima(animaData);
+            BattleSetting(haveAnima[i]);
+        }
 
     }
 
