@@ -9,6 +9,7 @@ using UnityEngine.UI;
 using static Unity.Burst.Intrinsics.X86.Avx;
 using System.Collections;
 using System;
+using UnityEngine.SceneManagement;
 public class BattleManager : MonoBehaviour
 {
     [SerializeField]
@@ -161,6 +162,7 @@ public class BattleManager : MonoBehaviour
             enemyInfo = new List<GameObject>();
         }
         enemyBattleSetting = gameObject.AddComponent<EnemyBattleSetting>();
+        enemyBattleSetting.stage = SceneManager.GetActiveScene().name.Substring(0, SceneManager.GetActiveScene().name.IndexOf("Battle"));
         enemyBattleSetting.SpawnEnemy();
         setEnemyanima();
         setEnemyActions();

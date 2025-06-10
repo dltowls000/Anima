@@ -21,6 +21,7 @@ public class EnemyBattleSetting : MonoBehaviour
     List<GameObject> enemyParserInstance;
     public GameObject canvas;
     GameObject battleParser;
+    public string stage;
     public void SpawnEnemy()
     {
         animator = new List<Animator>();
@@ -59,6 +60,7 @@ public class EnemyBattleSetting : MonoBehaviour
         
         animaTable.ForEachEntity(entity =>
         {
+            if(entity.Get<string>("Type") == stage)
             objectfileList.Add(entity.Get<string>("Objectfile"));
         });
         int numberOfObjectsToAdd = Random.Range(1, 4); 
