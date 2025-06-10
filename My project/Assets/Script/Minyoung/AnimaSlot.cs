@@ -14,7 +14,6 @@ public class AnimaSlot : MonoBehaviour
     // 클릭 이벤트: 외부에서 리스너 등록 가능
     public UnityEvent<AnimaEntry> onClick = new();
 
-    // 슬롯 초기화
     public void Setup(AnimaEntry entry, bool isDiscovered)
     {
         animaEntry = entry;
@@ -23,7 +22,6 @@ public class AnimaSlot : MonoBehaviour
         nameText.text = isDiscovered ? entry.animaName : "???";
     }
 
-    // UI 버튼에서 이걸 연결
     public void OnSlotClicked()
     {
         onClick.Invoke(animaEntry);

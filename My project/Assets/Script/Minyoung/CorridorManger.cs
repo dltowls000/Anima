@@ -39,8 +39,6 @@ public class CorridorManager : MonoBehaviour
     {
         return animaDatabase.Where(a => a.emotion == emotion).ToList();
     }
-
-    // 발견 여부 조회
     public bool IsDiscovered(AnimaEntry entry)
     {
         return discoveredAnimaIds.Contains(entry.animaId);
