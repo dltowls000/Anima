@@ -11,14 +11,15 @@ public class AnimaSlot : MonoBehaviour
 
     private AnimaEntry animaEntry;
 
-    // 클릭 이벤트: 외부에서 리스너 등록 가능
     public UnityEvent<AnimaEntry> onClick = new();
 
     public void Setup(AnimaEntry entry, bool isDiscovered)
     {
         animaEntry = entry;
 
-        iconImage.sprite = entry.colorImage; // 추후 실루엣 처리 추가 가능
+        iconImage.sprite = entry.colorImage;
+        iconImage.color = isDiscovered ? Color.white : Color.black;
+
         nameText.text = isDiscovered ? entry.animaName : "???";
     }
 

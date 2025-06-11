@@ -27,12 +27,18 @@ public class AnimaUI : MonoBehaviour
         for (int i = 0; i < emotionToggles.Length; i++)
         {
             int index = i;
+
             emotionToggles[i].onValueChanged.AddListener((isOn) =>
             {
                 if (isOn)
                 {
                     currentFilter = (index == 0) ? (EmotionType?)null : (EmotionType)(index - 1);
                     Refresh();
+
+                    for (int j = 0; j < emotionToggles.Length; j++)
+                    {
+                        emotionToggles[j].interactable = (j != index);
+                    }
                 }
             });
         }
@@ -40,33 +46,46 @@ public class AnimaUI : MonoBehaviour
 
     void Refresh()
     {
-        // 슬롯 모두 제거
+        // 슬롯 제거
         foreach (Transform child in gridParent)
             Destroy(child.gameObject);
 
-        // 감정 필터링 or 전체
+        // 감정별 필터링 및 전체
         List<AnimaEntry> animaList = currentFilter == null
             ? CorridorManager.Instance.GetAllAnima()
             : CorridorManager.Instance.GetByEmotion(currentFilter.Value);
 
         foreach (var anima in animaList)
         {
+            bool discovered = CorridorManager.Instance.IsDiscovered(anima);
+
+            // 발견되지 않은 애는 감정 필터에서 제외
+            if (currentFilter != null && !discovered)
+                continue;
+
             GameObject obj = Instantiate(slotPrefab, gridParent);
             AnimaSlot slot = obj.GetComponent<AnimaSlot>();
-
-            bool discovered = CorridorManager.Instance.IsDiscovered(anima);
             slot.Setup(anima, discovered);
             slot.onClick.AddListener(ShowDetail);
         }
 
         // 첫 항목 자동 표시
-        if (animaList.Count > 0)
-            ShowDetail(animaList[0]);
+        if (gridParent.childCount > 0)
+        {
+            AnimaEntry firstAnima = animaList.Find(a => currentFilter == null || CorridorManager.Instance.IsDiscovered(a));
+            if (firstAnima != null)
+                ShowDetail(firstAnima);
+        }
     }
 
     void ShowDetail(AnimaEntry anima)
     {
         bool discovered = CorridorManager.Instance.IsDiscovered(anima);
         detailPanel.Display(anima, discovered);
+    }
+
+    public void OnBackButton()
+    {
+        this.gameObject.SetActive(false);
     }
 }

@@ -8,12 +8,15 @@ public class AnimaDetailUI : MonoBehaviour
     public Image animaImage;
     public TMP_Text nameText;
     public TMP_Text descriptionText;
+    public TMP_Text typeText;
 
     public void Display(AnimaEntry anima, bool discovered)
     {
-        animaImage.sprite = anima.colorImage; // 실루엣이 필요하면 조건 처리 가능
+        animaImage.sprite = anima.colorImage;
+        animaImage.color = discovered ? Color.white : Color.black;
 
         nameText.text = discovered ? anima.animaName : "???";
         descriptionText.text = discovered ? anima.description : "???";
+        typeText.text = discovered ? anima.emotion.ToString() : "???";
     }
 }

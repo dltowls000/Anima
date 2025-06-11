@@ -15,6 +15,6 @@ MonoBehaviour:
   animaId: gaudium1
   animaName: gaudium1
   description: sdfcasvasdvasd
-  emotion: 7
+  emotion: 6
   colorImage: {fileID: -7199584321643050759, guid: 3ca6218a42b2acc4dbb620ae63d1770d, type: 3}
   silhouetteImage: {fileID: 0}
