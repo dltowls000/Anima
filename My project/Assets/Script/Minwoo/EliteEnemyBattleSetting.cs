@@ -86,6 +86,7 @@ public class EliteEnemyBattleSetting : MonoBehaviour
         if (enemyobjPrefab.Count == 1 && enemyobjPrefab != null && enemyhpPrefab != null)
         {
             enemyinstance.Add(Instantiate(enemyobjPrefab[0], new Vector3(0f, 1.2f, 0), Quaternion.identity));
+            enemyinstance[0].GetComponent<SpriteRenderer>().sortingOrder = -1;
             int index = enemyinstance[0].name.IndexOf("(Clone)");
             enemyinstance[0].name = enemyinstance[0].name.Substring(0, index) + 3;
             //enemyinstance[0].transform.Rotate(0, 180f, 0);

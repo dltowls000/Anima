@@ -61,14 +61,14 @@ public class EnemyBattleSetting : MonoBehaviour
         animaTable.ForEachEntity(entity =>
         {
             if(entity.Get<string>("Type") == stage)
-            objectfileList.Add(entity.Get<string>("Objectfile"));
+                objectfileList.Add(entity.Get<string>("Objectfile"));
         });
-        int numberOfObjectsToAdd = Random.Range(1, 4); 
-
+        int numberOfObjectsToAdd = Random.Range(1, 4);
+        Debug.Log(objectfileList.ToArray());
         for (int i = 0; i < numberOfObjectsToAdd; i++)
         {
             int randomIndex = Random.Range(1, 2);
-            enemyobjPrefab.Add(Resources.Load<GameObject>("Minwoo/" + objectfileList[randomIndex]));
+            enemyobjPrefab.Add(Resources.Load<GameObject>("Minwoo/Portrait/" + objectfileList[randomIndex]));
             enemyhpPrefab.Add(Resources.Load<GameObject>("Minwoo/EnemyAnimaHP"));
             enemyInfoPrefab.Add(Resources.Load<GameObject>($"Minwoo/Enemy{i}"));
             enemyParserPrefab.Add(Resources.Load<GameObject>($"Minwoo/Battle Parser/Enemy{i}Name"));
@@ -81,6 +81,7 @@ public class EnemyBattleSetting : MonoBehaviour
             for (int i = 0; i < enemyobjPrefab.Count; i++)
             {
                 enemyinstance.Add(Instantiate(enemyobjPrefab[i], new Vector3((i * 3.5f) - 3.5f, 1.2f, 0), Quaternion.identity));
+                enemyinstance[i].GetComponent<SpriteRenderer>().sortingOrder = -1;
                 int index = enemyinstance[i].name.IndexOf("(Clone)");
                 enemyinstance[i].name = enemyinstance[i].name.Substring(0, index) + (i+3);
                 //enemyinstance[i].transform.Rotate(0, 180f, 0);
@@ -105,6 +106,7 @@ public class EnemyBattleSetting : MonoBehaviour
             for (int i = 0; i < enemyobjPrefab.Count; i++)
             {
                 enemyinstance.Add(Instantiate(enemyobjPrefab[i], new Vector3( ( i * 3.5f ) - 1.75f, 1.2f, 0), Quaternion.identity));
+                enemyinstance[i].GetComponent<SpriteRenderer>().sortingOrder = -1;
                 int index = enemyinstance[i].name.IndexOf("(Clone)");
                 enemyinstance[i].name = enemyinstance[i].name.Substring(0, index) + (i + 3);
                 //enemyinstance[i].transform.Rotate(0, 180f, 0);
@@ -127,6 +129,7 @@ public class EnemyBattleSetting : MonoBehaviour
         else if (enemyobjPrefab.Count == 1 &&enemyobjPrefab != null && enemyhpPrefab != null)
         {
             enemyinstance.Add(Instantiate(enemyobjPrefab[0], new Vector3(0f, 1.2f, 0), Quaternion.identity));
+            enemyinstance[0].GetComponent<SpriteRenderer>().sortingOrder = -1;
             int index = enemyinstance[0].name.IndexOf("(Clone)");
             enemyinstance[0].name = enemyinstance[0].name.Substring(0, index) + 3;
             //enemyinstance[0].transform.Rotate(0, 180f, 0);
