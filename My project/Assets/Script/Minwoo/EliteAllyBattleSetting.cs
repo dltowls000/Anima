@@ -61,6 +61,7 @@ public class EliteAllyBattleSetting : MonoBehaviour
                 for (int i = 0; i < allyobjPrefab.Count; i++)
                 {
                     allyinstance.Add(Instantiate(allyobjPrefab[i], new Vector3((i * 3.5f) - 3.5f, -2.2f, 0f), Quaternion.identity));
+                    allyinstance[i].GetComponent<SpriteRenderer>().sortingOrder = -1;
                     int index = allyinstance[i].name.IndexOf("(Clone)");
                     allyinstance[i].name = allyinstance[i].name.Substring(0, index) + i;
                     allyinstance[i].transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
@@ -83,6 +84,7 @@ public class EliteAllyBattleSetting : MonoBehaviour
                 for (int i = 0; i < allyobjPrefab.Count; i++)
                 {
                     allyinstance.Add(Instantiate(allyobjPrefab[i], new Vector3((i * 3.5f) - 1.75f, -2.2f, 0f), Quaternion.identity));
+                    allyinstance[i].GetComponent<SpriteRenderer>().sortingOrder = -1;
                     int index = allyinstance[i].name.IndexOf("(Clone)");
                     allyinstance[i].name = allyinstance[i].name.Substring(0, index) + i;
                     allyinstance[i].transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
@@ -103,6 +105,7 @@ public class EliteAllyBattleSetting : MonoBehaviour
             else
             {
                 allyinstance.Add(Instantiate(allyobjPrefab[0], new Vector3(0f, 1.2f, 0), Quaternion.identity));
+                allyinstance[0].GetComponent<SpriteRenderer>().sortingOrder = -1;
                 int index = allyinstance[0].name.IndexOf("(Clone)");
                 allyinstance[0].name = allyinstance[0].name.Substring(0, index) + 0;
                 allyinstance[0].transform.Rotate(0, 180f, 0);
