@@ -9,4 +9,4 @@ Copyright (c) 2018-2025 All Rights Reserved
 -----------------------------------------------------
                             Disclaimer:
 -----------------------------------------------------
-This asset uses some Third-Party components. Please, see "Third-Party Notices.txt" for more details.  
+This asset uses some Third-Party components. Please see "Third-Party Notices.txt" for more details.  
