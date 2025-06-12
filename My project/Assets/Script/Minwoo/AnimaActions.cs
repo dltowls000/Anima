@@ -1,51 +1,55 @@
 using UnityEngine;
 using DamageNumbersPro;
+using System.Collections;
 public class AnimaActions : MonoBehaviour
 {
     public AnimaDataSO animaData;
-    public HealthBar healthBar;
     public DamageNumber damageNumber;
     public float damage;
-    public float Attack(AnimaActions ally, EnemyActions enemy, HealthBar enemyHealthBar)
+    
+    public IEnumerator Attack(AnimaActions ally, EnemyActions enemy, HealthBar enemyHealthBar, ParserBar damageBar)
     {
         if (!ally.animaData.Animadie && !enemy.animaData.Animadie)
         {
             damage = CalcAttackDamage(ally.animaData.Damage, enemy);
+            yield return enemyHealthBar.TakeDamage(damage);
             enemy.TakeDamage(damage);
-            enemyHealthBar.TakeDamage(damage);
+            yield return damageBar.PutDamage(damage);
         }
-        return damage;
     }
-    public float Skill(AnimaActions ally, EnemyActions enemy, HealthBar enemyHealthBar)
+    public IEnumerator Skill(AnimaActions ally, EnemyActions enemy, HealthBar enemyHealthBar, ParserBar damageBar)
     {
         if (!ally.animaData.Animadie && !enemy.animaData.Animadie)
         {
             damage = CalcSkillDamage(ally.animaData.Damage, enemy);
+            yield return enemyHealthBar.TakeDamage(damage);
             enemy.TakeSkillDamage(damage);
-            enemyHealthBar.TakeDamage(damage);
+            yield return damageBar.PutDamage(damage);
         }
-        return damage;
+        
     }
 
     public float TakeSkillDamage(float damage)
     {
-        float resdamage = damage;
+        this.damage = damage;
         this.animaData.Stamina -= damage;
         
         if (animaData.Stamina <= 0)
         {
             Die();
         }
-        return resdamage;
+        return damage;
     }
-    public void TakeDamage(float damage)
+    public float TakeDamage(float damage)
     {
+        this.damage = damage;
         this.animaData.Stamina -= damage;
         
         if (animaData.Stamina <= 0)
         {
             Die();
         }
+        return damage;
     }
     public float CalcAttackDamage(float damage , EnemyActions enemy)
     {

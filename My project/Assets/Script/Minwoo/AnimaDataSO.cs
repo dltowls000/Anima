@@ -27,6 +27,9 @@ public class AnimaDataSO : ScriptableObject
     public float defense;
     public float EXP = 0;
     public float MAX_EXP = 0;
+    public int enemyIndex = -1;
+    public string skillName = "Fire Ball";
+    public string attackName = "Normal Attack";
     public void Initialize(string name)
     {
 
