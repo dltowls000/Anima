@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Derevo_UV_initialShadingGroup_Roughness_0: 6433146503063582719
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
