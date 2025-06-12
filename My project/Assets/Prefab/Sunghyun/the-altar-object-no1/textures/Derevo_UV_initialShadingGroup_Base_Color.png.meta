@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Derevo_UV_initialShadingGroup_Base_Color_0: 3346459924150004782
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
