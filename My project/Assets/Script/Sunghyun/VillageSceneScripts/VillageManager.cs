@@ -10,6 +10,7 @@ public class VillageManager : MonoBehaviour
     [Header("UI 관리")]
     [SerializeField] private GameObject buildingNamePanel;
     [SerializeField] private TMPro.TextMeshProUGUI buildingNameText;
+    [SerializeField] private ShopManager shopManager;
     
     [SerializeField] private float fadeSpeed = 5f;
     private CanvasGroup _nameCanvasGroup;
@@ -91,5 +92,21 @@ public class VillageManager : MonoBehaviour
         }
         _nameCanvasGroup.alpha = 0f;
         buildingNamePanel.SetActive(false);
+    }
+
+    public void OpenShop()
+    {
+        if (ShopUIManager.Instance != null)
+        {
+            ShopUIManager.Instance.OpenShopPanel();
+        }
+    }
+    
+    public void CloseShop()
+    {
+        if (ShopUIManager.Instance != null)
+        {
+            ShopUIManager.Instance.CloseShopPanel();
+        }
     }
 }

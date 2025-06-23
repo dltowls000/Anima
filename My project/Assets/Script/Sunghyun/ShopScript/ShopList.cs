@@ -7,9 +7,11 @@ public class ShopList
 
     public List<ShopItemData> GetAllItems()
     {
-        List<ShopItemData> all = new();
-        all.AddRange(defaultItems);
-        all.AddRange(randomItems);
+        int totalCapacity = (defaultItems?.Count ?? 0) + (randomItems?.Count ?? 0);
+        List<ShopItemData> all = new(totalCapacity);
+    
+        if (defaultItems != null) all.AddRange(defaultItems);
+        if (randomItems != null) all.AddRange(randomItems);
         return all;
     }
 

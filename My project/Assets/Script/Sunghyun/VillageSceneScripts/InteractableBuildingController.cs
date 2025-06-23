@@ -37,6 +37,7 @@ public class InteractableBuilding : MonoBehaviour
                 break;
                 
             case BuildingType.Shop:
+                villageManager.OpenShop();
                 break;
                 
             case BuildingType.Corridor:
