@@ -5,6 +5,7 @@ public class StageNode : MonoBehaviour
 {
     public bool isSelected = false;
     public bool isLast = false;
+    public bool isBoss = false;
     public List<StageNode> prevNodes = new List<StageNode>();
     public List<StageNode> nextNodes = new List<StageNode>();
     public List<LineGenerate> lines = new List<LineGenerate>();
