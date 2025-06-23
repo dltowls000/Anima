@@ -135,6 +135,7 @@ public class SpawnStage : MonoBehaviour
 
         stage.GetComponent<RectTransform>().anchoredPosition = new Vector2(x_section2 * 8 + 300, y_section * 0);
         sections[8].Add(stage);
+        sections[8][0].isBoss = true;
     }
 
     void connectStageNodes()
@@ -219,9 +220,6 @@ public class SpawnStage : MonoBehaviour
                     break;
                 }
             }
-
-            if (!connected)
-                Debug.LogWarning($"[{stage.name}] 연결 가능한 후보 없음 (attempt {k})");
         }
     }
     void Shuffle<T>(List<T> list)
@@ -286,6 +284,10 @@ public class SpawnStage : MonoBehaviour
     {
         List<int> types = new List<int> { 0, 1, 2, 3, 4, 5, 6 };
         int selectType;
+        selectType = Random.Range(0, types.Count);
+        startNode.type = selectType;
+        selectType = Random.Range(0, types.Count);
+        sections[8][0].type = selectType;
         for (int i = 0; i < sections.Count; i++)
         {
             for (int j = 0; j < sections[i].Count; j++)
