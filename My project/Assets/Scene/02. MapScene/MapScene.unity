@@ -148,8 +148,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86cf2886ba60efa4e8f13d80b27f6a98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  regionPrefab: {fileID: 0}
   manager: {fileID: 130503368}
   mapScreen: {fileID: 461529648}
+  grid: {fileID: 0}
 --- !u!4 &130503370
 Transform:
   m_ObjectHideFlags: 0
@@ -301,28 +303,17 @@ MonoBehaviour:
   m_MoveRepeatDelay: 0.5
   m_MoveRepeatRate: 0.1
   m_XRTrackingOrigin: {fileID: 0}
-  m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018,
-    type: 3}
-  m_PointAction: {fileID: -1654692200621890270, guid: ca9f5fa95ffab41fb9a615ab714db018,
-    type: 3}
-  m_MoveAction: {fileID: -8784545083839296357, guid: ca9f5fa95ffab41fb9a615ab714db018,
-    type: 3}
-  m_SubmitAction: {fileID: 392368643174621059, guid: ca9f5fa95ffab41fb9a615ab714db018,
-    type: 3}
-  m_CancelAction: {fileID: 7727032971491509709, guid: ca9f5fa95ffab41fb9a615ab714db018,
-    type: 3}
-  m_LeftClickAction: {fileID: 3001919216989983466, guid: ca9f5fa95ffab41fb9a615ab714db018,
-    type: 3}
-  m_MiddleClickAction: {fileID: -2185481485913320682, guid: ca9f5fa95ffab41fb9a615ab714db018,
-    type: 3}
-  m_RightClickAction: {fileID: -4090225696740746782, guid: ca9f5fa95ffab41fb9a615ab714db018,
-    type: 3}
-  m_ScrollWheelAction: {fileID: 6240969308177333660, guid: ca9f5fa95ffab41fb9a615ab714db018,
-    type: 3}
-  m_TrackedDevicePositionAction: {fileID: 6564999863303420839, guid: ca9f5fa95ffab41fb9a615ab714db018,
-    type: 3}
-  m_TrackedDeviceOrientationAction: {fileID: 7970375526676320489, guid: ca9f5fa95ffab41fb9a615ab714db018,
-    type: 3}
+  m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_PointAction: {fileID: -1654692200621890270, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_MoveAction: {fileID: -8784545083839296357, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_SubmitAction: {fileID: 392368643174621059, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_CancelAction: {fileID: 7727032971491509709, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_LeftClickAction: {fileID: 3001919216989983466, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_MiddleClickAction: {fileID: -2185481485913320682, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_RightClickAction: {fileID: -4090225696740746782, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_ScrollWheelAction: {fileID: 6240969308177333660, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_TrackedDevicePositionAction: {fileID: 6564999863303420839, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_TrackedDeviceOrientationAction: {fileID: 7970375526676320489, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
@@ -599,14 +590,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nodesCanvas: {fileID: 1285100163}
-  firstStagePrefab: {fileID: -7418049055660440189, guid: 93a48968719e666489c52c10b0304a92,
-    type: 3}
-  middleStagePrefab: {fileID: 9010751129286225543, guid: a930dc255a1f7bc4c9838d4fe2dbd247,
-    type: 3}
-  lastStagePrefab: {fileID: 9010751129286225543, guid: e73715f3fa04b114794b24a8c2f71c97,
-    type: 3}
-  linePrefab: {fileID: 6127216025426368427, guid: c207ba887e77a4d4483f0125adb00d5e,
-    type: 3}
+  firstStagePrefab: {fileID: -7418049055660440189, guid: 93a48968719e666489c52c10b0304a92, type: 3}
+  middleStagePrefab: {fileID: 9010751129286225543, guid: a930dc255a1f7bc4c9838d4fe2dbd247, type: 3}
+  lastStagePrefab: {fileID: 9010751129286225543, guid: e73715f3fa04b114794b24a8c2f71c97, type: 3}
+  linePrefab: {fileID: 6127216025426368427, guid: c207ba887e77a4d4483f0125adb00d5e, type: 3}
   spawnLine: {fileID: 2024773394}
   sectionCount: 10
   sectionPerStage: 3
@@ -990,8 +977,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnStage: {fileID: 1285100164}
-  linePrefab: {fileID: 6127216025426368427, guid: c207ba887e77a4d4483f0125adb00d5e,
-    type: 3}
+  linePrefab: {fileID: 6127216025426368427, guid: c207ba887e77a4d4483f0125adb00d5e, type: 3}
   linesCanvas: {fileID: 2024773390}
 --- !u!1 &2057412591
 GameObject:

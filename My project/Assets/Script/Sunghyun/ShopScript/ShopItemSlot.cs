@@ -11,7 +11,6 @@ public class ShopItemSlot : MonoBehaviour
     [SerializeField] private TextMeshProUGUI itemDescriptionText;
     [SerializeField] private TextMeshProUGUI itemRemainingText;
     [SerializeField] private Button purchaseButton;
-    [SerializeField] private Button targetSelectButton; // 단일 대상용
 
     private ShopItemData itemData;
     private int currentRemaining;
@@ -24,21 +23,18 @@ public class ShopItemSlot : MonoBehaviour
         onPurchase = onPurchaseCallback;
 
         itemNameText.text = data.itemName;
-        itemPriceText.text = $"{data.price} G";
+        itemPriceText.text = $"{data.price:N0}";
         itemDescriptionText.text = data.itemDescription;
         itemRemainingText.text = $"{remainingCount} / {data.maxPurchaseCount}";
 
         purchaseButton.interactable = remainingCount > 0;
         purchaseButton.onClick.RemoveAllListeners();
-        purchaseButton.onClick.AddListener(() => onPurchase?.Invoke(data));
+        purchaseButton.onClick.AddListener(OnPurchaseButtonClick);
+    }
 
-        // 대상 선택 버튼 (단일 대상용만 표시)
-        targetSelectButton.gameObject.SetActive(data.targetType == TargetType.Single);
-        targetSelectButton.onClick.RemoveAllListeners();
-        targetSelectButton.onClick.AddListener(() =>
-        {
-            Debug.Log("대상 선택 UI 호출 - 구현 예정");
-        });
+    private void OnPurchaseButtonClick()
+    {
+        onPurchase?.Invoke(itemData);
     }
 
     public void UpdateRemainingCount(int newCount)

@@ -8,6 +8,7 @@ public class ShopUIManager : MonoBehaviour
     public static ShopUIManager Instance { get; private set; }
 
     [Header("UI")]
+    [SerializeField] private GameObject shopPanel;
     [SerializeField] private Transform slotParent;
     [SerializeField] private GameObject slotPrefab;
     [SerializeField] private TextMeshProUGUI playerGoldText;
@@ -18,6 +19,24 @@ public class ShopUIManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+    }
+
+    private void OnEnable()
+    {
+        if (GoldManager.Instance != null)
+        {
+            GoldManager.Instance.OnGoldChanged += UpdateGoldUI;
+            
+            UpdateGoldUI(GoldManager.Instance.GetCurrentGold());
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (GoldManager.Instance != null)
+        {
+            GoldManager.Instance.OnGoldChanged -= UpdateGoldUI;
+        }
     }
 
     public void ShowShopItems(List<ShopItemData> items, Dictionary<string, int> remainingCounts, Action<ShopItemData> onPurchase)
@@ -38,7 +57,7 @@ public class ShopUIManager : MonoBehaviour
 
     public void UpdateGoldUI(int gold)
     {
-        playerGoldText.text = $"Gold: {gold}";
+        playerGoldText.text = $"{gold:N0}";
     }
 
     public void UpdateItemSlot(string itemID, int newRemaining)
@@ -56,5 +75,21 @@ public class ShopUIManager : MonoBehaviour
             Destroy(child.gameObject);
         }
         activeSlots.Clear();
+    }
+
+    public void OpenShopPanel()
+    {
+        if (shopPanel != null)
+        {
+            shopPanel.SetActive(true);
+        }
+    }
+    
+    public void CloseShopPanel()
+    {
+        if (shopPanel != null)
+        {
+            shopPanel.SetActive(false);
+        }
     }
 }

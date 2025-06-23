@@ -1,5 +1,6 @@
 public enum InventorySlotType
 {
     Inventory,
-    Party
+    Party,
+    Shop
 }

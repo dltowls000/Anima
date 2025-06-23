@@ -11,8 +11,8 @@ public class GoldManager : MonoBehaviour
     private TextMeshProUGUI goldText;
     [SerializeField] private string goldTextObjectName = "GoldText";
     [SerializeField] private string goldFormat = "{0:N0}";
-    
-    private BGRepo database = BGRepo.I;
+
+    private BGRepo database;
     private BGMetaEntity goldTable;
     private BGEntity entity;
     private int currentGold;
@@ -26,6 +26,7 @@ public class GoldManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
             
+            database = BGRepo.I;
             goldTable = database.GetMeta("GoldData");
             entity = goldTable.FirstOrDefault(e => e.Get<string>("name").Equals("GoldData"));
             currentGold = entity.Get<int>("Gold");
