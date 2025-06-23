@@ -43,13 +43,15 @@ public class CameraManager : MonoBehaviour
                 yield return null;
             }
             yield return new WaitForSeconds(0.5f);
+
             instance = GameObject.Instantiate(Resources.Load<GameObject>("Effects/" + skill + "ed"), new Vector3(hitted.transform.position.x, hitted.transform.position.y, hitted.transform.position.z), Quaternion.identity);
 
             ps = instance.GetComponent<ParticleSystem>();
             yield return new WaitForSeconds(ps.main.duration + ps.main.startLifetime.constantMax);
             GameObject.Destroy(instance);
             
-            
+
+
             yield return animatorController.WaitForAnimationEnd(animator, "EnemyZoom2", instance);
 
             yield return new WaitForSeconds(1f);
@@ -63,7 +65,7 @@ public class CameraManager : MonoBehaviour
                 yield return null;
             }
             yield return new WaitForSeconds(0.5f);
-            instance = GameObject.Instantiate(Resources.Load<GameObject>("Effects/AmareHeartArrow"), new Vector3(hitter.transform.position.x, hitter.transform.position.y, hitter.transform.position.z), Quaternion.identity);
+            instance = GameObject.Instantiate(Resources.Load<GameObject>("Effects/" + skill), new Vector3(hitter.transform.position.x, hitter.transform.position.y, hitter.transform.position.z), Quaternion.identity);
 
             ps = instance.GetComponent<ParticleSystem>();
 
@@ -74,7 +76,8 @@ public class CameraManager : MonoBehaviour
                 yield return null;
             }
             yield return new WaitForSeconds(0.5f);
-            instance = GameObject.Instantiate(Resources.Load<GameObject>("Effects/AmareHeartArrowed"), new Vector3(hitted.transform.position.x, hitted.transform.position.y, hitted.transform.position.z), Quaternion.identity);
+
+            instance = GameObject.Instantiate(Resources.Load<GameObject>("Effects/" + skill + "ed"), new Vector3(hitted.transform.position.x, hitted.transform.position.y, hitted.transform.position.z), Quaternion.identity);
 
             ps = instance.GetComponent<ParticleSystem>();
             yield return new WaitForSeconds(ps.main.duration + ps.main.startLifetime.constantMax);

@@ -63,11 +63,10 @@ public class EnemyBattleSetting : MonoBehaviour
             if(entity.Get<string>("Type") == stage)
                 objectfileList.Add(entity.Get<string>("Objectfile"));
         });
-        int numberOfObjectsToAdd = Random.Range(1, 4);
-        Debug.Log(objectfileList.ToArray());
+        int numberOfObjectsToAdd = Random.Range(2, 4);
         for (int i = 0; i < numberOfObjectsToAdd; i++)
         {
-            int randomIndex = Random.Range(1, 2);
+            int randomIndex = Random.Range(1, objectfileList.Count);
             enemyobjPrefab.Add(Resources.Load<GameObject>("Minwoo/Portrait/" + objectfileList[randomIndex]));
             enemyhpPrefab.Add(Resources.Load<GameObject>("Minwoo/EnemyAnimaHP"));
             enemyInfoPrefab.Add(Resources.Load<GameObject>($"Minwoo/Enemy{i}"));
@@ -87,8 +86,9 @@ public class EnemyBattleSetting : MonoBehaviour
                 //enemyinstance[i].transform.Rotate(0, 180f, 0);
                 //damagex.Add(Random.Range(4.5f * Mathf.Pow(i, 2) - 8.5f * i + 10.5f-1.5f, 4.5f * Mathf.Pow(i, 2) - 8.5f * i + 10.5f-0.5f));
                 //damagey.Add(Random.Range(y - 2.5f * i + 0.25f, y - 2.5f * i + 1.25f));
-                enemyinstance[i].transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-                enemyhpinstance.Add(Instantiate(enemyhpPrefab[i], new Vector2((i * 399f) + 552f, 530f), Quaternion.identity, canvas.transform));
+                enemyinstance[i].transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
+                enemyhpinstance.Add(Instantiate(enemyhpPrefab[i], Vector3.zero, Quaternion.identity, canvas.transform));
+                enemyhpinstance[i].GetComponent<RectTransform>().anchoredPosition = new Vector3((i * 380f) - 380f, -22f, 0f);
                 enemyInfoInstance.Add(Instantiate(enemyInfoPrefab[i],canvas.transform));
                 index = enemyhpinstance[i].name.IndexOf("(Clone)");
                 enemyhpinstance[i].name = enemyhpinstance[i].name.Substring(0, index) + i;
@@ -112,8 +112,9 @@ public class EnemyBattleSetting : MonoBehaviour
                 //enemyinstance[i].transform.Rotate(0, 180f, 0);
                 //damagex.Add(Random.Range(4.5f * Mathf.Pow(i, 2) - 8.5f * i + 10.5f - 1.5f, 4.5f * Mathf.Pow(i, 2) - 8.5f * i + 10.5f - 0.5f));
                 //damagey.Add(Random.Range(y - 2.5f * i + 0.25f, y - 2.5f * i + 1.25f));
-                enemyinstance[i].transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-                enemyhpinstance.Add(Instantiate(enemyhpPrefab[i], new Vector2((i * 380f) + 765f, 530f), Quaternion.identity, canvas.transform));
+                enemyinstance[i].transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
+                enemyhpinstance.Add(Instantiate(enemyhpPrefab[i], Vector3.zero, Quaternion.identity, canvas.transform));
+                enemyhpinstance[i].GetComponent<RectTransform>().anchoredPosition = new Vector3((i * 380f) - 200f, -22f, 0f);
                 enemyInfoInstance.Add(Instantiate(enemyInfoPrefab[i],canvas.transform));
                 index = enemyhpinstance[i].name.IndexOf("(Clone)");
                 enemyhpinstance[i].name = enemyhpinstance[i].name.Substring(0, index) + i;
@@ -135,8 +136,9 @@ public class EnemyBattleSetting : MonoBehaviour
             //enemyinstance[0].transform.Rotate(0, 180f, 0);
             //damagex.Add(Random.Range(4.5f * Mathf.Pow(0, 2) - 8.5f * 0 + 10.5f - 1.5f, 4.5f * Mathf.Pow(0, 2) - 8.5f * i + 10.5f - 0.5f));
             //damagey.Add(Random.Range(y - 2.5f * i + 0.25f, y - 2.5f * i + 1.25f));
-            enemyinstance[0].transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);//-195f 185f 
-            enemyhpinstance.Add(Instantiate(enemyhpPrefab[0], new Vector2(951f, 530f), Quaternion.identity, canvas.transform));
+            enemyinstance[0].transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);//-195f 185f 
+            enemyhpinstance.Add(Instantiate(enemyhpPrefab[0], Vector3.zero, Quaternion.identity, canvas.transform));
+            enemyhpinstance[0].GetComponent<RectTransform>().anchoredPosition = new Vector3(0f, -22f, 0f);
             enemyInfoInstance.Add(Instantiate(enemyInfoPrefab[0],canvas.transform));
             index = enemyhpinstance[0].name.IndexOf("(Clone)");
             enemyhpinstance[0].name = enemyhpinstance[0].name.Substring(0, index) + 0;
