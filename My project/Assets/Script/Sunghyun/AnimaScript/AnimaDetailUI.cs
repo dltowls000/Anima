@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 
-public class AnimaDetailUI : MonoBehaviour
+public class AnimaInventoryDetailUI : MonoBehaviour
 {
     [SerializeField] private Image portraitImage;
     [SerializeField] private TMP_Text nameText;
