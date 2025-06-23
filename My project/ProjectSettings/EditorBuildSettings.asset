@@ -27,26 +27,23 @@ EditorBuildSettings:
     path: Assets/Scene/04. BattleScene/GameClearScene.unity
     guid: 02bc8b28c2e9c1e4995cf5b09bd6dc27
   - enabled: 1
-    path: Assets/Scene/04. BattleScene/FelixBattleScene.unity
-    guid: b40b32c0609f2764ebfbfc72a89e1bf1
-  - enabled: 1
-    path: Assets/Scene/03. FieldScene/FelixFieldScene.unity
-    guid: 6ff53bc4afb7da14dbe2ae5dc7bae158
-  - enabled: 1
     path: Assets/Scene/03. FieldScene/AmareBossFieldScene.unity
     guid: 53ddde849aca99e41b224235f660154d
   - enabled: 1
     path: Assets/Scene/03. FieldScene/AmareFieldScene.unity
     guid: a8a132c268f22b941a9e9128f2a6887a
   - enabled: 1
-    path: Assets/Scene/03. FieldScene/HavetFieldScene.unity
-    guid: 0a991cd24e5191a43b4b00d06bf3bc02
-  - enabled: 1
     path: Assets/Scene/03. FieldScene/FelixBossFieldScene.unity
     guid: db910f62b9bef504ba4db618f62ff3a5
   - enabled: 1
+    path: Assets/Scene/03. FieldScene/FelixFieldScene.unity
+    guid: 6ff53bc4afb7da14dbe2ae5dc7bae158
+  - enabled: 1
     path: Assets/Scene/03. FieldScene/HavetBossFieldScene.unity
     guid: f00be14fc5cf9fd4a916d9e829909d68
+  - enabled: 1
+    path: Assets/Scene/03. FieldScene/HavetFieldScene.unity
+    guid: 0a991cd24e5191a43b4b00d06bf3bc02
   - enabled: 1
     path: Assets/Scene/03. FieldScene/IrascorBossFieldScene.unity
     guid: 9620b80f2e36a1e46b00a5ee7c6e6abd
