@@ -10,6 +10,8 @@ using static Unity.Burst.Intrinsics.X86.Avx;
 using System.Collections;
 using System;
 using UnityEngine.SceneManagement;
+using BansheeGz.BGDatabase;
+using System.IO;
 public class BattleManager : MonoBehaviour
 {
     [SerializeField]
@@ -73,7 +75,8 @@ public class BattleManager : MonoBehaviour
     UnityEngine.UI.Button skillButton;
     bool isZKeyPressed = false;
     bool isXKeyPressed = false;
-
+    BGRepo database;
+    BGMetaEntity animaTable;
     float wheel;
     Vector3 originPoint;
     int turnIndex = 0;
@@ -97,7 +100,8 @@ public class BattleManager : MonoBehaviour
         dieAllyAnima = new List<int>();
 
         state = State.start;
-
+        database = BGRepo.I;
+        animaTable = database.GetMeta("Anima");
         AnimaActionUISetting();
         AllyBattlePrepare();
         EnemyBattlePrepare();
@@ -206,7 +210,7 @@ public class BattleManager : MonoBehaviour
             allyActions[i].animaData.isAlly = true;
             var allyStatus = GameObject.Find($"Ally{i}");
             var allyParser = GameObject.Find($"Ally{i}Name");
-            allyStatus.transform.Find("Image").GetComponent<UnityEngine.UI.Image>().sprite= Resources.Load<Sprite>("Minwoo/Portrait/" + allyActions[i].animaData.Image);
+            allyStatus.transform.Find("Image").GetComponent<UnityEngine.UI.Image>().sprite= Resources.Load<Sprite>("Minwoo/Portrait/" + allyActions[i].animaData.Objectfile);
             allyHealthBar.Add(GameObject.Find($"AllyAnimaHP{i}").transform.Find("HP").GetComponent<HealthBar>());
             
             allyDamageBar.Add(allyParser.transform.Find($"A{i}Damage").transform.Find($"A{i} Damage Bar").GetComponent<ParserBar>());
@@ -224,15 +228,46 @@ public class BattleManager : MonoBehaviour
     }
     void initializeEnemyAnima()
     {
+        int level = 0;
+        
+        
+        foreach (var anima in playerInfo.haveAnima)
+        {
+            if(anima.level >= level)
+            {
+                level = anima.level;
+            }
+        }
+        switch (enemyActions.Count)
+        {
+            case 1:
+                level -= 1;
+                break;
+            case 2:
+                level -= 2;
+                break;
+            case 3:
+                level -= 3;
+                break;
+        }
         for (int i = 0; i < enemyActions.Count; i++)
         {
             enemyActions[i].animaData = ScriptableObject.CreateInstance<AnimaDataSO>();
-            enemyActions[i].animaData.Initialize(enemyBattleSetting.battleEnemyAnima[i]);
+            enemyActions[i].animaData.Initialize(enemyBattleSetting.battleEnemyAnima[i],level);
+            animaTable.ForEachEntity(entity =>
+            {
+                if (entity.Get<string>("name") == enemyActions[i].animaData.Name && entity.Get<int>("Meeted") == 0 )
+                {
+                    
+                    
+                }
+
+            });
             enemyActions[i].animaData.location = i;
             enemyActions[i].animaData.enemyIndex = i;
             var enemyStatus = GameObject.Find($"Enemy{i}");
             var enemyParser = GameObject.Find($"Enemy{i}Name");
-            enemyStatus.transform.Find("Image").GetComponent<UnityEngine.UI.Image>().sprite = Resources.Load<Sprite>("Minwoo/Portrait/" + enemyActions[i].animaData.Image);
+            enemyStatus.transform.Find("Image").GetComponent<UnityEngine.UI.Image>().sprite = Resources.Load<Sprite>("Minwoo/Portrait/" + enemyActions[i].animaData.Objectfile);
             enemyHealthBar.Add(GameObject.Find($"EnemyAnimaHP{i}").transform.Find("HP").GetComponent<HealthBar>());
             enemyDamageBar.Add(enemyParser.transform.Find($"E{i}Damage").transform.Find($"E{i} Damage Bar").GetComponent<ParserBar>());
             //enemyHealBar.Add(enemyParser.transform.Find($"E{i}Heal").transform.Find($"E{i} Heal Bar").GetComponent<ParserBar>());
@@ -311,7 +346,7 @@ public class BattleManager : MonoBehaviour
                 turn.Add(UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Minwoo/Player Turn Slot"), turnUI.transform.position, Quaternion.identity, turnUI));
                 int index = turn[i].name.IndexOf("(Clone)");
                 turn[i].name = turn[i].name.Substring(0, index) + "" + i;
-                turnUI.transform.Find($"Player Turn Slot{i}").transform.Find("Player Turn Portrait").GetComponent<UnityEngine.UI.Image>().sprite = Resources.Load<Sprite>("Minwoo/Portrait/" + turnList[i].Image);
+                turnUI.transform.Find($"Player Turn Slot{i}").transform.Find("Player Turn Portrait").GetComponent<UnityEngine.UI.Image>().sprite = Resources.Load<Sprite>("Minwoo/Portrait/" + turnList[i].Objectfile);
                 isTurn.Add(UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Minwoo/IsTurn"), turnUI.transform.Find($"Player Turn Slot{i}").transform.position, Quaternion.identity, turnUI.transform.Find($"Player Turn Slot{i}")));
                 index = isTurn[i].name.IndexOf("(Clone)");
                 isTurn[i].name = isTurn[i].name.Substring(0, index) + "" + i;
@@ -323,7 +358,7 @@ public class BattleManager : MonoBehaviour
                 turn[i].transform.Rotate(0, 180f, 0);
                 int index = turn[i].name.IndexOf("(Clone)");
                 turn[i].name = turn[i].name.Substring(0, index) + "" + i;
-                turnUI.transform.Find($"Enemy Turn Slot{i}").transform.Find("Enemy Turn Portrait").GetComponent<UnityEngine.UI.Image>().sprite = Resources.Load<Sprite>("Minwoo/Portrait/" + turnList[i].Image);
+                turnUI.transform.Find($"Enemy Turn Slot{i}").transform.Find("Enemy Turn Portrait").GetComponent<UnityEngine.UI.Image>().sprite = Resources.Load<Sprite>("Minwoo/Portrait/" + turnList[i].Objectfile);
                 isTurn.Add(Instantiate(Resources.Load<GameObject>("Minwoo/IsTurn"), turnUI.transform.Find($"Enemy Turn Slot{i}").transform.position, Quaternion.identity, turnUI.transform.Find($"Enemy Turn Slot{i}")));
                 index = isTurn[i].name.IndexOf("(Clone)");
                 isTurn[i].name = isTurn[i].name.Substring(0, index) + "" + i;
@@ -346,9 +381,9 @@ public class BattleManager : MonoBehaviour
                     index = i;
                 }
             }
-            Instantiate(Resources.Load<GameObject>("Minwoo/Arrow_down"), new Vector2(allyBattleSetting.allyinstance[allyActions[index].animaData.location].transform.position.x, allyBattleSetting.allyinstance[allyActions[index].animaData.location].transform.position.y + 1.65f), Quaternion.identity);
+            Instantiate(Resources.Load<GameObject>("Minwoo/Arrow_down"), new Vector2(allyBattleSetting.allyinstance[allyActions[index].animaData.location].transform.position.x, allyBattleSetting.allyinstance[allyActions[index].animaData.location].transform.position.y + 1.2f), Quaternion.identity);
             arrow = GameObject.Find("Arrow_down(Clone)");
-            GameObject.Find("Anima Portrait").GetComponent<UnityEngine.UI.Image>().sprite = Resources.Load<Sprite>("Minwoo/Portrait/" + turnList[0].Image);
+            GameObject.Find("Anima Portrait").GetComponent<UnityEngine.UI.Image>().sprite = Resources.Load<Sprite>("Minwoo/Portrait/" + turnList[0].Objectfile);
             GameObject.Find("Currunt Anima Name").GetComponent<TextMeshProUGUI>().text = turnList[0].Name;
             skillButton.GetComponentInChildren<TextMeshProUGUI>().text = $"Skill\n{turnList[0].Skill_pp}/{turnList[0].MaxSkill_pp}";
             if (turnList[0].Skill_pp == 0)
@@ -413,19 +448,19 @@ public class BattleManager : MonoBehaviour
         arrow = GameObject.Find("Arrow_down(Clone)");
         DestroyImmediate(arrow);
         int index = 0;
-        Instantiate(Resources.Load<GameObject>("Minwoo/Arrow_down"), new Vector2(enemyBattleSetting.enemyinstance[index].transform.position.x, enemyBattleSetting.enemyinstance[index].transform.position.y + 1.65f), Quaternion.identity);
+        Instantiate(Resources.Load<GameObject>("Minwoo/Arrow_down"), new Vector2(enemyBattleSetting.enemyinstance[index].transform.position.x, enemyBattleSetting.enemyinstance[index].transform.position.y + 1.2f), Quaternion.identity);
         arrow = GameObject.Find("Arrow_down(Clone)");
         while (true)
         {
             if (index != 2 && index < (enemyAnimaNum - 1) && Input.GetKeyUp(KeyCode.RightArrow))
             {
                 index++;
-                GameObject.Find("Arrow_down(Clone)").transform.position = new Vector2(enemyBattleSetting.enemyinstance[index].transform.position.x, enemyBattleSetting.enemyinstance[index].transform.position.y + 1.65f);
+                GameObject.Find("Arrow_down(Clone)").transform.position = new Vector2(enemyBattleSetting.enemyinstance[index].transform.position.x, enemyBattleSetting.enemyinstance[index].transform.position.y + 1.2f);
             }
             if (index != 0 && Input.GetKeyUp(KeyCode.LeftArrow))
             {
                 index--;
-                GameObject.Find("Arrow_down(Clone)").transform.position = new Vector2(enemyBattleSetting.enemyinstance[index].transform.position.x, enemyBattleSetting.enemyinstance[index].transform.position.y + 1.65f);
+                GameObject.Find("Arrow_down(Clone)").transform.position = new Vector2(enemyBattleSetting.enemyinstance[index].transform.position.x, enemyBattleSetting.enemyinstance[index].transform.position.y + 1.2f);
             }
             else if (Input.GetKeyDown(KeyCode.Z) && !attackButton.interactable)
             {
@@ -468,7 +503,7 @@ public class BattleManager : MonoBehaviour
 
 
                 /* Animation */
-                yield return cameraManager.ZoomIn(allyBattleSetting.allyinstance[allyActions.IndexOf(anima)].transform, enemyActions[selectEnemy].transform, true, anima.animaData.attackName);
+                yield return cameraManager.ZoomIn(allyBattleSetting.allyinstance[allyActions.IndexOf(anima)].transform, enemyBattleSetting.enemyinstance[selectEnemy].transform, true, anima.animaData.attackName);
                 canvas.SetActive(true);
                 yield return anima.Attack(anima, enemyActions[selectEnemy], enemyHealthBar[selectEnemy], allyDamageBar[allyActions.IndexOf(anima)]);
                 battleLogManager.AddLog($"{anima.animaData.Name} hit {enemyActions[selectEnemy].animaData.Name} for {Mathf.Ceil(enemyActions[selectEnemy].damage)}damage", true);
@@ -519,13 +554,21 @@ public class BattleManager : MonoBehaviour
                             if (UnityEngine.Random.Range(0, 101) <= enemyActions[selectEnemy].animaData.DropRate)
                             {
                                 AnimaDataSO animadata = ScriptableObject.CreateInstance<AnimaDataSO>();
-                                animadata.GetAnima(enemyActions[selectEnemy].animaData.Name);
+                                animadata.GetAnima(enemyActions[selectEnemy].animaData.Name, enemyActions[selectEnemy].animaData.level);
                                 allyBattleSetting.playerinfo.GetAnima(animadata);
+                                animaTable.ForEachEntity(entity =>
+                                {
+                                    if (entity.Get<string>("name") == enemyActions[selectEnemy].animaData.Name)
+                                    {
+                                        entity.Set<int>("Meeted", 2);
+                                        database.Addons.Get<BGAddonSaveLoad>().Save();
+                                    }
+                                });
                             }
                         }
                     }
                     battleLogManager.AddLog($"{enemyActions[selectEnemy].animaData.Name}is dead", false);
-                    //LoadGold.UpdateGold(enemyActions[selectEnemy].animaData.DropGold);
+                    //GoldManager.Instance.AddGold(enemyActions[selectEnemy].animaData.DropGold);
                     turnList.Remove(enemyActions[selectEnemy].animaData);
                     DestroyImmediate(enemyBattleSetting.enemyhpinstance[selectEnemy]);
                     enemyBattleSetting.enemyhpinstance.RemoveAt(selectEnemy);
@@ -584,19 +627,19 @@ public class BattleManager : MonoBehaviour
         arrow = GameObject.Find("Arrow_down(Clone)");
         DestroyImmediate(arrow);
         int index = 0;
-        Instantiate(Resources.Load<GameObject>("Minwoo/Arrow_down"), new Vector2(enemyBattleSetting.enemyinstance[index].transform.position.x, enemyBattleSetting.enemyinstance[index].transform.position.y + 1.65f), Quaternion.identity);
+        Instantiate(Resources.Load<GameObject>("Minwoo/Arrow_down"), new Vector2(enemyBattleSetting.enemyinstance[index].transform.position.x, enemyBattleSetting.enemyinstance[index].transform.position.y + 1.2f), Quaternion.identity);
         arrow = GameObject.Find("Arrow_down(Clone)");
         while (true)
         {
             if (index != 2 && index < (enemyAnimaNum - 1) && Input.GetKeyUp(KeyCode.RightArrow))
             {
                 index++;
-                GameObject.Find("Arrow_down(Clone)").transform.position = new Vector2(enemyBattleSetting.enemyinstance[index].transform.position.x, enemyBattleSetting.enemyinstance[index].transform.position.y + 1.65f);
+                GameObject.Find("Arrow_down(Clone)").transform.position = new Vector2(enemyBattleSetting.enemyinstance[index].transform.position.x, enemyBattleSetting.enemyinstance[index].transform.position.y +1.2f);
             }
             if (index != 0 && Input.GetKeyUp(KeyCode.LeftArrow))
             {
                 index--;
-                GameObject.Find("Arrow_down(Clone)").transform.position = new Vector2(enemyBattleSetting.enemyinstance[index].transform.position.x, enemyBattleSetting.enemyinstance[index].transform.position.y + 1.65f);
+                GameObject.Find("Arrow_down(Clone)").transform.position = new Vector2(enemyBattleSetting.enemyinstance[index].transform.position.x, enemyBattleSetting.enemyinstance[index].transform.position.y + 1.2f);
             }
             else if (Input.GetKeyDown(KeyCode.Z) && !attackButton.interactable)
             {
@@ -637,7 +680,7 @@ public class BattleManager : MonoBehaviour
                 canvas.SetActive(false);//체력 바 동기화 문제 발생 예상
                 /* Attack */
 
-                yield return cameraManager.ZoomIn(allyBattleSetting.allyinstance[allyActions.IndexOf(anima)].transform, enemyActions[selectEnemy].transform, true, anima.animaData.skillName);
+                yield return cameraManager.ZoomIn(allyBattleSetting.allyinstance[allyActions.IndexOf(anima)].transform, enemyBattleSetting.enemyinstance[selectEnemy].transform, true, anima.animaData.skillName);
 
                 /* Animation */
                 canvas.SetActive(true);
@@ -689,13 +732,22 @@ public class BattleManager : MonoBehaviour
                             if (UnityEngine.Random.Range(0, 101) <= enemyActions[selectEnemy].animaData.DropRate)
                             {
                                 AnimaDataSO animadata = ScriptableObject.CreateInstance<AnimaDataSO>();
-                                animadata.GetAnima(enemyActions[selectEnemy].animaData.Name);
+                                animadata.GetAnima(enemyActions[selectEnemy].animaData.Name, enemyActions[selectEnemy].animaData.level);
                                 allyBattleSetting.playerinfo.GetAnima(animadata);
+                                animaTable.ForEachEntity(entity =>
+                                {
+                                    if (entity.Get<string>("name") == enemyActions[selectEnemy].animaData.Name)
+                                    {
+                                        entity.Set<int>("Meeted", 2);
+                                        database.Addons.Get<BGAddonSaveLoad>().Save();
+
+                                    }
+                                });
                             }
                         }
                     }
                     battleLogManager.AddLog($"{enemyActions[selectEnemy].animaData.Name}is dead", false);
-                    //LoadGold.UpdateGold(enemyActions[selectEnemy].animaData.DropGold);
+                    //GoldManager.Instance.AddGold(enemyActions[selectEnemy].animaData.DropGold);
                     turnList.Remove(enemyActions[selectEnemy].animaData);
                     DestroyImmediate(enemyBattleSetting.enemyhpinstance[selectEnemy]);
                     enemyBattleSetting.enemyhpinstance.RemoveAt(selectEnemy);
@@ -774,7 +826,7 @@ public class BattleManager : MonoBehaviour
 
 
                     /* Animation */
-                    yield return cameraManager.ZoomIn(enemyBattleSetting.enemyinstance[enemyActions.IndexOf(enemy)].transform, allyActions[selectAlly].transform, false, enemy.animaData.attackName);
+                    yield return cameraManager.ZoomIn(enemyBattleSetting.enemyinstance[enemyActions.IndexOf(enemy)].transform, allyBattleSetting.allyinstance[selectAlly].transform, false, enemy.animaData.attackName);
                     canvas.SetActive(true);
                     
                     yield return enemy.Attack(enemy, allyActions[selectAlly], allyHealthBar[selectAlly], enemyDamageBar[enemy.animaData.enemyIndex]);
@@ -872,7 +924,7 @@ public class BattleManager : MonoBehaviour
 
                     /* Animation */
 
-                    yield return cameraManager.ZoomIn(enemyBattleSetting.enemyinstance[enemyActions.IndexOf(enemy)].transform, allyActions[selectAlly].transform, false, enemy.animaData.skillName);
+                    yield return cameraManager.ZoomIn(enemyBattleSetting.enemyinstance[enemyActions.IndexOf(enemy)].transform, allyBattleSetting.allyinstance[selectAlly].transform, false, enemy.animaData.skillName);
                     canvas.SetActive(true);
                     yield return enemy.Skill(enemy, allyActions[selectAlly], allyHealthBar[selectAlly], enemyDamageBar[enemy.animaData.enemyIndex]);
                     battleLogManager.AddLog($"{enemy.animaData.Name} used \"{enemy.animaData.skillName}\" on {allyActions[selectAlly].animaData.Name} for {Mathf.Ceil(allyActions[selectAlly].damage)} damage", false);

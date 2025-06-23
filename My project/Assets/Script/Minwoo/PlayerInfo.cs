@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using BansheeGz.BGDatabase;
 using UnityEditor.Analytics;
 using UnityEngine;
@@ -11,24 +12,43 @@ public class PlayerInfo : ScriptableObject
     public List<AnimaDataSO> haveAnima = new List<AnimaDataSO>();
     public AnimaDataSO animaData;
     public bool onBossStage = false;
-
+    int tmp = 0;
+    
     public void Initialize()
     {
         var database = BGRepo.I;
         var animaTable = database.GetMeta("Anima");
-        
 
-        for(int i = 0; i < 3 ; i++)
+        int a = Random.Range(0, 7);
+        int b;
+        do
         {
-            animaData = ScriptableObject.CreateInstance<AnimaDataSO>();
-            animaData.Initialize(animaTable[Random.Range(0, 1)].Get<string>("name"));
-            animaData.location = i;
-            GetAnima(animaData);
-            BattleSetting(haveAnima[i]);
+            b = Random.Range(0, 7);
+        } while (a == b);
+
+        animaData = ScriptableObject.CreateInstance<AnimaDataSO>();
+        animaData.Initialize(animaTable[0].Get<string>("name"),5);
+        animaData.location = tmp;
+        GetAnima(animaData);
+        BattleSetting(haveAnima[tmp++]);
+
+        animaData = ScriptableObject.CreateInstance<AnimaDataSO>();
+        animaData.Initialize(animaTable[0].Get<string>("name"), 5);
+        animaData.location = tmp;
+        GetAnima(animaData);
+        BattleSetting(haveAnima[tmp++]);
+        for(int i = 0; i < 2; i++)
+        {
+            animaTable.ForEachEntity(entity =>
+            {
+                if (entity.Get<string>("name") == haveAnima[i].Name && entity.Get<int>("Meeted") == 0)
+                {
+                    entity.Set<int>("Meeted", 1);
+                }
+            });
         }
-
+        
     }
-
     public void BattleSetting(AnimaDataSO animaData)
     {
         if (haveAnima.Contains(animaData) && battleAnima.Count < maxAnimaNum)

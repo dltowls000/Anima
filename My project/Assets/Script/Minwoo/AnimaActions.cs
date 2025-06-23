@@ -53,12 +53,12 @@ public class AnimaActions : MonoBehaviour
     }
     public float CalcAttackDamage(float damage , EnemyActions enemy)
     {
-        return damage * animaData.attackweight * (1 - enemy.animaData.defense * 0.002f);
+        return damage * (1 - enemy.animaData.defense * 0.002f) * Random.Range(0.95f, 1.11f);
     }
 
     public float CalcSkillDamage(float damage, EnemyActions enemy)
     {
-        return damage * animaData.skillweight * (1 - enemy.animaData.defense * 0.002f);
+        return damage * (1 - enemy.animaData.defense * 0.002f) * Random.Range(0.95f, 1.11f) * 1.13f;
     }
     public void Die()
     {

@@ -89,12 +89,12 @@ public class EnemyActions : MonoBehaviour
     }
     public float CalcAttackDamage(float damage, AnimaActions ally)
     {
-        return damage * animaData.attackweight * (1 - ally.animaData.defense * 0.002f) * Random.Range(0.95f, 1.11f);
+        return damage * (1 - ally.animaData.defense * 0.002f) * Random.Range(0.95f, 1.11f);
     }
 
     public float CalcSkillDamage(float damage, AnimaActions ally)
     {
-        return damage * animaData.skillweight * (1 - ally.animaData.defense * 0.002f) * Random.Range(0.95f, 1.11f);
+        return damage * (1 - ally.animaData.defense * 0.002f) * Random.Range(0.95f, 1.11f) * 1.13f;
     }
     public float BossAttack(EnemyActions enemy, AnimaActions ally, HealthBar allyHealthBar)
     {
@@ -119,11 +119,11 @@ public class EnemyActions : MonoBehaviour
     }
     public float CalcBossAttackDamage(float damage, AnimaActions ally)
     {
-        return damage * animaData.attackweight * (1 - ally.animaData.defense * 0.002f) * Random.Range(0.98f, 1.11f);
+        return damage * (1 - ally.animaData.defense * 0.002f) * Random.Range(0.98f, 1.11f);
     }
     public float CalcBossSkillDamage(float damage, AnimaActions ally , int skillnum)
     {
-        return damage * animaData.skillweight * (1 - ally.animaData.defense * 0.002f) * Random.Range(0.98f, 1.11f);
+        return damage * (1 - ally.animaData.defense * 0.002f) * Random.Range(0.98f, 1.11f);
     }
     public float TakeSkillDamage(float damage)
     {
