@@ -9,7 +9,7 @@ public class AnimaInventoryUIController : MonoBehaviour
     [SerializeField] private Transform PartySlotParent;
 
     [Header("디테일 패널")]
-    [SerializeField] private AnimaDetailUI detailUI;
+    [SerializeField] private AnimaInventoryDetailUI detailUI;
 
     private List<AnimaSlotUI> inventorySlots = new List<AnimaSlotUI>();
     private List<AnimaSlotUI> PartySlots = new List<AnimaSlotUI>();
