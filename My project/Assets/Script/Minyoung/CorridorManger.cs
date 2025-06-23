@@ -7,52 +7,76 @@ public class CorridorManager : MonoBehaviour
     public static CorridorManager Instance { get; private set; }
 
     [Header("전체 아니마 데이터베이스")]
-    public List<AnimaEntry> animaDatabase;  // 에디터에서 드래그할 ScriptableObject들
+    public List<AnimaEntry> animaDatabase = new();  // BGDatabase에서 로드된 데이터
 
-    private HashSet<string> discoveredAnimaIds = new();  // 발견된 animaId 목록
+    // 발견 여부: name 기준, 0 = 미발견, 1 = 발견
+    private Dictionary<string, int> meetStatusMap = new();
 
-    void Start()
-    {
-        // 테스트용: 나중에 지울것
-        var target = animaDatabase.Find(x => x.animaId == "gaudium1");
-        if (target != null)
-            MarkDiscovered(target);
-    }
     void Awake()
     {
         if (Instance == null)
+        {
             Instance = this;
+            Init(); 
+        }
         else
+        {
             Destroy(gameObject);
+        }
+    }
+    void Init()
+    {
+        animaDatabase = AnimaEntry.LoadAll();
 
-        // 추후 LoadDiscoveredData(); 추가 가능
+        // 발견 정보 불러오기 (지금은 임시)
+        LoadMeetedData();
+
+        // 예시: 강제로 하나 발견 처리 (테스트용)
+        if (animaDatabase.Count > 0)
+        {
+            MarkDiscovered(animaDatabase[0]);
+        }
     }
 
-    // 모든 Anima 반환
+    public bool IsDiscovered(AnimaEntry entry)
+    {
+        return meetStatusMap.TryGetValue(entry.name, out int value) && value >= 1;
+    }
+
+    public void MarkDiscovered(AnimaEntry entry)
+    {
+        if (!meetStatusMap.ContainsKey(entry.name) || meetStatusMap[entry.name] == 0)
+        {
+            meetStatusMap[entry.name] = 1;
+            SaveMeetedData();  // 저장은 추후 구현
+        }
+    }
+
     public List<AnimaEntry> GetAllAnima()
     {
         return animaDatabase;
     }
 
-    // 감정별 필터
     public List<AnimaEntry> GetByEmotion(EmotionType emotion)
     {
         return animaDatabase.Where(a => a.emotion == emotion).ToList();
     }
-    public bool IsDiscovered(AnimaEntry entry)
+
+    // 추후 구현: 발견 정보 저장
+    private void SaveMeetedData()
     {
-        return discoveredAnimaIds.Contains(entry.animaId);
+        // 예: PlayerPrefs 또는 JSON
     }
 
-    // 발견 처리
-    public void MarkDiscovered(AnimaEntry entry)
+    // 추후 구현: 발견 정보 불러오기
+    private void LoadMeetedData()
     {
-        if (!discoveredAnimaIds.Contains(entry.animaId))
+        // 예: PlayerPrefs 또는 JSON
+        // 초기화 시 모든 meet 상태를 0으로 시작
+        foreach (var anima in animaDatabase)
         {
-            discoveredAnimaIds.Add(entry.animaId);
-            // 추후 SaveDiscoveredData(); 연결 가능
+            if (!meetStatusMap.ContainsKey(anima.name))
+                meetStatusMap[anima.name] = 0;
         }
     }
-
-    // 저장/불러오기 기능은 나중에 추가해도 됩니다
 }

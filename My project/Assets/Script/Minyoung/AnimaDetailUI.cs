@@ -5,17 +5,17 @@ using TMPro;
 public class AnimaDetailUI : MonoBehaviour
 {
     [Header("UI ÂüÁ¶")]
-    public Image animaImage;
-    public TMP_Text nameText;
-    public TMP_Text descriptionText;
-    public TMP_Text typeText;
+    [SerializeField] private Image animaImage;
+    [SerializeField] private TMP_Text nameText;
+    [SerializeField] private TMP_Text descriptionText;
+    [SerializeField] private TMP_Text typeText;
 
     public void Display(AnimaEntry anima, bool discovered)
     {
-        animaImage.sprite = anima.colorImage;
+        animaImage.sprite = anima.GetImage();
         animaImage.color = discovered ? Color.white : Color.black;
 
-        nameText.text = discovered ? anima.animaName : "???";
+        nameText.text = discovered ? anima.name : "???";
         descriptionText.text = discovered ? anima.description : "???";
         typeText.text = discovered ? anima.emotion.ToString() : "???";
     }

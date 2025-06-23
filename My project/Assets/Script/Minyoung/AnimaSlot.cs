@@ -8,23 +8,23 @@ public class AnimaSlot : MonoBehaviour
     [Header("UI ¿ä¼Ò")]
     [SerializeField] private Image iconImage;
     [SerializeField] private TMP_Text nameText;
+    [SerializeField] private Button slotButton;
 
-    private AnimaEntry animaEntry;
+    private AnimaEntry animaData;
 
     public UnityEvent<AnimaEntry> onClick = new();
 
     public void Setup(AnimaEntry entry, bool isDiscovered)
     {
-        animaEntry = entry;
+        animaData = entry;
 
-        iconImage.sprite = entry.colorImage;
+        Sprite sprite = entry.GetImage();
+        iconImage.sprite = sprite;
         iconImage.color = isDiscovered ? Color.white : Color.black;
 
-        nameText.text = isDiscovered ? entry.animaName : "???";
-    }
+        nameText.text = isDiscovered ? entry.name : "???";
 
-    public void OnSlotClicked()
-    {
-        onClick.Invoke(animaEntry);
+        slotButton.onClick.RemoveAllListeners();
+        slotButton.onClick.AddListener(() => onClick.Invoke(animaData));
     }
 }
