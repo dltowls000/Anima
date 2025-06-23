@@ -7,7 +7,9 @@ using TreeEditor;
 public class EnterStage : MonoBehaviour, IPointerClickHandler
 {
     public string sceneToLoad;
+    public string sceneToLoadBoss;
     private List<string> stageNames = new List<string> { "FelixFieldScene", "PhobiaFieldScene", "OdiumFieldScene", "AmareFieldScene", "IrascorFieldScene", "LacrimaFieldScene", "HavetFieldScene" };
+    private List<string> bossStageNames = new List<string> { "FelixBossFieldScene", "PhobiaBossFieldScene", "OdiumBossFieldScene", "AmareBossFieldScene", "IrascorBossFieldScene", "LacrimaBossFieldScene", "HavetBossFieldScene" };
     private StageNode stageNode;
     private StageNode prevNode;
     private SpawnStage spawnStage;
@@ -21,6 +23,7 @@ public class EnterStage : MonoBehaviour, IPointerClickHandler
         stageNode = GetComponent<StageNode>();
         spawnStage = GetComponentInParent<SpawnStage>();
         sceneToLoad = stageNames[stageNode.type];
+        sceneToLoadBoss = bossStageNames[stageNode.type];
 
         manager.SetStage(stageNode);
 
@@ -36,12 +39,18 @@ public class EnterStage : MonoBehaviour, IPointerClickHandler
             spawnStage.find_section(stageNode);
         }
 
-        SceneManager.LoadScene(sceneToLoad);
+        if (stageNode.isBoss)
+        {
+            SceneManager.LoadScene(sceneToLoadBoss);
+        }
+        else
+        {
+            SceneManager.LoadScene(sceneToLoad);
+        }
     }
 
     public void SetLineColor(StageNode node)
     {
-        Debug.Log($"SetLineColor 호출 노드 : {node}");
         if (node.prevNodes.Count != 0)
         {
             prevNode = node.prevNodes[0];

@@ -1,16 +1,17 @@
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class DontDesManager : MonoBehaviour
 {
     public static DontDesManager Instance { get; private set; }
-
+    [SerializeField] RegionManager regionPrefab;
     public GameObject manager;
     public GameObject mapScreen;
     public GameObject grid;
     private StageNode stageNode;
+    private GameObject tileManager;
     private RegionController tile;
-    private RegionManager tileManager;
     private string lastUnloaded;
     private Camera tileCam;
     private Vector3 camPosition;
@@ -43,8 +44,13 @@ public class DontDesManager : MonoBehaviour
             EnterStage es = stageNode.GetComponent<EnterStage>();
             es.SetLineColor(stageNode);
         }
+        if (lastUnloaded.EndsWith("EliteBattleScene"))
+        {
+            Destroy(grid);
+            Destroy(tileManager);
+        }
 
-        if (scene.name == "FelixFieldScene" && lastUnloaded == "BattleScene")
+        if (lastUnloaded.EndsWith("BattleScene"))
         {
             if (grid == null)
             {
@@ -66,21 +72,81 @@ public class DontDesManager : MonoBehaviour
                     }
                 }
             }
+
+            if (tileManager == null)
+            {
+                var tmPrefab = GameObject.Find("RegionManager");
+                if (tmPrefab != null)
+                {
+                    tileManager = tmPrefab;
+                    DontDestroyOnLoad(tileManager);
+                }
+            }
+            else
+            {
+                foreach (var root in scene.GetRootGameObjects())
+                {
+                    if (root.name == "RegionManager" && root != tileManager)
+                    {
+                        Destroy(root);
+                        break;
+                    }
+                }
+            }
             var cam = GameObject.Find("Main Camera");
             tileCam = cam.GetComponent<Camera>();
             tileCam.transform.position = camPosition;
             grid.SetActive(true);
-            tileManager.SetNextTile(tile);
+            var tManager = tileManager.GetComponent<RegionManager>();
+            tManager.SetNextTile(tile);
         }
-        else if (scene.name == "FelixFieldScene")
+        else if (scene.name.EndsWith("FieldScene"))
         {
+            Debug.Log("Field »£√‚");
+            var regionManager = GameObject.Find("RegionManager");
+            tileManager = regionManager;
+            var tManager = tileManager.GetComponent<RegionManager>();
+
+            if (scene.name.StartsWith("Felix"))
+            {
+                Debug.Log("Felix");
+                tManager.stageType = 0;
+            }
+            else if (scene.name.StartsWith("Phobia"))
+            {
+                Debug.Log("Phobia");
+                tManager.stageType = 1;
+            }
+            else if (scene.name.StartsWith("Odium"))
+            {
+                tManager.stageType = 2;
+                Debug.Log("Odium");
+            }
+            else if (scene.name.StartsWith("Amare"))
+            {
+                tManager.stageType = 3;
+                Debug.Log("Amare");
+            }
+            else if (scene.name.StartsWith("Irascor"))
+            {
+                tManager.stageType = 4;
+                Debug.Log("Irascor");
+            }
+            else if (scene.name.StartsWith("Lacrima"))
+            {
+                tManager.stageType = 5;
+                Debug.Log("Lacrima");
+            }
+            else if (scene.name.StartsWith("Havet"))
+            {
+                tManager.stageType = 6;
+                Debug.Log("Havet");
+            }
             mapScreen.SetActive(false);
-            var tilePrefab = GameObject.Find("Tiles");
-            grid = tilePrefab;
-            DontDestroyOnLoad(grid);
+            DontDestroyOnLoad(tileManager);
         }
 
-        if (scene.name == "BattleScene" && lastUnloaded == "FelixFieldScene")
+        if (scene.name.EndsWith("BattleScene"))
         {
             grid.SetActive(false);
         }
@@ -103,13 +169,17 @@ public class DontDesManager : MonoBehaviour
 
     public void SetTile(RegionController target, RegionManager m)
     {
-        tileManager = m;
         tile = target;
     }
 
     public void setCamPosition(Vector3 cp)
     {
-        Debug.Log($"Camera Position : {cp}");
         camPosition = cp;
+    }
+
+    public void setDesGrid()
+    {
+        grid = GameObject.Find("Tiles");
+        DontDestroyOnLoad(grid);
     }
 }
