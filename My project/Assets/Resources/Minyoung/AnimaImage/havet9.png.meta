@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 88d0dfdf015b54647828cf116a8ee2eb
+guid: 7098d360ec8ba594ca5dc3876f78d4b7
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1468671975462063758
-    second: odium10_0
+      213: 6870112022394529104
+    second: phobia10_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: odium10_0
+      name: phobia10_0
       rect:
         serializedVersion: 2
-        x: 2
-        y: 5
-        width: 1022
-        height: 981
+        x: 87
+        y: 79
+        width: 935
+        height: 897
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e8eccfc5165c16410800000000000000
-      internalID: 1468671975462063758
+      spriteID: 05567f52c7a875f50800000000000000
+      internalID: 6870112022394529104
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      odium10_0: 1468671975462063758
+      phobia10_0: 6870112022394529104
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

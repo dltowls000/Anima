@@ -19,4 +19,5 @@ public class AnimaDetailUI : MonoBehaviour
         descriptionText.text = discovered ? anima.description : "???";
         typeText.text = discovered ? anima.emotion.ToString() : "???";
     }
+
 }

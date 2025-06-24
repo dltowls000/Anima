@@ -1,25 +1,16 @@
 fileFormatVersion: 2
-guid: 55da270b76a38b14292d086f61703740
+guid: 3bd6a5d3a52671148ac456c2f77ae02d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3148693474966494251
-    second: amare10_0
+      213: 1352797595708297049
+    second: phobia3_0
   - first:
-      213: -8013664190337980607
-    second: amare10_1
+      213: 2977495665059132927
+    second: phobia3_1
   - first:
-      213: 8886708975252473224
-    second: amare10_2
-  - first:
-      213: -6086904879017194516
-    second: amare10_3
-  - first:
-      213: 6346400775650878525
-    second: amare10_4
-  - first:
-      213: 2077804606077022455
-    second: amare10_5
+      213: 6159806848746623138
+    second: phobia3_2
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -115,79 +106,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: amare10_0
-      rect:
-        serializedVersion: 2
-        x: 58
-        y: 632
-        width: 38
-        height: 34
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 5d3280e87f79d44d0800000000000000
-      internalID: -3148693474966494251
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: amare10_1
-      rect:
-        serializedVersion: 2
-        x: 84
-        y: 136
-        width: 896
-        height: 808
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 147e2a980eeb9c090800000000000000
-      internalID: -8013664190337980607
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: amare10_2
-      rect:
-        serializedVersion: 2
-        x: 64
-        y: 576
-        width: 56
-        height: 42
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 885033caabee35b70800000000000000
-      internalID: 8886708975252473224
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: amare10_3
+      name: phobia3_0
       rect:
         serializedVersion: 2
         x: 60
-        y: 512
-        width: 50
-        height: 46
+        y: 84
+        width: 876
+        height: 844
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -196,20 +121,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ceb86982348f68ba0800000000000000
-      internalID: -6086904879017194516
+      spriteID: 95f0231fe3a16c210800000000000000
+      internalID: 1352797595708297049
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: amare10_4
+      name: phobia3_1
       rect:
         serializedVersion: 2
-        x: 74
-        y: 472
-        width: 36
-        height: 28
+        x: 768
+        y: 698
+        width: 178
+        height: 170
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -218,20 +143,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d342fea71e1f21850800000000000000
-      internalID: 6346400775650878525
+      spriteID: ff57d1c2880325920800000000000000
+      internalID: 2977495665059132927
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: amare10_5
+      name: phobia3_2
       rect:
         serializedVersion: 2
-        x: 58
-        y: 338
-        width: 80
-        height: 70
+        x: 898
+        y: 554
+        width: 48
+        height: 108
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -240,8 +165,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7f034e1d748d5dc10800000000000000
-      internalID: 2077804606077022455
+      spriteID: 2a09f8061b70c7550800000000000000
+      internalID: 6159806848746623138
       vertices: []
       indices: 
       edges: []
@@ -260,12 +185,9 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      amare10_0: -3148693474966494251
-      amare10_1: -8013664190337980607
-      amare10_2: 8886708975252473224
-      amare10_3: -6086904879017194516
-      amare10_4: 6346400775650878525
-      amare10_5: 2077804606077022455
+      phobia3_0: 1352797595708297049
+      phobia3_1: 2977495665059132927
+      phobia3_2: 6159806848746623138
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

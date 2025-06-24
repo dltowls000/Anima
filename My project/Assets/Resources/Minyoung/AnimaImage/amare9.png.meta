@@ -5,6 +5,21 @@ TextureImporter:
   - first:
       213: 6552029487901557249
     second: amare9_0
+  - first:
+      213: -1926690007103612952
+    second: amare9_1
+  - first:
+      213: 949119035969538665
+    second: amare9_2
+  - first:
+      213: -7546466916324442129
+    second: amare9_3
+  - first:
+      213: 8609519489772621505
+    second: amare9_4
+  - first:
+      213: -8050706182999424499
+    second: amare9_5
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -103,10 +118,10 @@ TextureImporter:
       name: amare9_0
       rect:
         serializedVersion: 2
-        x: 72
-        y: 62
-        width: 934
-        height: 912
+        x: 58
+        y: 632
+        width: 38
+        height: 34
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -117,6 +132,116 @@ TextureImporter:
       bones: []
       spriteID: 102c148ea1c7dea50800000000000000
       internalID: 6552029487901557249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: amare9_1
+      rect:
+        serializedVersion: 2
+        x: 84
+        y: 136
+        width: 896
+        height: 808
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8e75b4685a50345e0800000000000000
+      internalID: -1926690007103612952
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: amare9_2
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 576
+        width: 56
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96a868c0cb2fb2d00800000000000000
+      internalID: 949119035969538665
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: amare9_3
+      rect:
+        serializedVersion: 2
+        x: 60
+        y: 512
+        width: 50
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fef7e3f8250954790800000000000000
+      internalID: -7546466916324442129
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: amare9_4
+      rect:
+        serializedVersion: 2
+        x: 74
+        y: 472
+        width: 36
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ce03ba5c582b7770800000000000000
+      internalID: 8609519489772621505
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: amare9_5
+      rect:
+        serializedVersion: 2
+        x: 58
+        y: 338
+        width: 80
+        height: 70
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d02474b8165264090800000000000000
+      internalID: -8050706182999424499
       vertices: []
       indices: 
       edges: []
@@ -136,6 +261,11 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       amare9_0: 6552029487901557249
+      amare9_1: -1926690007103612952
+      amare9_2: 949119035969538665
+      amare9_3: -7546466916324442129
+      amare9_4: 8609519489772621505
+      amare9_5: -8050706182999424499
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

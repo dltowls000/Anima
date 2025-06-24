@@ -1,10 +1,16 @@
 fileFormatVersion: 2
-guid: a3009335d0c6add408a1b2e74219e950
+guid: 719e681c7222282449834e37a2998805
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2008266103491213688
-    second: inanis2_0
+      213: 2687897689349160197
+    second: inanis3_0
+  - first:
+      213: 1138867210251357100
+    second: inanis3_1
+  - first:
+      213: 3430331478970943712
+    second: inanis3_2
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +106,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: inanis2_0
+      name: inanis3_0
       rect:
         serializedVersion: 2
-        x: 118
-        y: 106
-        width: 820
-        height: 882
+        x: 127
+        y: 39
+        width: 22
+        height: 24
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +121,52 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8793d01816bcedb10800000000000000
-      internalID: 2008266103491213688
+      spriteID: 50dff3615b45d4520800000000000000
+      internalID: 2687897689349160197
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: inanis3_1
+      rect:
+        serializedVersion: 2
+        x: 138
+        y: 12
+        width: 752
+        height: 1012
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cab4f5991b11ecf00800000000000000
+      internalID: 1138867210251357100
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: inanis3_2
+      rect:
+        serializedVersion: 2
+        x: 887
+        y: 39
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e847e13e4cfa9f20800000000000000
+      internalID: 3430331478970943712
       vertices: []
       indices: 
       edges: []
@@ -135,7 +185,9 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      inanis2_0: 2008266103491213688
+      inanis3_0: 2687897689349160197
+      inanis3_1: 1138867210251357100
+      inanis3_2: 3430331478970943712
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
