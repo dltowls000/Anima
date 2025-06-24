@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 using System.Collections;
 using UnityEngine.SceneManagement;
 using BansheeGz.BGDatabase;
+using UnityEngine.UI;
 public class BattleManager : MonoBehaviour
 {
     [SerializeField]
@@ -58,7 +59,7 @@ public class BattleManager : MonoBehaviour
     List<GameObject> isTurn;
     List<GameObject> allyInfo;
     List<GameObject> enemyInfo;
-
+    List<AnimaDataSO> dropAnima;
     
     GameObject animaActionUI;
     GameObject arrow;
@@ -80,7 +81,6 @@ public class BattleManager : MonoBehaviour
     float maxValue = 0;
     void Start()
     {
-        DBUpdater.Load();
         playerInfo = ScriptableObject.CreateInstance<PlayerInfo>();
         playerInfo.Initialize();
         eventSystem = EventSystem.current;
@@ -91,7 +91,7 @@ public class BattleManager : MonoBehaviour
         turn = new List<GameObject>();
 
         dieAllyAnima = new List<int>();
-
+        dropAnima = new List<AnimaDataSO>();
         state = State.start;
         database = BGRepo.I;
         animaTable = database.GetMeta("Anima");
@@ -556,6 +556,7 @@ public class BattleManager : MonoBehaviour
                                 AnimaDataSO animadata = ScriptableObject.CreateInstance<AnimaDataSO>();
                                 animadata.GetAnima(enemyActions[selectEnemy].animaData.Name, enemyActions[selectEnemy].animaData.level);
                                 allyBattleSetting.playerinfo.GetAnima(animadata);
+                                dropAnima.Add(animadata);
                                 animaTable.ForEachEntity(entity =>
                                 {
                                     if (entity.Get<string>("name") == enemyActions[selectEnemy].animaData.Name)
@@ -603,9 +604,8 @@ public class BattleManager : MonoBehaviour
                             ally.animaData.location = -1;
                         }
                         state = State.win;
-                        print("½Â¸®");
                         turnIndex = 0;
-                        //winBattle();
+                        WinBattle();
                         StopCoroutine(runningCoroutine);
                     }
 
@@ -794,7 +794,7 @@ public class BattleManager : MonoBehaviour
                         state = State.win;
                         print("½Â¸®");
                         turnIndex = 0;
-                        //winBattle();
+                        WinBattle();
                         StopCoroutine(runningCoroutine);
                     }
 
@@ -916,9 +916,8 @@ public class BattleManager : MonoBehaviour
                         {
                             state = State.defeat;
                             print("ÆÐ¹è");
-                            //loseBattle();
+                            LoseBattle();
                             StopCoroutine(runningCoroutine);
-                            yield return new WaitForSeconds(10000f);
 
 
                         }
@@ -1015,9 +1014,8 @@ public class BattleManager : MonoBehaviour
                         {
                             state = State.defeat;
                             print("ÆÐ¹è");
-                            //loseBattle();
+                            LoseBattle();
                             StopCoroutine(runningCoroutine);
-                            yield return new WaitForSeconds(10000f);
 
                         }
                     }
@@ -1059,6 +1057,28 @@ public class BattleManager : MonoBehaviour
     public List<EnemyActions> getEnemy()
     {
         return enemyActions;
+    }
+    void WinBattle()
+    {
+        
+        Instantiate(Resources.Load<GameObject>("Minwoo/Battle Win UI"), canvas.transform);
+        for(int i = 0; i< allyActions.Count; i++)
+        {
+            GameObject animaImage = GameObject.Find("Entry Anima List").transform.Find($"Anima {i}").gameObject;
+            animaImage.GetComponent<Image>().sprite = Resources.Load<Sprite>("Minwoo/Portrait/" + allyActions[i].animaData.Objectfile);
+            animaImage.SetActive(true);
+        }
+        for (int i = 0; i < dropAnima.Count; i++) 
+        {
+            GameObject dropAnimaImage = GameObject.Find("Drop Anima List").transform.Find($"Anima {i}").gameObject;
+            dropAnimaImage.GetComponent<Image>().sprite = Resources.Load<Sprite>("Minwoo/Portrait/" + dropAnima[i].Objectfile);
+            dropAnimaImage.SetActive(true);
+        }
+        
+    }
+    void LoseBattle()
+    {
+        Instantiate(Resources.Load<GameObject>("Minwoo/Game Over UI"), canvas.transform);
     }
 }
 
