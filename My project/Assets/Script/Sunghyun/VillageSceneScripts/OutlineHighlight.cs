@@ -27,8 +27,6 @@ public class OutlineHighlight : MonoBehaviour
                 outlineMaterial.SetColor("_OutlineColor", outlineColor);
                 outlineMaterial.SetFloat("_OutlineWidth", outlineWidth);
             }
-            else
-                Debug.LogError("외곽선 쉐이더를 찾을 수 없습니다. Custom/Outline 쉐이더를 프로젝트에 추가하세요.");
         }
     }
     

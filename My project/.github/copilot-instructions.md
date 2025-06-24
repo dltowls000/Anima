@@ -4,11 +4,11 @@
 - Active scene:
   - Name: VillegeScene
   - Tags:
-    - Untagged, Respawn, Finish, EditorOnly, MainCamera, Player, GameController, Missile, Target
+    - Untagged, Respawn, Finish, EditorOnly, MainCamera, Player, GameController
   - Layers:
     - Default, TransparentFX, Ignore Raycast, Water, UI
 - Active game object:
-  - Name: Shop Panel
+  - Name: Villege Controller
   - Tag: Untagged
-  - Layer: UI
+  - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

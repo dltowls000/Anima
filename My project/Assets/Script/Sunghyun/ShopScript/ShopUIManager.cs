@@ -87,9 +87,11 @@ public class ShopUIManager : MonoBehaviour
     
     public void CloseShopPanel()
     {
-        if (shopPanel != null)
+        if (ShopAnimaSelectUI.Instance != null)
         {
-            shopPanel.SetActive(false);
+            ShopAnimaSelectUI.Instance.CloseUI();
         }
+        
+        shopPanel.SetActive(false);
     }
 }

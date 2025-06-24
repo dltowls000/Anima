@@ -24,5 +24,6 @@ public enum ItemType
 public enum TargetType
 {
     Single,
-    All
+    All,
+    None
 }

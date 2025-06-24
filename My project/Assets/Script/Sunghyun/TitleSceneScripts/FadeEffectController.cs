@@ -10,12 +10,10 @@ public class FadeEffect : MonoBehaviour
     
     private void Awake()
     {
-        // 캔버스 그룹 가져오기 또는 추가
         canvasGroup = GetComponent<CanvasGroup>();
         if (canvasGroup == null)
             canvasGroup = gameObject.AddComponent<CanvasGroup>();
             
-        // 초기 설정
         canvasGroup.alpha = 0f;
         canvasGroup.blocksRaycasts = false;
     }

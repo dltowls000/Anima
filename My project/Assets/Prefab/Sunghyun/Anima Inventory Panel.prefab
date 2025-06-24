@@ -2885,6 +2885,9 @@ MonoBehaviour:
   skill1DescriptionText: {fileID: 815977130698732753}
   skill2NameText: {fileID: 8924467522781400796}
   skill2DescriptionText: {fileID: 606504921594109639}
+  grayscaleMaterial: {fileID: 2100000, guid: 124019c4e80f9c4499b3d4093867a3b0, type: 2}
+  normalHpColor: {r: 1, g: 1, b: 1, a: 1}
+  defeatedHpColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &6029018503132234924
 GameObject:
   m_ObjectHideFlags: 0
