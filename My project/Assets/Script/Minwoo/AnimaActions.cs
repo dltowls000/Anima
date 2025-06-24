@@ -1,6 +1,7 @@
 using UnityEngine;
 using DamageNumbersPro;
 using System.Collections;
+using UnityEngine.UI;
 public class AnimaActions : MonoBehaviour
 {
     public AnimaDataSO animaData;

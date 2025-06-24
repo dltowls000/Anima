@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using BansheeGz.BGDatabase;
 using UnityEditor.Analytics;
 using UnityEngine;
@@ -27,13 +28,13 @@ public class PlayerInfo : ScriptableObject
         } while (a == b);
 
         animaData = ScriptableObject.CreateInstance<AnimaDataSO>();
-        animaData.Initialize(animaTable[0].Get<string>("name"),5);
+        animaData.Initialize(animaTable[a].Get<string>("name"),5);
         animaData.location = tmp;
         GetAnima(animaData);
         BattleSetting(haveAnima[tmp++]);
 
         animaData = ScriptableObject.CreateInstance<AnimaDataSO>();
-        animaData.Initialize(animaTable[0].Get<string>("name"), 5);
+        animaData.Initialize(animaTable[b].Get<string>("name"), 5);
         animaData.location = tmp;
         GetAnima(animaData);
         BattleSetting(haveAnima[tmp++]);
@@ -44,6 +45,7 @@ public class PlayerInfo : ScriptableObject
                 if (entity.Get<string>("name") == haveAnima[i].Name && entity.Get<int>("Meeted") == 0)
                 {
                     entity.Set<int>("Meeted", 1);
+                    DBUpdater.Save();
                 }
             });
         }
