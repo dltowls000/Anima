@@ -5,12 +5,6 @@ TextureImporter:
   - first:
       213: 7817576474306664380
     second: havet1_0
-  - first:
-      213: 7963485574632150909
-    second: havet1_1
-  - first:
-      213: -1845955885473251341
-    second: havet1_2
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -109,10 +103,10 @@ TextureImporter:
       name: havet1_0
       rect:
         serializedVersion: 2
-        x: 138
-        y: 324
-        width: 20
-        height: 22
+        x: 3
+        y: 0
+        width: 1019
+        height: 1019
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -123,50 +117,6 @@ TextureImporter:
       bones: []
       spriteID: cb7df73526c9d7c60800000000000000
       internalID: 7817576474306664380
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: havet1_1
-      rect:
-        serializedVersion: 2
-        x: 154
-        y: 128
-        width: 814
-        height: 820
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: d7795e110fbf38e60800000000000000
-      internalID: 7963485574632150909
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: havet1_2
-      rect:
-        serializedVersion: 2
-        x: 122
-        y: 246
-        width: 22
-        height: 22
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 3ff335707e8d166e0800000000000000
-      internalID: -1845955885473251341
       vertices: []
       indices: 
       edges: []
@@ -186,8 +136,6 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       havet1_0: 7817576474306664380
-      havet1_1: 7963485574632150909
-      havet1_2: -1845955885473251341
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
