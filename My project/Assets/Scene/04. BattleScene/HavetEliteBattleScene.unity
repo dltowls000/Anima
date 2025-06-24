@@ -2658,6 +2658,7 @@ MonoBehaviour:
   eliteBattleManager: {fileID: 1923943545}
   canvas: {fileID: 1655396152}
   playerInfo: {fileID: 0}
+  damageNumber: {fileID: 5688961714689424391, guid: 925da8dae987a344e9c4b1fafa29a40f, type: 3}
 --- !u!1 &1925759235
 GameObject:
   m_ObjectHideFlags: 0
@@ -3439,7 +3440,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1183021856}
   m_HandleRect: {fileID: 1183021855}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
