@@ -63,7 +63,7 @@ public class EnemyBattleSetting : MonoBehaviour
             if(entity.Get<string>("Type") == stage)
                 objectfileList.Add(entity.Get<string>("Objectfile"));
         });
-        int numberOfObjectsToAdd = Random.Range(1,4);
+        int numberOfObjectsToAdd = Random.Range(1,2);
         int mood = 0;
         if (level <= 8)
         {

@@ -373,22 +373,22 @@ public class RegionManager : MonoBehaviour
                         SceneManager.LoadScene("FelixEliteBattleScene");
                         break;
                     case 1:
-                        SceneManager.LoadScene("PhobiaEliteFieldScene");
+                        SceneManager.LoadScene("PhobiaEliteBattleScene");
                         break;
                     case 2:
-                        SceneManager.LoadScene("OdiumEliteFieldScene");
+                        SceneManager.LoadScene("OdiumEliteBattleScene");
                         break;
                     case 3:
-                        SceneManager.LoadScene("AmareEliteFieldScene");
+                        SceneManager.LoadScene("AmareEliteBattleScene");
                         break;
                     case 4:
-                        SceneManager.LoadScene("IrascorEliteFieldScene");
+                        SceneManager.LoadScene("IrascorEliteBattleScene");
                         break;
                     case 5:
-                        SceneManager.LoadScene("LacrimaEliteFieldScene");
+                        SceneManager.LoadScene("LacrimaEliteBattleScene");
                         break;
                     case 6:
-                        SceneManager.LoadScene("HavetEliteFieldScene");
+                        SceneManager.LoadScene("HavetEliteBattleScene");
                         break;
                 }
             }
