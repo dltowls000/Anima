@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 using System.Collections;
 using UnityEngine.SceneManagement;
 using BansheeGz.BGDatabase;
+using UnityEngine.UI;
 public class EliteBattleManager : MonoBehaviour
 {
     [SerializeField]
@@ -58,7 +59,7 @@ public class EliteBattleManager : MonoBehaviour
     List<GameObject> isTurn;
     List<GameObject> allyInfo;
     List<GameObject> enemyInfo;
-
+    List<AnimaDataSO> dropAnima;
 
     GameObject animaActionUI;
     GameObject arrow;
@@ -88,7 +89,7 @@ public class EliteBattleManager : MonoBehaviour
 
         eventSystem = EventSystem.current;
         pointerEventData = new PointerEventData(eventSystem);
-
+        dropAnima = new List<AnimaDataSO>();
         isTurn = new List<GameObject>();
 
         turn = new List<GameObject>();
@@ -752,7 +753,7 @@ public class EliteBattleManager : MonoBehaviour
                         state = State.win;
                         print("승리");
                         turnIndex = 0;
-                        //winBattle();
+                        WinBattle();
                         StopCoroutine(runningCoroutine);
                     }
 
@@ -874,9 +875,9 @@ public class EliteBattleManager : MonoBehaviour
                         {
                             state = State.defeat;
                             print("패배");
-                            //loseBattle();
+                            LoseBattle();
                             StopCoroutine(runningCoroutine);
-                            yield return new WaitForSeconds(10000f);
+                            
 
 
                         }
@@ -973,9 +974,9 @@ public class EliteBattleManager : MonoBehaviour
                         {
                             state = State.defeat;
                             print("패배");
-                            //loseBattle();
+                            LoseBattle();
                             StopCoroutine(runningCoroutine);
-                            yield return new WaitForSeconds(10000f);
+                            
 
                         }
                     }
@@ -1017,6 +1018,28 @@ public class EliteBattleManager : MonoBehaviour
     public List<EnemyActions> getEnemy()
     {
         return enemyActions;
+    }
+    void WinBattle()
+    {
+
+        Instantiate(Resources.Load<GameObject>("Minwoo/Battle Win UI"), canvas.transform);
+        for (int i = 0; i < allyActions.Count; i++)
+        {
+            GameObject animaImage = GameObject.Find("Entry Anima List").transform.Find($"Anima {i}").gameObject;
+            animaImage.GetComponent<Image>().sprite = Resources.Load<Sprite>("Minwoo/Portrait/" + allyActions[i].animaData.Objectfile);
+            animaImage.SetActive(true);
+        }
+        for (int i = 0; i < dropAnima.Count; i++)
+        {
+            GameObject dropAnimaImage = GameObject.Find("Drop Anima List").transform.Find($"Anima {i}").gameObject;
+            dropAnimaImage.GetComponent<Image>().sprite = Resources.Load<Sprite>("Minwoo/Portrait/" + dropAnima[i].Objectfile);
+            dropAnimaImage.SetActive(true);
+        }
+
+    }
+    void LoseBattle()
+    {
+        Instantiate(Resources.Load<GameObject>("Minwoo/Game Over UI"), canvas.transform);
     }
 }
 
