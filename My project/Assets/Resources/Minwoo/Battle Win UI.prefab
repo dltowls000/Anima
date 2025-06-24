@@ -340,6 +340,7 @@ GameObject:
   - component: {fileID: 905698863275302750}
   - component: {fileID: 2270475541983178892}
   - component: {fileID: 2270283134538155794}
+  - component: {fileID: 9186954257259372522}
   m_Layer: 5
   m_Name: Next Battle Button
   m_TagString: Untagged
@@ -449,9 +450,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Test, Assembly-CSharp
-        m_MethodName: OnClick
+      - m_Target: {fileID: 9186954257259372522}
+        m_TargetAssemblyTypeName: SceneManagerInBattle, Assembly-CSharp
+        m_MethodName: backToTiles
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -461,6 +462,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &9186954257259372522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2194348877655613812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11f7d347bbd546146a3a02dad8c1d8f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3380049974267466877
 GameObject:
   m_ObjectHideFlags: 0

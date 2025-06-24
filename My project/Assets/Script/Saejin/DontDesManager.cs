@@ -38,9 +38,21 @@ public class DontDesManager : MonoBehaviour
     }
     public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        if (scene.name == "TitleScene")
+        {
+            Destroy(manager);
+            mapScreen.SetActive(true);
+            Destroy(mapScreen);
+            Destroy(this);
+            Destroy(gameObject);
+            Destroy(grid);
+            Destroy(tileManager);
+            return;
+        }
         if (scene.name == "MapScene")
         {
             mapScreen.SetActive(true);
+            Camera.main.transform.position = new Vector3(0f, 0f, -10);
             EnterStage es = stageNode.GetComponent<EnterStage>();
             es.SetLineColor(stageNode);
         }
@@ -50,7 +62,7 @@ public class DontDesManager : MonoBehaviour
             Destroy(tileManager);
         }
 
-        if (lastUnloaded.EndsWith("BattleScene"))
+        if (lastUnloaded.EndsWith("BattleScene") && scene.name != "MapScene")
         {
             if (grid == null)
             {

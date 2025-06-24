@@ -78,7 +78,7 @@ public class AnimaInventoryDetailUI : MonoBehaviour
         if (dpText != null) dpText.text = anima.defense.ToString();
         if (spText != null) spText.text = anima.Speed.ToString();
 
-        if (skill1NameText != null) skill1NameText.text = anima.skillName;
+        if (skill1NameText != null) skill1NameText.text = anima.skillName[0];
         // if (skill2NameText != null) skill2NameText.text = "두 번째 스킬";
     
         // if (skill1DescriptionText != null) skill1DescriptionText.text = "스킬1 설명";

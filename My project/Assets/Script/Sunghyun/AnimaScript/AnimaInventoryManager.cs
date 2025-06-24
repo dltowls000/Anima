@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class AnimaInventoryManager : MonoBehaviour
 {
+    public PlayerInfo playerInfo;
+
     public static AnimaInventoryManager Instance { get; private set; }
 
-    [SerializeField] private List<AnimaDataSO> playerAnima = new List<AnimaDataSO>();
-    [SerializeField] private List<AnimaDataSO> activeAnima = new List<AnimaDataSO>();
+    [SerializeField] private List<AnimaDataSO> playerAnima;
+    [SerializeField] private List<AnimaDataSO> activeAnima;
 
     public event Action OnAnimaInventoryChanged;
     public event Action<AnimaDataSO> OnPartyAddFailed;
@@ -23,6 +25,14 @@ public class AnimaInventoryManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
+
+        playerInfo = ScriptableObject.CreateInstance<PlayerInfo>(); 
+          
+
+        playerInfo.Initialize();
+
+        playerAnima = playerInfo.haveAnima;
+        activeAnima = playerInfo.battleAnima;
     }
 
     private void OnDestroy()
