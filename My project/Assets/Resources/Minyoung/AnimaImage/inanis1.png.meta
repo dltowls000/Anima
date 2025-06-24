@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 2278fbf95725e5848b538cd890922244
+guid: a3009335d0c6add408a1b2e74219e950
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6755052888831187805
-    second: inanis1_0
+      213: 2008266103491213688
+    second: inanis2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: inanis1_0
+      name: inanis2_0
       rect:
         serializedVersion: 2
-        x: 87
-        y: 45
-        width: 879
-        height: 937
+        x: 118
+        y: 106
+        width: 820
+        height: 882
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3a4ad3aff2b3142a0800000000000000
-      internalID: -6755052888831187805
+      spriteID: 8793d01816bcedb10800000000000000
+      internalID: 2008266103491213688
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      inanis1_0: -6755052888831187805
+      inanis2_0: 2008266103491213688
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

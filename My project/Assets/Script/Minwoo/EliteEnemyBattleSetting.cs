@@ -22,13 +22,12 @@ public class EliteEnemyBattleSetting : MonoBehaviour
     public GameObject canvas;
     GameObject battleParser;
     public string stage;
-    public void SpawnEnemy()
+    public void SpawnEnemy(int level)
     {
         animator = new List<Animator>();
         var database = BGRepo.I;
         var animaTable = database.GetMeta("Anima");
         canvas = GameObject.Find("Main Battle UI");
-        Debug.Log(stage);
         if (objectfileList != null)
         {
             objectfileList.Clear();
@@ -68,14 +67,34 @@ public class EliteEnemyBattleSetting : MonoBehaviour
             }
             
         });
-        
+        int mood = 0;
+        if (level <= 8)
+        {
+            mood = 3;
+        }
+        else if (level <= 12)
+        {
+            mood = 4;
+        }
+        else if (level <= 16)
+        {
+            mood = 5;
+        }
+        else if (level <= 20)
+        {
+            mood = 6;
+        }
+        else
+        {
+            mood = 7;
+        }
         int numberOfObjectsToAdd = Random.Range(1, 2);
         for (int i = 0; i < numberOfObjectsToAdd; i++)
         {
-            int randomIndex = Random.Range(0, objectfileList.Count);
+            int randomIndex = Random.Range(mood, mood+1);
             enemyobjPrefab.Add(Resources.Load<GameObject>("Minwoo/Portrait/" + objectfileList[randomIndex]));
             enemyhpPrefab.Add(Resources.Load<GameObject>("Minwoo/EnemyAnimaHP"));
-            enemyInfoPrefab.Add(Resources.Load<GameObject>($"Minwoo/Enemy{i}"));
+            enemyInfoPrefab.Add(Resources.Load<GameObject>($"Minwoo/EnemyElite{i}"));
             enemyParserPrefab.Add(Resources.Load<GameObject>($"Minwoo/Battle Parser/Enemy{i}Name"));
             battleEnemyAnima.Add(objectfileList[randomIndex]);
         }

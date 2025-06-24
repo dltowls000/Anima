@@ -188,9 +188,9 @@ public class RegionManager : MonoBehaviour
                 GameObject map = Instantiate(tileMap, new Vector3(0, 0, 0), Quaternion.identity);
                 map.name = "Tiles";
                 startRegion = map.GetComponentInChildren<RegionController>();
-                Camera.main.transform.position = new Vector3(-1.44f, -0.56f, -10);
+                Camera.main.transform.position = new Vector3(-6.581469f, -4.221349f, -10);
                 cameraRegion = GameObject.Find("CameraLocation");
-                cameraRegion.transform.position = new Vector3(-1.1244f, -0.3748f, 1);
+                cameraRegion.transform.position = new Vector3(-5.626893f, -4.260386f, 1);
                 cameraRegion.transform.localScale = new Vector3(18.20955f, 13.32993f, 1);
                 camSet.setMaxMin();
             }
@@ -206,7 +206,7 @@ public class RegionManager : MonoBehaviour
                 cameraRegion.transform.localScale = new Vector3(25.01435f, 11.4265f, 1);
                 camSet.setMaxMin();
             }
-            else
+            else 
             {
                 tileMap = Resources.Load<GameObject>("Saejin/Irascor3");
                 GameObject map = Instantiate(tileMap, new Vector3(0, 0, 0), Quaternion.identity);
@@ -239,7 +239,7 @@ public class RegionManager : MonoBehaviour
                 GameObject map = Instantiate(tileMap, new Vector3(0, 0, 0), Quaternion.identity);
                 map.name = "Tiles";
                 startRegion = map.GetComponentInChildren<RegionController>();
-                Camera.main.transform.position = new Vector3(1.74f, -0.3f, -10);
+                Camera.main.transform.position = new Vector3(4.992178f, -5.217116f, -10);
                 cameraRegion = GameObject.Find("CameraLocation");
                 cameraRegion.transform.position = new Vector3(1.8816f, -0.0576f, 1);
                 cameraRegion.transform.localScale = new Vector3(17.50384f, 15.80637f, 1);
@@ -353,7 +353,11 @@ public class RegionManager : MonoBehaviour
         }
         else if (target.isVillaged)
         {
-            SceneManager.LoadScene("VillageScene");
+            string a = target.name;
+            target.name.EndsWith("VillageArea");
+            target.name.EndsWith("VillageArea 2");
+            //VillageDataManager.Instance.SetCurrentVillageID(villageTile.name);
+            SceneManager.LoadScene("VillageScene"); 
         }
         else if (target.name.StartsWith("Boss"))
         {

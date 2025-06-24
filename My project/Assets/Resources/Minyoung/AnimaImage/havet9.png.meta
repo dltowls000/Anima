@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: e67e24e38aa5bb44ba66bf3008b2d428
+guid: 7098d360ec8ba594ca5dc3876f78d4b7
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8787487081993924845
-    second: phobia11_0
+      213: 6870112022394529104
+    second: phobia10_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,7 +100,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: phobia11_0
+      name: phobia10_0
       rect:
         serializedVersion: 2
         x: 87
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 31f0b699e039c0680800000000000000
-      internalID: -8787487081993924845
+      spriteID: 05567f52c7a875f50800000000000000
+      internalID: 6870112022394529104
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      phobia11_0: -8787487081993924845
+      phobia10_0: 6870112022394529104
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

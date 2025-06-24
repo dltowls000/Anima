@@ -103,10 +103,10 @@ TextureImporter:
       name: phobia7_0
       rect:
         serializedVersion: 2
-        x: 18
-        y: 62
-        width: 1006
-        height: 892
+        x: 118
+        y: 94
+        width: 830
+        height: 846
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

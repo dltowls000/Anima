@@ -14,17 +14,18 @@ public class AnimaSlot : MonoBehaviour
 
     public UnityEvent<AnimaEntry> onClick = new();
 
-    public void Setup(AnimaEntry entry, bool isDiscovered)
+    public void Setup(AnimaEntry entry, bool discovered)
     {
         animaData = entry;
 
         Sprite sprite = entry.GetImage();
         iconImage.sprite = sprite;
-        iconImage.color = isDiscovered ? Color.white : Color.black;
+        iconImage.color = discovered ? Color.white : Color.black;
 
-        nameText.text = isDiscovered ? entry.name : "???";
+        nameText.text = discovered ? entry.name : "???";
 
         slotButton.onClick.RemoveAllListeners();
         slotButton.onClick.AddListener(() => onClick.Invoke(animaData));
     }
+
 }

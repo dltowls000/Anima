@@ -1,17 +1,12 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
 using DamageNumbersPro;
 using TMPro;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using static Unity.Burst.Intrinsics.X86.Avx;
 using System.Collections;
-using System;
 using UnityEngine.SceneManagement;
 using BansheeGz.BGDatabase;
-using System.IO;
+using UnityEngine.UI;
 public class BattleManager : MonoBehaviour
 {
     [SerializeField]
@@ -53,6 +48,7 @@ public class BattleManager : MonoBehaviour
     List<GameObject> enemy;
     
     List<int> dieAllyAnima;
+    [SerializeField]
     DamageNumber damageNumber;
     EventSystem eventSystem;
 
@@ -63,7 +59,7 @@ public class BattleManager : MonoBehaviour
     List<GameObject> isTurn;
     List<GameObject> allyInfo;
     List<GameObject> enemyInfo;
-
+    List<AnimaDataSO> dropAnima;
     
     GameObject animaActionUI;
     GameObject arrow;
@@ -77,8 +73,6 @@ public class BattleManager : MonoBehaviour
     bool isXKeyPressed = false;
     BGRepo database;
     BGMetaEntity animaTable;
-    float wheel;
-    Vector3 originPoint;
     int turnIndex = 0;
     int enemyAnimaNum = 0;
     int allyAnimaNum = 0;
@@ -89,16 +83,15 @@ public class BattleManager : MonoBehaviour
     {
         playerInfo = ScriptableObject.CreateInstance<PlayerInfo>();
         playerInfo.Initialize();
-
         eventSystem = EventSystem.current;
         pointerEventData = new PointerEventData(eventSystem);
-
+        
         isTurn = new List<GameObject>();
 
         turn = new List<GameObject>();
 
         dieAllyAnima = new List<int>();
-
+        dropAnima = new List<AnimaDataSO>();
         state = State.start;
         database = BGRepo.I;
         animaTable = database.GetMeta("Anima");
@@ -167,7 +160,12 @@ public class BattleManager : MonoBehaviour
         }
         enemyBattleSetting = gameObject.AddComponent<EnemyBattleSetting>();
         enemyBattleSetting.stage = SceneManager.GetActiveScene().name.Substring(0, SceneManager.GetActiveScene().name.IndexOf("Battle"));
-        enemyBattleSetting.SpawnEnemy();
+        int n = 0;
+        foreach(var tmp in playerInfo.haveAnima)
+        {
+            if(tmp.level > n) n = tmp.level;
+        }
+        enemyBattleSetting.SpawnEnemy(n);
         setEnemyanima();
         setEnemyActions();
         initializeEnemyAnima();
@@ -208,6 +206,7 @@ public class BattleManager : MonoBehaviour
         {
             allyActions[i].animaData = allyBattleSetting.playerinfo.battleAnima[i];
             allyActions[i].animaData.isAlly = true;
+            allyActions[i].animaData.location = i;
             var allyStatus = GameObject.Find($"Ally{i}");
             var allyParser = GameObject.Find($"Ally{i}Name");
             allyStatus.transform.Find("Image").GetComponent<UnityEngine.UI.Image>().sprite= Resources.Load<Sprite>("Minwoo/Portrait/" + allyActions[i].animaData.Objectfile);
@@ -258,8 +257,8 @@ public class BattleManager : MonoBehaviour
             {
                 if (entity.Get<string>("name") == enemyActions[i].animaData.Name && entity.Get<int>("Meeted") == 0 )
                 {
-                    
-                    
+                    entity.Set<int>("Meeted", 1);
+                    DBUpdater.Save();
                 }
 
             });
@@ -506,6 +505,7 @@ public class BattleManager : MonoBehaviour
                 yield return cameraManager.ZoomIn(allyBattleSetting.allyinstance[allyActions.IndexOf(anima)].transform, enemyBattleSetting.enemyinstance[selectEnemy].transform, true, anima.animaData.attackName);
                 canvas.SetActive(true);
                 yield return anima.Attack(anima, enemyActions[selectEnemy], enemyHealthBar[selectEnemy], allyDamageBar[allyActions.IndexOf(anima)]);
+                damageNumber.Spawn(new Vector2(enemyBattleSetting.enemyinstance[selectEnemy].transform.position.x -0.1f, enemyBattleSetting.enemyinstance[selectEnemy].transform.position.y + 0.1f), enemyActions[selectEnemy].damage);
                 battleLogManager.AddLog($"{anima.animaData.Name} hit {enemyActions[selectEnemy].animaData.Name} for {Mathf.Ceil(enemyActions[selectEnemy].damage)}damage", true);
                 allyDamageText[allyActions.IndexOf(anima)].text = Mathf.Ceil(allyDamageBar[allyActions.IndexOf(anima)].thisPoint).ToString();
                 foreach (var max in allyDamageBar)
@@ -556,6 +556,7 @@ public class BattleManager : MonoBehaviour
                                 AnimaDataSO animadata = ScriptableObject.CreateInstance<AnimaDataSO>();
                                 animadata.GetAnima(enemyActions[selectEnemy].animaData.Name, enemyActions[selectEnemy].animaData.level);
                                 allyBattleSetting.playerinfo.GetAnima(animadata);
+                                dropAnima.Add(animadata);
                                 animaTable.ForEachEntity(entity =>
                                 {
                                     if (entity.Get<string>("name") == enemyActions[selectEnemy].animaData.Name)
@@ -564,6 +565,14 @@ public class BattleManager : MonoBehaviour
                                         database.Addons.Get<BGAddonSaveLoad>().Save();
                                     }
                                 });
+                            }
+                            foreach (var tmp in allyActions)
+                            {
+                                if (!tmp.animaData.Animadie)
+                                {
+                                    tmp.animaData.LevelUp();
+                                    GameObject.Find($"AllyAnimaHP{tmp.animaData.location}").transform.Find("LV UI").transform.Find("Current LV").GetComponent<TextMeshProUGUI>().text = tmp.animaData.level.ToString();
+                                }
                             }
                         }
                     }
@@ -595,9 +604,8 @@ public class BattleManager : MonoBehaviour
                             ally.animaData.location = -1;
                         }
                         state = State.win;
-                        print("승리");
                         turnIndex = 0;
-                        //winBattle();
+                        WinBattle();
                         StopCoroutine(runningCoroutine);
                     }
 
@@ -612,7 +620,7 @@ public class BattleManager : MonoBehaviour
         if (enemyActions.Count > 0 && turnList.Count == 0)
         {
             runningCoroutine = null;
-            //BattleStart();
+            BattleStart();
         }
         else if (enemyActions.Count > 0 && turnList.Count != 0)
         {
@@ -680,11 +688,12 @@ public class BattleManager : MonoBehaviour
                 canvas.SetActive(false);//체력 바 동기화 문제 발생 예상
                 /* Attack */
 
-                yield return cameraManager.ZoomIn(allyBattleSetting.allyinstance[allyActions.IndexOf(anima)].transform, enemyBattleSetting.enemyinstance[selectEnemy].transform, true, anima.animaData.skillName);
+                yield return cameraManager.ZoomIn(allyBattleSetting.allyinstance[allyActions.IndexOf(anima)].transform, enemyBattleSetting.enemyinstance[selectEnemy].transform, true, anima.animaData.skillName[0]);
 
                 /* Animation */
                 canvas.SetActive(true);
                 yield return anima.Skill(anima, enemyActions[selectEnemy], enemyHealthBar[selectEnemy], allyDamageBar[allyActions.IndexOf(anima)]);
+                damageNumber.Spawn(new Vector2(enemyBattleSetting.enemyinstance[selectEnemy].transform.position.x - 0.1f, enemyBattleSetting.enemyinstance[selectEnemy].transform.position.y + 0.1f), enemyActions[selectEnemy].damage);
                 battleLogManager.AddLog($"{anima.animaData.Name} used \"{ anima.animaData.skillName}\" on {enemyActions[selectEnemy].animaData.Name} for {Mathf.Ceil(enemyActions[selectEnemy].damage)}damage", true);
                 allyDamageText[allyActions.IndexOf(anima)].text = Mathf.Ceil(allyDamageBar[allyActions.IndexOf(anima)].thisPoint).ToString();
                 foreach (var max in allyDamageBar)
@@ -739,10 +748,17 @@ public class BattleManager : MonoBehaviour
                                     if (entity.Get<string>("name") == enemyActions[selectEnemy].animaData.Name)
                                     {
                                         entity.Set<int>("Meeted", 2);
-                                        database.Addons.Get<BGAddonSaveLoad>().Save();
-
+                                        DBUpdater.Save();
                                     }
                                 });
+                            }
+                            foreach (var tmp in allyActions)
+                            {
+                                if (!tmp.animaData.Animadie)
+                                {
+                                    tmp.animaData.LevelUp();
+                                    GameObject.Find($"AllyAnimaHP{tmp.animaData.location}").transform.Find("LV UI").transform.Find("Current LV").GetComponent<TextMeshProUGUI>().text = tmp.animaData.level.ToString();
+                                }
                             }
                         }
                     }
@@ -778,7 +794,7 @@ public class BattleManager : MonoBehaviour
                         state = State.win;
                         print("승리");
                         turnIndex = 0;
-                        //winBattle();
+                        WinBattle();
                         StopCoroutine(runningCoroutine);
                     }
 
@@ -793,7 +809,7 @@ public class BattleManager : MonoBehaviour
         if (enemyActions.Count > 0 && turnList.Count == 0)
         {
             runningCoroutine = null;
-            //BattleStart();
+            BattleStart();
         }
         else if (enemyActions.Count > 0 && turnList.Count != 0)
         {
@@ -830,6 +846,7 @@ public class BattleManager : MonoBehaviour
                     canvas.SetActive(true);
                     
                     yield return enemy.Attack(enemy, allyActions[selectAlly], allyHealthBar[selectAlly], enemyDamageBar[enemy.animaData.enemyIndex]);
+                    damageNumber.Spawn(new Vector2(allyBattleSetting.allyinstance[selectAlly].transform.position.x - 0.1f, allyBattleSetting.allyinstance[selectAlly].transform.position.y + 0.1f), allyActions[selectAlly].damage);
                     battleLogManager.AddLog($"{enemy.animaData.Name} hit {allyActions[selectAlly].animaData.Name} for {Mathf.Ceil(allyActions[selectAlly].damage)} damage", false);
                     enemyDamageText[enemy.animaData.enemyIndex].text = Mathf.Ceil(enemyDamageBar[enemy.animaData.enemyIndex].thisPoint).ToString();
                     
@@ -899,9 +916,8 @@ public class BattleManager : MonoBehaviour
                         {
                             state = State.defeat;
                             print("패배");
-                            //loseBattle();
+                            LoseBattle();
                             StopCoroutine(runningCoroutine);
-                            yield return new WaitForSeconds(10000f);
 
 
                         }
@@ -924,9 +940,10 @@ public class BattleManager : MonoBehaviour
 
                     /* Animation */
 
-                    yield return cameraManager.ZoomIn(enemyBattleSetting.enemyinstance[enemyActions.IndexOf(enemy)].transform, allyBattleSetting.allyinstance[selectAlly].transform, false, enemy.animaData.skillName);
+                    yield return cameraManager.ZoomIn(enemyBattleSetting.enemyinstance[enemyActions.IndexOf(enemy)].transform, allyBattleSetting.allyinstance[selectAlly].transform, false, enemy.animaData.skillName[0]);
                     canvas.SetActive(true);
                     yield return enemy.Skill(enemy, allyActions[selectAlly], allyHealthBar[selectAlly], enemyDamageBar[enemy.animaData.enemyIndex]);
+                    damageNumber.Spawn(new Vector2(allyBattleSetting.allyinstance[selectAlly].transform.position.x - 0.1f, allyBattleSetting.allyinstance[selectAlly].transform.position.y + 0.1f), allyActions[selectAlly].damage);
                     battleLogManager.AddLog($"{enemy.animaData.Name} used \"{enemy.animaData.skillName}\" on {allyActions[selectAlly].animaData.Name} for {Mathf.Ceil(allyActions[selectAlly].damage)} damage", false);
                     enemyDamageText[enemy.animaData.enemyIndex].text = Mathf.Ceil(enemyDamageBar[enemy.animaData.enemyIndex].thisPoint).ToString();
                     foreach (var max in allyDamageBar)
@@ -997,9 +1014,8 @@ public class BattleManager : MonoBehaviour
                         {
                             state = State.defeat;
                             print("패배");
-                            //loseBattle();
+                            LoseBattle();
                             StopCoroutine(runningCoroutine);
-                            yield return new WaitForSeconds(10000f);
 
                         }
                     }
@@ -1041,6 +1057,28 @@ public class BattleManager : MonoBehaviour
     public List<EnemyActions> getEnemy()
     {
         return enemyActions;
+    }
+    void WinBattle()
+    {
+        
+        Instantiate(Resources.Load<GameObject>("Minwoo/Battle Win UI"), canvas.transform);
+        for(int i = 0; i< allyActions.Count; i++)
+        {
+            GameObject animaImage = GameObject.Find("Entry Anima List").transform.Find($"Anima {i}").gameObject;
+            animaImage.GetComponent<Image>().sprite = Resources.Load<Sprite>("Minwoo/Portrait/" + allyActions[i].animaData.Objectfile);
+            animaImage.SetActive(true);
+        }
+        for (int i = 0; i < dropAnima.Count; i++) 
+        {
+            GameObject dropAnimaImage = GameObject.Find("Drop Anima List").transform.Find($"Anima {i}").gameObject;
+            dropAnimaImage.GetComponent<Image>().sprite = Resources.Load<Sprite>("Minwoo/Portrait/" + dropAnima[i].Objectfile);
+            dropAnimaImage.SetActive(true);
+        }
+        
+    }
+    void LoseBattle()
+    {
+        Instantiate(Resources.Load<GameObject>("Minwoo/Game Over UI"), canvas.transform);
     }
 }
 
