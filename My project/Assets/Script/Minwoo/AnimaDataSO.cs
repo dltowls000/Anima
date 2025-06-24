@@ -18,7 +18,10 @@ public class AnimaDataSO : ScriptableObject
     public float DropRate = 1;
     public int MaxSkill_pp = 10;
     public int Skill_pp = 10;
-    public int Max_pp = 1;
+    public float defHP;
+    public float defAP;
+    public float defDP;
+    public float defSP;
     public string Objectfile;
     public int location = -1;
     public float defense = 0;
@@ -26,9 +29,11 @@ public class AnimaDataSO : ScriptableObject
     public float MAX_EXP = 0;
     public float weight;
     public int enemyIndex= -1;
-    
-    public string skillName = "";
+    public int mood = -1;
+    public string type = "";
+    public List <string> skillName = new List<string>();
     public string attackName = "";
+    private int[] maxLevel = new int[10]{ 9, 12, 15, 18, 21, 24, 27, 30, 33, 36 };
     public void Initialize(string name, int level)
     {
         
@@ -38,18 +43,25 @@ public class AnimaDataSO : ScriptableObject
         animaTable.ForEachEntity(entity => {
             if (entity.Get<string>("name") == name)
             {
+
+                mood = int.Parse(Name.Substring(Name.Length - 1));
                 this.level = level;
                 weight = entity.Get<float>("Weight");
-                Maxstamina = Mathf.Ceil(CalcStat(level, weight, entity.Get<float>("HP")));
+                defHP = entity.Get<float>("HP");
+                defAP = entity.Get<float>("AP");
+                defDP = entity.Get<float>("DP");
+                defSP = entity.Get<float>("SP");
+                Maxstamina = Mathf.Ceil(CalcStat(level, weight, defHP));
                 Stamina = Maxstamina;
-                Damage = Mathf.Ceil(CalcStat(level, weight, entity.Get<float>("AP")));
-                defense = Mathf.Ceil(CalcStat(level, weight, entity.Get<float>("DP")));
+                Damage = Mathf.Ceil(CalcStat(level, weight, defAP));
+                defense = Mathf.Ceil(CalcStat(level, weight, defDP));
                 DropGold = entity.Get<int>("DropGold");
-                Speed = Mathf.Ceil(entity.Get<float>("SP"));
+                Speed = Mathf.Ceil(CalcStat(level, weight, defSP));
                 DropRate = entity.Get<float>("DropRate");
                 Objectfile = entity.Get<string>("Objectfile");
                 attackName = entity.Get<string>("Attack");
-                skillName = entity.Get<string>("Skill");
+                skillName.Add(entity.Get<string>("Skill"));
+                type = entity.Get<string>("Type");
             }
         });
     }
@@ -63,28 +75,40 @@ public class AnimaDataSO : ScriptableObject
             {
                 this.level = level;
                 weight = entity.Get<float>("Weight");
-                Maxstamina = Mathf.Ceil(CalcStat(level, weight, entity.Get<float>("HP")));
+                defHP = entity.Get<float>("HP");
+                defAP = entity.Get<float>("AP");
+                defDP = entity.Get<float>("DP");
+                defSP = entity.Get<float>("SP");
+                Maxstamina = Mathf.Ceil(CalcStat(level, weight, defHP));
                 Stamina = Maxstamina * 0.4f;
-                Damage = Mathf.Ceil(CalcStat(level, weight, entity.Get<float>("AP")));
-                defense = Mathf.Ceil(CalcStat(level, weight, entity.Get<float>("DP")));
+                Damage = Mathf.Ceil(CalcStat(level, weight, defAP));
+                defense = Mathf.Ceil(CalcStat(level, weight, defDP));
                 DropGold = entity.Get<int>("DropGold");
-                Speed = Mathf.Ceil(entity.Get<float>("SP"));
+                Speed = Mathf.Ceil(CalcStat(level, weight, defSP));
                 DropRate = entity.Get<float>("DropRate");
                 Objectfile = entity.Get<string>("Objectfile");
                 attackName = entity.Get<string>("Attack");
-                skillName = entity.Get<string>("Skill");
+                skillName.Add(entity.Get<string>("Skill"));
+                type = entity.Get<string>("Type");
             }
         });
     }
     public float CalcStat(int level, float weight, float stat)
     {
         //math.ceil(((2*j)*(j+0.9))*(k * math.sqrt(math.sqrt(pow(i,3))) + k*math.sqrt(math.sqrt(pow(j, i)))))
-        float a = ((2f * weight) * (weight + 0.9f));
-        if (float.IsNaN(a)) { Debug.Log("a"); }
-        float b = (stat * Mathf.Sqrt(Mathf.Sqrt(Mathf.Pow(level, 3f))));
-        if (float.IsNaN(b)) { Debug.Log("b"); }
-        float c = stat * Mathf.Sqrt(Mathf.Sqrt(Mathf.Pow(weight, level)));
-        if (float.IsNaN(a)) { Debug.Log("c"); }
-        return Mathf.Ceil(a * b + c);
+        
+        return Mathf.Ceil(((2f * weight) * (weight + 0.9f)) * (stat * Mathf.Sqrt(Mathf.Sqrt(Mathf.Pow(level, 3f)))) + stat * Mathf.Sqrt(Mathf.Sqrt(Mathf.Pow(weight, level))));
+    }
+    public void LevelUp()
+    {
+        if (maxLevel[mood] > level)
+        {
+            level++;
+            Maxstamina = Mathf.Ceil(CalcStat(level, weight, defHP));
+            Damage = CalcStat(level, weight, defAP);
+            defense = CalcStat(level, weight, defDP);
+            Speed = CalcStat(level, weight, defSP);
+        }
+        
     }
 }

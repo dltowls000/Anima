@@ -282,6 +282,7 @@ MonoBehaviour:
   battleManager: {fileID: 230224972}
   canvas: {fileID: 599841604}
   playerInfo: {fileID: 0}
+  damageNumber: {fileID: 5688961714689424391, guid: 925da8dae987a344e9c4b1fafa29a40f, type: 3}
 --- !u!4 &230224974
 Transform:
   m_ObjectHideFlags: 0

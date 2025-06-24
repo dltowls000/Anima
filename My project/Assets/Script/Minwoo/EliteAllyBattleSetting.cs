@@ -48,9 +48,9 @@ public class EliteAllyBattleSetting : MonoBehaviour
         var animaTable = database.GetMeta("Anima");
         for (int i = 0; i < playerinfo.battleAnima.Count; i++)
         {
-            allyobjPrefab.Add(Resources.Load<GameObject>("Minwoo/" + playerinfo.battleAnima[i].Objectfile));
+            allyobjPrefab.Add(Resources.Load<GameObject>("Minwoo/Portrait/" + playerinfo.battleAnima[i].Objectfile));
             allyhpPrefab.Add(Resources.Load<GameObject>("Minwoo/AllyAnimaHP"));
-            allyInfoPrefab.Add(Resources.Load<GameObject>($"Minwoo/Ally{i}"));
+            allyInfoPrefab.Add(Resources.Load<GameObject>($"Minwoo/AllyElite{i}"));
             allyParserPrefab.Add(Resources.Load<GameObject>($"Minwoo/Battle Parser/Ally{i}Name"));
 
         }

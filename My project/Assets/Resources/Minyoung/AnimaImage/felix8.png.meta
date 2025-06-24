@@ -5,6 +5,9 @@ TextureImporter:
   - first:
       213: -1786011516949344709
     second: felix8_0
+  - first:
+      213: -5249054610429177214
+    second: felix8_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -103,10 +106,10 @@ TextureImporter:
       name: felix8_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 1024
-        height: 1024
+        x: 55
+        y: 560
+        width: 19
+        height: 24
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -117,6 +120,28 @@ TextureImporter:
       bones: []
       spriteID: b3e4a7fecffc637e0800000000000000
       internalID: -1786011516949344709
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: felix8_1
+      rect:
+        serializedVersion: 2
+        x: 68
+        y: 57
+        width: 893
+        height: 921
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2821eba74ac9727b0800000000000000
+      internalID: -5249054610429177214
       vertices: []
       indices: 
       edges: []
@@ -136,6 +161,7 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       felix8_0: -1786011516949344709
+      felix8_1: -5249054610429177214
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

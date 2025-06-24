@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,11 +17,13 @@ public class AnimaUI : MonoBehaviour
     [SerializeField] private Toggle[] emotionToggles;
 
     private EmotionType? currentFilter = null;
+
     private void OnEnable()
     {
         SetupTabs();
         Refresh();
     }
+
     private void SetupTabs()
     {
         for (int i = 0; i < emotionToggles.Length; i++)
@@ -39,6 +42,7 @@ public class AnimaUI : MonoBehaviour
             });
         }
     }
+
     private void Refresh()
     {
         foreach (Transform child in gridParent)
@@ -50,7 +54,7 @@ public class AnimaUI : MonoBehaviour
 
         foreach (var anima in animaList)
         {
-            bool discovered = CorridorManager.Instance.IsDiscovered(anima);
+            bool discovered = anima.meeted >= 1;
 
             if (currentFilter != null && !discovered)
                 continue;
@@ -61,14 +65,17 @@ public class AnimaUI : MonoBehaviour
             slot.onClick.AddListener(ShowDetail);
         }
 
-        var first = animaList.Find(a => currentFilter == null || CorridorManager.Instance.IsDiscovered(a));
-        if (first != null) ShowDetail(first);
+        var first = animaList.Find(a => currentFilter == null || a.meeted >= 1);
+        if (first != null)
+            ShowDetail(first);
     }
+
     private void ShowDetail(AnimaEntry anima)
     {
-        bool discovered = CorridorManager.Instance.IsDiscovered(anima);
+        bool discovered = anima.meeted >= 1;
         detailPanel.Display(anima, discovered);
     }
+
     public void OnBackButton()
     {
         gameObject.SetActive(false);

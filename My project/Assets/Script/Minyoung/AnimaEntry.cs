@@ -11,7 +11,8 @@ public class AnimaEntry
     public float hp;               
     public float ap;               
     public float sp;               
-    public float dp;               
+    public float dp;
+    public int meeted;
 
     public string objectFile;      
     public EmotionType emotion;    
@@ -39,6 +40,7 @@ public class AnimaEntry
                 sp = entity.Get<float>("SP"),
                 dp = entity.Get<float>("DP"),
                 objectFile = entity.Get<string>("Objectfile"),
+                meeted = entity.Get<int>("Meeted"),
                 emotion = ParseEmotion(entity.Get<string>("Type"))
             };
 

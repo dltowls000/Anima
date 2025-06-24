@@ -22,7 +22,7 @@ public class EnemyBattleSetting : MonoBehaviour
     public GameObject canvas;
     GameObject battleParser;
     public string stage;
-    public void SpawnEnemy()
+    public void SpawnEnemy(int level)
     {
         animator = new List<Animator>();
         var database = BGRepo.I;
@@ -64,9 +64,30 @@ public class EnemyBattleSetting : MonoBehaviour
                 objectfileList.Add(entity.Get<string>("Objectfile"));
         });
         int numberOfObjectsToAdd = Random.Range(2, 4);
+        int mood = 0;
+        if (level <= 8)
+        {
+            mood = 2;
+        }
+        else if (level <= 12)
+        {
+            mood = 3;
+        }
+        else if (level <= 16)
+        {
+            mood = 4;
+        }
+        else if (level <= 20)
+        {
+            mood = 5;
+        }
+        else
+        {
+            mood = 6;
+        }
         for (int i = 0; i < numberOfObjectsToAdd; i++)
         {
-            int randomIndex = Random.Range(1, objectfileList.Count);
+            int randomIndex = Random.Range(mood-1 , mood + 2);
             enemyobjPrefab.Add(Resources.Load<GameObject>("Minwoo/Portrait/" + objectfileList[randomIndex]));
             enemyhpPrefab.Add(Resources.Load<GameObject>("Minwoo/EnemyAnimaHP"));
             enemyInfoPrefab.Add(Resources.Load<GameObject>($"Minwoo/Enemy{i}"));

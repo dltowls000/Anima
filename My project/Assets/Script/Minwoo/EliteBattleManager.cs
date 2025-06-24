@@ -1,14 +1,9 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
 using DamageNumbersPro;
 using TMPro;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using static Unity.Burst.Intrinsics.X86.Avx;
 using System.Collections;
-using System;
 using UnityEngine.SceneManagement;
 using BansheeGz.BGDatabase;
 public class EliteBattleManager : MonoBehaviour
@@ -52,6 +47,7 @@ public class EliteBattleManager : MonoBehaviour
     List<GameObject> enemy;
 
     List<int> dieAllyAnima;
+    [SerializeField]
     DamageNumber damageNumber;
     EventSystem eventSystem;
 
@@ -167,7 +163,12 @@ public class EliteBattleManager : MonoBehaviour
         }
         eliteEnemyBattleSetting = gameObject.AddComponent<EliteEnemyBattleSetting>();
         eliteEnemyBattleSetting.stage = SceneManager.GetActiveScene().name.Substring(0,SceneManager.GetActiveScene().name.IndexOf("Elite"));
-        eliteEnemyBattleSetting.SpawnEnemy();
+        int n = 0;
+        foreach (var tmp in playerInfo.haveAnima)
+        {
+            if (tmp.level > n) n = tmp.level;
+        }
+        eliteEnemyBattleSetting.SpawnEnemy(n);
         setEnemyanima();
         setEnemyActions();
         initializeEnemyAnima();
@@ -208,7 +209,7 @@ public class EliteBattleManager : MonoBehaviour
         {
             allyActions[i].animaData = eliteAllyBattleSetting.playerinfo.battleAnima[i];
             allyActions[i].animaData.isAlly = true;
-            var allyStatus = GameObject.Find($"Ally{i}");
+            var allyStatus = GameObject.Find($"AllyElite{i}");
             var allyParser = GameObject.Find($"Ally{i}Name");
             allyStatus.transform.Find("Image").GetComponent<UnityEngine.UI.Image>().sprite = Resources.Load<Sprite>("Minwoo/Portrait/" + allyActions[i].animaData.Objectfile);
             allyHealthBar.Add(GameObject.Find($"AllyAnimaHP{i}").transform.Find("HP").GetComponent<HealthBar>());
@@ -246,11 +247,12 @@ public class EliteBattleManager : MonoBehaviour
                 if (entity.Get<string>("name") == enemyActions[i].animaData.Name && entity.Get<int>("Meeted") == 0)
                 {
                     entity.Set<int>("Meeted", 1);
+                    DBUpdater.Save();
                 }
             });
             enemyActions[i].animaData.location = i;
             enemyActions[i].animaData.enemyIndex = i;
-            var enemyStatus = GameObject.Find($"Enemy{i}");
+            var enemyStatus = GameObject.Find($"EnemyElite{i}");
             var enemyParser = GameObject.Find($"Enemy{i}Name");
             enemyStatus.transform.Find("Image").GetComponent<UnityEngine.UI.Image>().sprite = Resources.Load<Sprite>("Minwoo/Portrait/" + enemyActions[i].animaData.Objectfile);
             enemyHealthBar.Add(GameObject.Find($"EnemyAnimaHP{i}").transform.Find("HP").GetComponent<HealthBar>());
@@ -488,9 +490,10 @@ public class EliteBattleManager : MonoBehaviour
 
 
                 /* Animation */
-                yield return cameraManager.ZoomIn(eliteAllyBattleSetting.allyinstance[allyActions.IndexOf(anima)].transform, enemyActions[selectEnemy].transform, true, anima.animaData.attackName);
+                yield return cameraManager.ZoomIn(eliteAllyBattleSetting.allyinstance[allyActions.IndexOf(anima)].transform, eliteEnemyBattleSetting.enemyinstance[selectEnemy].transform, true, anima.animaData.attackName);
                 canvas.SetActive(true);
                 yield return anima.Attack(anima, enemyActions[selectEnemy], enemyHealthBar[selectEnemy], allyDamageBar[allyActions.IndexOf(anima)]);
+                damageNumber.Spawn(new Vector2(eliteEnemyBattleSetting.enemyinstance[selectEnemy].transform.position.x - 0.1f, eliteEnemyBattleSetting.enemyinstance[selectEnemy].transform.position.y + 0.1f), enemyActions[selectEnemy].damage);
                 battleLogManager.AddLog($"{anima.animaData.Name} hit {enemyActions[selectEnemy].animaData.Name} for {Mathf.Ceil(enemyActions[selectEnemy].damage)}damage", true);
                 allyDamageText[allyActions.IndexOf(anima)].text = Mathf.Ceil(allyDamageBar[allyActions.IndexOf(anima)].thisPoint).ToString();
                 foreach (var max in allyDamageBar)
@@ -536,12 +539,13 @@ public class EliteBattleManager : MonoBehaviour
                             tmpturnList.RemoveAt(i);
                             turn.RemoveAt(i);
                             isTurn.RemoveAt(i);
-                            //if (UnityEngine.Random.Range(0, 101) <= enemyActions[selectEnemy].animaData.DropRate)
-                            //{
-                            //    AnimaDataSO animadata = ScriptableObject.CreateInstance<AnimaDataSO>();
-                            //    animadata.GetAnima(enemyActions[selectEnemy].animaData.Name, enemyActions[selectEnemy].animaData.level);
-                            //    eliteAllyBattleSetting.playerinfo.GetAnima(animadata);
-                            //}
+                        }
+                        foreach (var tmp in allyActions)
+                        {
+                            if (!tmp.animaData.Animadie)
+                            {
+                                tmp.animaData.LevelUp();
+                            }
                         }
                     }
                     battleLogManager.AddLog($"{enemyActions[selectEnemy].animaData.Name}is dead", false);
@@ -561,7 +565,7 @@ public class EliteBattleManager : MonoBehaviour
                         rebuild = GameObject.Find($"Enemy{i}");
                         if (rebuild != null)
                         {
-                            rebuild.transform.Find("Status").GetComponent<StatusSync>().dieanima++;
+                            rebuild.transform.Find("Status").GetComponent<EliteStatusSync>().dieanima++;
                         }
                     }
 
@@ -589,7 +593,7 @@ public class EliteBattleManager : MonoBehaviour
         if (enemyActions.Count > 0 && turnList.Count == 0)
         {
             runningCoroutine = null;
-            //BattleStart();
+            BattleStart();
         }
         else if (enemyActions.Count > 0 && turnList.Count != 0)
         {
@@ -657,11 +661,12 @@ public class EliteBattleManager : MonoBehaviour
                 canvas.SetActive(false);//체력 바 동기화 문제 발생 예상
                 /* Attack */
 
-                yield return cameraManager.ZoomIn(eliteAllyBattleSetting.allyinstance[allyActions.IndexOf(anima)].transform, enemyActions[selectEnemy].transform, true, anima.animaData.skillName);
+                yield return cameraManager.ZoomIn(eliteAllyBattleSetting.allyinstance[allyActions.IndexOf(anima)].transform, eliteEnemyBattleSetting.enemyinstance[selectEnemy].transform, true, anima.animaData.skillName[0]);
 
                 /* Animation */
                 canvas.SetActive(true);
                 yield return anima.Skill(anima, enemyActions[selectEnemy], enemyHealthBar[selectEnemy], allyDamageBar[allyActions.IndexOf(anima)]);
+                damageNumber.Spawn(new Vector2(eliteEnemyBattleSetting.enemyinstance[selectEnemy].transform.position.x - 0.1f, eliteEnemyBattleSetting.enemyinstance[selectEnemy].transform.position.y + 0.1f), enemyActions[selectEnemy].damage);
                 battleLogManager.AddLog($"{anima.animaData.Name} used \"{anima.animaData.skillName}\" on {enemyActions[selectEnemy].animaData.Name} for {Mathf.Ceil(enemyActions[selectEnemy].damage)}damage", true);
                 allyDamageText[allyActions.IndexOf(anima)].text = Mathf.Ceil(allyDamageBar[allyActions.IndexOf(anima)].thisPoint).ToString();
                 foreach (var max in allyDamageBar)
@@ -706,12 +711,13 @@ public class EliteBattleManager : MonoBehaviour
                             tmpturnList.RemoveAt(i);
                             turn.RemoveAt(i);
                             isTurn.RemoveAt(i);
-                            //if (UnityEngine.Random.Range(0, 101) <= enemyActions[selectEnemy].animaData.DropRate)
-                            //{
-                            //    AnimaDataSO animadata = ScriptableObject.CreateInstance<AnimaDataSO>();
-                            //    animadata.GetAnima(enemyActions[selectEnemy].animaData.Name, enemyActions[selectEnemy].animaData.level);
-                            //    eliteAllyBattleSetting.playerinfo.GetAnima(animadata);
-                            //}
+                        }
+                        foreach (var tmp in allyActions)
+                        {
+                            if (!tmp.animaData.Animadie)
+                            {
+                                tmp.animaData.LevelUp();
+                            }
                         }
                     }
                     battleLogManager.AddLog($"{enemyActions[selectEnemy].animaData.Name}is dead", false);
@@ -733,7 +739,7 @@ public class EliteBattleManager : MonoBehaviour
                         rebuild = GameObject.Find($"Enemy{i}");
                         if (rebuild != null)
                         {
-                            rebuild.transform.Find("Status").GetComponent<StatusSync>().dieanima++;
+                            rebuild.transform.Find("Status").GetComponent<EliteStatusSync>().dieanima++;
                         }
                     }
 
@@ -761,7 +767,7 @@ public class EliteBattleManager : MonoBehaviour
         if (enemyActions.Count > 0 && turnList.Count == 0)
         {
             runningCoroutine = null;
-            //BattleStart();
+            BattleStart();
         }
         else if (enemyActions.Count > 0 && turnList.Count != 0)
         {
@@ -794,10 +800,11 @@ public class EliteBattleManager : MonoBehaviour
 
 
                     /* Animation */
-                    yield return cameraManager.ZoomIn(eliteEnemyBattleSetting.enemyinstance[enemyActions.IndexOf(enemy)].transform, enemyActions[selectEnemy].transform, false, enemy.animaData.attackName);
+                    yield return cameraManager.ZoomIn(eliteEnemyBattleSetting.enemyinstance[enemyActions.IndexOf(enemy)].transform, eliteAllyBattleSetting.allyinstance[selectAlly].transform, false, enemy.animaData.attackName);
                     canvas.SetActive(true);
 
                     yield return enemy.Attack(enemy, allyActions[selectAlly], allyHealthBar[selectAlly], enemyDamageBar[enemy.animaData.enemyIndex]);
+                    damageNumber.Spawn(new Vector2(eliteAllyBattleSetting.allyinstance[selectAlly].transform.position.x - 0.1f, eliteAllyBattleSetting.allyinstance[selectAlly].transform.position.y + 0.1f), allyActions[selectAlly].damage);
                     battleLogManager.AddLog($"{enemy.animaData.Name} hit {allyActions[selectAlly].animaData.Name} for {Mathf.Ceil(allyActions[selectAlly].damage)} damage", false);
                     enemyDamageText[enemy.animaData.enemyIndex].text = Mathf.Ceil(enemyDamageBar[enemy.animaData.enemyIndex].thisPoint).ToString();
 
@@ -892,9 +899,10 @@ public class EliteBattleManager : MonoBehaviour
 
                     /* Animation */
 
-                    yield return cameraManager.ZoomIn(eliteEnemyBattleSetting.enemyinstance[enemyActions.IndexOf(enemy)].transform, enemyActions[selectEnemy].transform, false, enemy.animaData.skillName);
+                    yield return cameraManager.ZoomIn(eliteEnemyBattleSetting.enemyinstance[enemyActions.IndexOf(enemy)].transform, eliteAllyBattleSetting.allyinstance[selectAlly].transform, false, enemy.animaData.skillName[0]);
                     canvas.SetActive(true);
                     yield return enemy.Skill(enemy, allyActions[selectAlly], allyHealthBar[selectAlly], enemyDamageBar[enemy.animaData.enemyIndex]);
+                    damageNumber.Spawn(new Vector2(eliteAllyBattleSetting.allyinstance[selectAlly].transform.position.x - 0.1f, eliteAllyBattleSetting.allyinstance[selectAlly].transform.position.y + 0.1f), allyActions[selectAlly].damage);
                     battleLogManager.AddLog($"{enemy.animaData.Name} used \"{enemy.animaData.skillName}\" on {allyActions[selectAlly].animaData.Name} for {Mathf.Ceil(allyActions[selectAlly].damage)} damage", false);
                     enemyDamageText[enemy.animaData.enemyIndex].text = Mathf.Ceil(enemyDamageBar[enemy.animaData.enemyIndex].thisPoint).ToString();
                     foreach (var max in allyDamageBar)
