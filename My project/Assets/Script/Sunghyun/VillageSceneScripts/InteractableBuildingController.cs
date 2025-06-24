@@ -9,7 +9,7 @@ public class InteractableBuilding : MonoBehaviour
     [SerializeField] private BuildingType buildingType;
     [SerializeField] private Vector3 nameDisplayOffset = new Vector3(0, 1.5f, 0);
     
-    private VillageManager villageManager;
+    private VillageController _villageController;
     
     public enum BuildingType
     {
@@ -21,7 +21,7 @@ public class InteractableBuilding : MonoBehaviour
     
     private void Awake()
     {
-        villageManager = FindObjectOfType<VillageManager>();
+        _villageController = FindObjectOfType<VillageController>();
     }
     
     private void OnMouseDown()
@@ -29,15 +29,16 @@ public class InteractableBuilding : MonoBehaviour
         if (EventSystem.current.IsPointerOverGameObject())
             return;
         
-        villageManager.PlayClickSound();
+        _villageController.PlayClickSound();
         
         switch (buildingType)
         {
             case BuildingType.Inn:
+                _villageController.OpenInn();
                 break;
                 
             case BuildingType.Shop:
-                villageManager.OpenShop();
+                _villageController.OpenShop();
                 break;
                 
             case BuildingType.Corridor:
@@ -66,12 +67,12 @@ public class InteractableBuilding : MonoBehaviour
             return;
             
         Vector3 displayPosition = transform.position + nameDisplayOffset;
-        villageManager.ShowBuildingName(buildingName, displayPosition);
+        _villageController.ShowBuildingName(buildingName, displayPosition);
     }
 
     private void OnMouseExit()
     {
-        if (villageManager != null)
-            villageManager.HideBuildingName();
+        if (_villageController != null)
+            _villageController.HideBuildingName();
     }
 }

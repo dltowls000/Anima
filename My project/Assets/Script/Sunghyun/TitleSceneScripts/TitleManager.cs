@@ -25,16 +25,13 @@ public class TitleManager : MonoBehaviour
 
     private void Awake()
     {
-        // 효과음을 위한 AudioSource 생성
         _sfxSource = gameObject.AddComponent<AudioSource>();
     }
 
     private void Start()
     {
-        // 버튼 이벤트 등록
         SetupButtonEvents();
 
-        // BGM 재생
         if (bgmSource != null && bgmSource.clip != null)
             bgmSource.Play();
     }
@@ -97,14 +94,11 @@ public class TitleManager : MonoBehaviour
     
     private IEnumerator LoadSceneWithFade(string sceneName)
     {
-        // 버튼 비활성화
         SetButtonsInteractable(false);
     
-        // 페이드 인
         if (fadeEffect != null)
             yield return fadeEffect.FadeIn();
     
-        // 씬 로드
         SceneManager.LoadScene(sceneName);
     }
 

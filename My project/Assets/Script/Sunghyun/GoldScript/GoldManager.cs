@@ -58,8 +58,6 @@ public class GoldManager : MonoBehaviour
             goldText = goldTextObj.GetComponent<TextMeshProUGUI>();
             if (goldText != null)
                 UpdateGoldDisplay();
-            else
-                Debug.LogWarning($"GameObject '{goldTextObjectName}' found but doesn't have TextMeshProUGUI component");
         }
         else
         {

@@ -10,6 +10,7 @@ public class AnimaInventoryManager : MonoBehaviour
     [SerializeField] private List<AnimaDataSO> activeAnima = new List<AnimaDataSO>();
 
     public event Action OnAnimaInventoryChanged;
+    public event Action<AnimaDataSO> OnPartyAddFailed;
 
     private void Awake()
     {
@@ -34,6 +35,12 @@ public class AnimaInventoryManager : MonoBehaviour
 
     public List<AnimaDataSO> GetAllAnima() => new List<AnimaDataSO>(playerAnima);
     public List<AnimaDataSO> GetActiveAnima() => new List<AnimaDataSO>(activeAnima);
+
+    public bool IsAnimaDefeated(AnimaDataSO anima)
+    {
+        if (anima == null) return false;
+        return anima.Animadie || anima.Stamina <= 0;
+    }
 
     public void AddAnima(AnimaDataSO anima)
     {
@@ -75,6 +82,13 @@ public class AnimaInventoryManager : MonoBehaviour
         var fromList = fromType == InventorySlotType.Inventory ? playerAnima : activeAnima;
         var toList = toType == InventorySlotType.Inventory ? playerAnima : activeAnima;
         
+        if (fromType == InventorySlotType.Inventory && toType == InventorySlotType.Party && 
+            IsAnimaDefeated(fromAnima))
+        {
+            OnPartyAddFailed?.Invoke(fromAnima);
+            return;
+        }
+        
         int fromIndex = fromAnima != null ? fromList.IndexOf(fromAnima) : -1;
         int toIndex = toAnima != null ? toList.IndexOf(toAnima) : -1;
         
@@ -84,6 +98,12 @@ public class AnimaInventoryManager : MonoBehaviour
             {
                 if (fromAnima != null)
                 {
+                    if (IsAnimaDefeated(fromAnima))
+                    {
+                        OnPartyAddFailed?.Invoke(fromAnima);
+                        return;
+                    }
+
                     if (toAnima == null)
                     {
                         if (activeAnima.Count < 3)
@@ -111,6 +131,12 @@ public class AnimaInventoryManager : MonoBehaviour
                     }
                     else if (toIndex >= 0)
                     {
+                        if (IsAnimaDefeated(toAnima))
+                        {
+                            OnPartyAddFailed?.Invoke(toAnima);
+                            return;
+                        }
+
                         activeAnima[fromIndex] = toAnima;
                         playerAnima[toIndex] = fromAnima;
                     }
@@ -132,6 +158,12 @@ public class AnimaInventoryManager : MonoBehaviour
         if (anima == null || activeAnima.Contains(anima)) return;
         if (activeAnima.Count >= 3) return;
         
+        if (IsAnimaDefeated(anima))
+        {
+            OnPartyAddFailed?.Invoke(anima);
+            return;
+        }
+
         if (playerAnima.Remove(anima))
         {
             activeAnima.Add(anima);

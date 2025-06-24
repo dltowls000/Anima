@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class VillageManager : MonoBehaviour
+public class VillageController : MonoBehaviour
 {
     [Header("오디오")]
     [SerializeField] private AudioSource bgmSource;
@@ -11,6 +11,7 @@ public class VillageManager : MonoBehaviour
     [SerializeField] private GameObject buildingNamePanel;
     [SerializeField] private TMPro.TextMeshProUGUI buildingNameText;
     [SerializeField] private ShopManager shopManager;
+    [SerializeField] private InnUIManager innUIManager;
     
     [SerializeField] private float fadeSpeed = 5f;
     private CanvasGroup _nameCanvasGroup;
@@ -107,6 +108,14 @@ public class VillageManager : MonoBehaviour
         if (ShopUIManager.Instance != null)
         {
             ShopUIManager.Instance.CloseShopPanel();
+        }
+    }
+    
+    public void OpenInn()
+    {
+        if (innUIManager != null)
+        {
+            innUIManager.OpenInnPanel();
         }
     }
 }

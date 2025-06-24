@@ -9,6 +9,8 @@ public class AnimaSlotUI : MonoBehaviour, IPointerClickHandler, IBeginDragHandle
     [SerializeField] private Image portraitImage;
     [SerializeField] private Image backgroundImage;
     [SerializeField] private Button button;
+    
+    [SerializeField] private Material grayscaleMaterial;
 
     private AnimaDataSO animaData;
     private InventorySlotType slotType;
@@ -48,6 +50,15 @@ public class AnimaSlotUI : MonoBehaviour, IPointerClickHandler, IBeginDragHandle
             portraitImage.sprite = sprite;
             portraitImage.enabled = sprite != null;
             button.interactable = true;
+            
+            if (animaData.Animadie || animaData.Stamina <= 0)
+            {
+                portraitImage.material = grayscaleMaterial;
+            }
+            else
+            {
+                portraitImage.material = null;
+            }
         }
         else
         {
