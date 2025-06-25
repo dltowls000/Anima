@@ -64,7 +64,7 @@ public class AnimaInventoryDetailUI : MonoBehaviour
     
         if (nameText != null) nameText.text = anima.Name;
         if (levelText != null) levelText.text = anima.level.ToString();
-        // if (typeText != null) typeText.text = anima.type;
+        if (typeText != null) typeText.text = anima.type;
 
         if (hpText != null) 
         {
@@ -78,11 +78,11 @@ public class AnimaInventoryDetailUI : MonoBehaviour
         if (dpText != null) dpText.text = anima.defense.ToString();
         if (spText != null) spText.text = anima.Speed.ToString();
 
-        if (skill1NameText != null) skill1NameText.text = anima.skillName;
-        // if (skill2NameText != null) skill2NameText.text = "두 번째 스킬";
+        if (skill1NameText != null) skill1NameText.text = anima.skillName[0];
+        if (skill2NameText != null) skill2NameText.text = "";
     
-        // if (skill1DescriptionText != null) skill1DescriptionText.text = "스킬1 설명";
-        // if (skill2DescriptionText != null) skill2DescriptionText.text = "스킬2 설명";
+        if (skill1DescriptionText != null) skill1DescriptionText.text = "";
+        if (skill2DescriptionText != null) skill2DescriptionText.text = "";
     }
 
     public void Clear()

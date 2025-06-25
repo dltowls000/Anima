@@ -6,8 +6,7 @@ public class AnimaInventoryManager : MonoBehaviour
 {
     public static AnimaInventoryManager Instance { get; private set; }
 
-    [SerializeField] private List<AnimaDataSO> playerAnima = new List<AnimaDataSO>();
-    [SerializeField] private List<AnimaDataSO> activeAnima = new List<AnimaDataSO>();
+    public PlayerInfo playerInfo;
 
     public event Action OnAnimaInventoryChanged;
     public event Action<AnimaDataSO> OnPartyAddFailed;
@@ -23,6 +22,9 @@ public class AnimaInventoryManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
+
+        playerInfo = ScriptableObject.CreateInstance<PlayerInfo>();
+        playerInfo.Initialize();
     }
 
     private void OnDestroy()
@@ -33,20 +35,19 @@ public class AnimaInventoryManager : MonoBehaviour
         }
     }
 
-    public List<AnimaDataSO> GetAllAnima() => new List<AnimaDataSO>(playerAnima);
-    public List<AnimaDataSO> GetActiveAnima() => new List<AnimaDataSO>(activeAnima);
+    public List<AnimaDataSO> GetAllAnima() => new List<AnimaDataSO>(playerInfo.haveAnima);
+    public List<AnimaDataSO> GetActiveAnima() => new List<AnimaDataSO>(playerInfo.battleAnima);
 
     public bool IsAnimaDefeated(AnimaDataSO anima)
     {
-        if (anima == null) return false;
-        return anima.Animadie || anima.Stamina <= 0;
+        return anima != null && (anima.Animadie || anima.Stamina <= 0);
     }
 
     public void AddAnima(AnimaDataSO anima)
     {
-        if (anima != null && !playerAnima.Contains(anima))
+        if (anima != null && !playerInfo.haveAnima.Contains(anima))
         {
-            playerAnima.Add(anima);
+            playerInfo.haveAnima.Add(anima);
             OnAnimaInventoryChanged?.Invoke();
         }
     }
@@ -54,16 +55,16 @@ public class AnimaInventoryManager : MonoBehaviour
     public void SetActiveAnima(List<AnimaDataSO> selected)
     {
         if (selected == null) return;
-        
-        activeAnima.Clear();
+
+        playerInfo.battleAnima.Clear();
         foreach (var anima in selected)
         {
             if (anima != null)
             {
-                activeAnima.Add(anima);
+                playerInfo.battleAnima.Add(anima);
             }
         }
-        
+
         OnAnimaInventoryChanged?.Invoke();
     }
 
@@ -73,25 +74,24 @@ public class AnimaInventoryManager : MonoBehaviour
 
         var fromAnima = fromSlot.AnimaData;
         var toAnima = toSlot.AnimaData;
-        
+
         if (fromAnima == null && toAnima == null) return;
-        
+
         var fromType = fromSlot.SlotType;
         var toType = toSlot.SlotType;
-        
-        var fromList = fromType == InventorySlotType.Inventory ? playerAnima : activeAnima;
-        var toList = toType == InventorySlotType.Inventory ? playerAnima : activeAnima;
-        
-        if (fromType == InventorySlotType.Inventory && toType == InventorySlotType.Party && 
-            IsAnimaDefeated(fromAnima))
+
+        var fromList = fromType == InventorySlotType.Inventory ? playerInfo.haveAnima : playerInfo.battleAnima;
+        var toList = toType == InventorySlotType.Inventory ? playerInfo.haveAnima : playerInfo.battleAnima;
+
+        if (fromType == InventorySlotType.Inventory && toType == InventorySlotType.Party && IsAnimaDefeated(fromAnima))
         {
             OnPartyAddFailed?.Invoke(fromAnima);
             return;
         }
-        
+
         int fromIndex = fromAnima != null ? fromList.IndexOf(fromAnima) : -1;
         int toIndex = toAnima != null ? toList.IndexOf(toAnima) : -1;
-        
+
         if (fromList != toList)
         {
             if (fromType == InventorySlotType.Inventory && toType == InventorySlotType.Party)
@@ -104,19 +104,16 @@ public class AnimaInventoryManager : MonoBehaviour
                         return;
                     }
 
-                    if (toAnima == null)
+                    if (toAnima == null && playerInfo.battleAnima.Count < playerInfo.maxAnimaNum)
                     {
-                        if (activeAnima.Count < 3)
-                        {
-                            playerAnima.Remove(fromAnima);
-                            activeAnima.Add(fromAnima);
-                        }
+                        playerInfo.haveAnima.Remove(fromAnima);
+                        playerInfo.battleAnima.Add(fromAnima);
                     }
                     else if (toIndex >= 0)
                     {
-                        playerAnima.Remove(fromAnima);
-                        activeAnima[toIndex] = fromAnima;
-                        playerAnima.Add(toAnima);
+                        playerInfo.haveAnima.Remove(fromAnima);
+                        playerInfo.battleAnima[toIndex] = fromAnima;
+                        playerInfo.haveAnima.Add(toAnima);
                     }
                 }
             }
@@ -126,8 +123,8 @@ public class AnimaInventoryManager : MonoBehaviour
                 {
                     if (toAnima == null)
                     {
-                        activeAnima.Remove(fromAnima);
-                        playerAnima.Add(fromAnima);
+                        playerInfo.battleAnima.Remove(fromAnima);
+                        playerInfo.haveAnima.Add(fromAnima);
                     }
                     else if (toIndex >= 0)
                     {
@@ -137,8 +134,8 @@ public class AnimaInventoryManager : MonoBehaviour
                             return;
                         }
 
-                        activeAnima[fromIndex] = toAnima;
-                        playerAnima[toIndex] = fromAnima;
+                        playerInfo.battleAnima[fromIndex] = toAnima;
+                        playerInfo.haveAnima[toIndex] = fromAnima;
                     }
                 }
             }
@@ -149,35 +146,35 @@ public class AnimaInventoryManager : MonoBehaviour
             fromList[fromIndex] = toList[toIndex];
             toList[toIndex] = temp;
         }
-        
+
         OnAnimaInventoryChanged?.Invoke();
     }
-    
+
     public void MoveToParty(AnimaDataSO anima)
     {
-        if (anima == null || activeAnima.Contains(anima)) return;
-        if (activeAnima.Count >= 3) return;
-        
+        if (anima == null || playerInfo.battleAnima.Contains(anima)) return;
+        if (playerInfo.battleAnima.Count >= playerInfo.maxAnimaNum) return;
+
         if (IsAnimaDefeated(anima))
         {
             OnPartyAddFailed?.Invoke(anima);
             return;
         }
 
-        if (playerAnima.Remove(anima))
+        if (playerInfo.haveAnima.Remove(anima))
         {
-            activeAnima.Add(anima);
+            playerInfo.battleAnima.Add(anima);
             OnAnimaInventoryChanged?.Invoke();
         }
     }
 
     public void MoveToInventory(AnimaDataSO anima)
     {
-        if (anima == null || playerAnima.Contains(anima)) return;
-        
-        if (activeAnima.Remove(anima))
+        if (anima == null || playerInfo.haveAnima.Contains(anima)) return;
+
+        if (playerInfo.battleAnima.Remove(anima))
         {
-            playerAnima.Add(anima);
+            playerInfo.haveAnima.Add(anima);
             OnAnimaInventoryChanged?.Invoke();
         }
     }

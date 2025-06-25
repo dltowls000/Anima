@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEditor.AssetImporters;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.EventSystems;
 
 public class CameraController : MonoBehaviour
 {
@@ -35,6 +36,9 @@ public class CameraController : MonoBehaviour
 
     private void PanCamera()
     {
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
+        
         if (Input.GetMouseButtonDown(0))
         {
             dragOrigin = cam.ScreenToWorldPoint(Input.mousePosition);

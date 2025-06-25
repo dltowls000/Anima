@@ -41,10 +41,12 @@ public class EnterStage : MonoBehaviour, IPointerClickHandler
 
         if (stageNode.isBoss)
         {
+            VillageDataManager.Instance.ClearAllVillages();
             SceneManager.LoadScene(sceneToLoadBoss);
         }
         else
         {
+            VillageDataManager.Instance.ClearAllVillages();
             SceneManager.LoadScene(sceneToLoad);
         }
     }

@@ -19,17 +19,18 @@ public class ShopManager : MonoBehaviour
     
     private void Start()
     {
+        villageID = VillageDataManager.Instance.GetCurrentVillageID();
+
         shopList = ShopList.CreateForVillage(villageID);
-        
         shopState = VillageDataManager.Instance.GetVillageShopState(villageID, shopList.GetAllItems());
-        
+
         foreach (var item in shopList.GetAllItems())
         {
             remainingCounts[item.itemID] = shopState.GetRemainingCount(item.itemID);
         }
-        
+
         ShopUIManager.Instance.ShowShopItems(shopList.GetAllItems(), remainingCounts, OnItemPurchase);
-        
+
         if (feedbackPanel != null)
         {
             feedbackPanel.SetActive(false);

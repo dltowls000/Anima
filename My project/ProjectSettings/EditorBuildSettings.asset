@@ -15,10 +15,10 @@ EditorBuildSettings:
     path: Assets/Scene/02. MapScene/MapScene.unity
     guid: e8a27d81351f0f5499370a73c282be1d
   - enabled: 1
-    path: Assets/Scene/05. VillegeScene/VillegeScene.unity
+    path: Assets/Scene/05. VillageScene/VillageScene.unity
     guid: c58e6c81674c91b4d8dfbc002c1545fb
   - enabled: 1
-    path: Assets/Scene/05. VillegeScene/MixScene.unity
+    path: Assets/Scene/05. VillageScene/MixScene.unity
     guid: 4058c9054f12e1b4cb4b09cd26ee595c
   - enabled: 1
     path: Assets/Scene/04. BattleScene/GameOverScene.unity
@@ -68,6 +68,57 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scene/03. FieldScene/PhobiaFieldScene.unity
     guid: 200e97c3ba00f3d419e624ab9ab73bb0
+  - enabled: 1
+    path: Assets/Scene/04. BattleScene/AmareBattleScene.unity
+    guid: db71759d8d296084ab08f6974cb9e49e
+  - enabled: 1
+    path: Assets/Scene/04. BattleScene/AmareEliteBattleScene.unity
+    guid: 4d9cbb0bb33ae904f869b59a48657fe4
+  - enabled: 1
+    path: Assets/Scene/04. BattleScene/BossBattleScene.unity
+    guid: 884bfe815eeea4a4a86070487e36145f
+  - enabled: 1
+    path: Assets/Scene/04. BattleScene/FelixBattleScene.unity
+    guid: b40b32c0609f2764ebfbfc72a89e1bf1
+  - enabled: 1
+    path: Assets/Scene/04. BattleScene/FelixEliteBattleScene.unity
+    guid: 462832edb7c62f64ab7365024959c9bf
+  - enabled: 1
+    path: Assets/Scene/04. BattleScene/HavetBattleScene.unity
+    guid: 97fb9dc14a073cd42b6911272a4eb781
+  - enabled: 1
+    path: Assets/Scene/04. BattleScene/HavetEliteBattleScene.unity
+    guid: d2b3f76b6fc00344dba6628f6b1f5e27
+  - enabled: 1
+    path: Assets/Scene/04. BattleScene/InanisBattleScene.unity
+    guid: 7a3e120d42f4f6547bca843843c8454d
+  - enabled: 1
+    path: Assets/Scene/04. BattleScene/InanisEliteBattleScene.unity
+    guid: bc05197c7db1fbc41941f9c7354a0e19
+  - enabled: 1
+    path: Assets/Scene/04. BattleScene/IrascorBattleScene.unity
+    guid: 60a4e5a4ba43c5d4ea234b5d7146d463
+  - enabled: 1
+    path: Assets/Scene/04. BattleScene/IrascorEliteBattleScene.unity
+    guid: 691bdd3fb6f7f6446894f79cc30243ea
+  - enabled: 1
+    path: Assets/Scene/04. BattleScene/LacrimaBattleScene.unity
+    guid: 7695572f58c23a646bb2378a84753509
+  - enabled: 1
+    path: Assets/Scene/04. BattleScene/LacrimaEliteBattleScene.unity
+    guid: 7880fb10da5b6f34c9fd1977eba1314e
+  - enabled: 1
+    path: Assets/Scene/04. BattleScene/OdiumBattleScene.unity
+    guid: 9b2ac486f9d0c624d997bea3a2d9ba9c
+  - enabled: 1
+    path: Assets/Scene/04. BattleScene/OdiumEliteBattleScene.unity
+    guid: 46d2cade00a027e46816c1afd5833df7
+  - enabled: 1
+    path: Assets/Scene/04. BattleScene/PhobiaBattleScene.unity
+    guid: efa654ed5bc163a42a2a928a25115297
+  - enabled: 1
+    path: Assets/Scene/04. BattleScene/PhobiaEliteBattleScene.unity
+    guid: e154b482fc7c44646af8014a549139f7
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class RegionManager : MonoBehaviour
 {
@@ -326,7 +327,7 @@ public class RegionManager : MonoBehaviour
 
         if (Input.GetMouseButtonUp(0))
         {
-            if (!isDragging)
+            if (!isDragging && !EventSystem.current.IsPointerOverGameObject())
             {
                 HandleClick();
             }
@@ -353,10 +354,8 @@ public class RegionManager : MonoBehaviour
         }
         else if (target.isVillaged)
         {
-            string a = target.name;
-            target.name.EndsWith("VillageArea");
-            target.name.EndsWith("VillageArea 2");
-            //VillageDataManager.Instance.SetCurrentVillageID(villageTile.name);
+            string villageID = target.name;
+            VillageDataManager.Instance.SetCurrentVillageID(villageID);
             SceneManager.LoadScene("VillageScene"); 
         }
         else if (target.name.StartsWith("Boss"))
@@ -373,22 +372,22 @@ public class RegionManager : MonoBehaviour
                         SceneManager.LoadScene("FelixEliteBattleScene");
                         break;
                     case 1:
-                        SceneManager.LoadScene("PhobiaEliteFieldScene");
+                        SceneManager.LoadScene("PhobiaEliteBattleScene");
                         break;
                     case 2:
-                        SceneManager.LoadScene("OdiumEliteFieldScene");
+                        SceneManager.LoadScene("OdiumEliteBattleScene");
                         break;
                     case 3:
-                        SceneManager.LoadScene("AmareEliteFieldScene");
+                        SceneManager.LoadScene("AmareEliteBattleScene");
                         break;
                     case 4:
-                        SceneManager.LoadScene("IrascorEliteFieldScene");
+                        SceneManager.LoadScene("IrascorEliteBattleScene");
                         break;
                     case 5:
-                        SceneManager.LoadScene("LacrimaEliteFieldScene");
+                        SceneManager.LoadScene("LacrimaEliteBattleScene");
                         break;
                     case 6:
-                        SceneManager.LoadScene("HavetEliteFieldScene");
+                        SceneManager.LoadScene("HavetEliteBattleScene");
                         break;
                 }
             }

@@ -6,6 +6,8 @@ public class VillageDataManager : MonoBehaviour
 {
     public static VillageDataManager Instance { get; private set; }
     
+    private string currentVillageID;
+    
     private Dictionary<string, VillageShopState> villageShops = new Dictionary<string, VillageShopState>(10);
     private int innCurrentPrice = 300;
     
@@ -40,11 +42,6 @@ public class VillageDataManager : MonoBehaviour
         innCurrentPrice = newPrice;
     }
     
-    public void ResetInnPrice()
-    {
-        innCurrentPrice = 300;
-    }
-    
     public VillageShopState GetVillageShopState(string villageID, List<ShopItemData> shopItems)
     {
         if (villageShops.ContainsKey(villageID))
@@ -55,8 +52,6 @@ public class VillageDataManager : MonoBehaviour
         VillageShopState newState = new VillageShopState(villageID, shopItems);
         villageShops[villageID] = newState;
         
-        Debug.Log($"새 마을 상점 상태 생성: {villageID}");
-        
         return newState;
     }
     
@@ -64,7 +59,6 @@ public class VillageDataManager : MonoBehaviour
     {
         if (!villageShops.ContainsKey(villageID))
         {
-            Debug.LogWarning($"존재하지 않는 마을: {villageID}");
             return false;
         }
         
@@ -74,29 +68,15 @@ public class VillageDataManager : MonoBehaviour
     public void ClearAllVillages()
     {
         villageShops.Clear();
-        Debug.Log("모든 마을 상점 상태 초기화됨");
     }
     
-    public void ClearVillage(string villageID)
+    public void SetCurrentVillageID(string villageID)
     {
-        if (villageShops.ContainsKey(villageID))
-        {
-            villageShops.Remove(villageID);
-            Debug.Log($"마을 상점 상태 초기화됨: {villageID}");
-        }
+        currentVillageID = villageID;
     }
-    
-    public void DebugPrintAllVillages()
+
+    public string GetCurrentVillageID()
     {
-        Debug.Log($"현재 저장된 마을 수: {villageShops.Count}");
-        
-        foreach (var entry in villageShops)
-        {
-            Debug.Log($"마을 ID: {entry.Key}");
-            foreach (var item in entry.Value.remainingCounts)
-            {
-                Debug.Log($"  아이템: {item.Key}, 남은 횟수: {item.Value}");
-            }
-        }
+        return currentVillageID;
     }
 }

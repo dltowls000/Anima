@@ -2,13 +2,13 @@
 - Project name: My project
 - Unity version: Unity 6000.0.37f1
 - Active scene:
-  - Name: VillegeScene
+  - Name: Field Scene Canvas
   - Tags:
     - Untagged, Respawn, Finish, EditorOnly, MainCamera, Player, GameController
   - Layers:
     - Default, TransparentFX, Ignore Raycast, Water, UI
 - Active game object:
-  - Name: Villege Controller
+  - Name: Field Scene Canvas
   - Tag: Untagged
-  - Layer: Default
+  - Layer: UI
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
