@@ -5,7 +5,8 @@ using System;
 
 public class ShopItemSlot : MonoBehaviour
 {
-    [Header("UI")]
+    [Header("UI")] 
+    [SerializeField] private Image ItemImage;
     [SerializeField] private TextMeshProUGUI itemNameText;
     [SerializeField] private TextMeshProUGUI itemPriceText;
     [SerializeField] private TextMeshProUGUI itemDescriptionText;
@@ -22,6 +23,7 @@ public class ShopItemSlot : MonoBehaviour
         currentRemaining = remainingCount;
         onPurchase = onPurchaseCallback;
 
+        //itemImage = ItemImage;
         itemNameText.text = data.itemName;
         itemPriceText.text = $"{data.price:N0}";
         itemDescriptionText.text = data.itemDescription;

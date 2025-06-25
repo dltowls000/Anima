@@ -15,10 +15,10 @@ EditorBuildSettings:
     path: Assets/Scene/02. MapScene/MapScene.unity
     guid: e8a27d81351f0f5499370a73c282be1d
   - enabled: 1
-    path: Assets/Scene/05. VillegeScene/VillageScene.unity
+    path: Assets/Scene/05. VillageScene/VillageScene.unity
     guid: c58e6c81674c91b4d8dfbc002c1545fb
   - enabled: 1
-    path: Assets/Scene/05. VillegeScene/MixScene.unity
+    path: Assets/Scene/05. VillageScene/MixScene.unity
     guid: 4058c9054f12e1b4cb4b09cd26ee595c
   - enabled: 1
     path: Assets/Scene/04. BattleScene/GameOverScene.unity

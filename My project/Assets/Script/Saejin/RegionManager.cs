@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class RegionManager : MonoBehaviour
 {
@@ -326,7 +327,7 @@ public class RegionManager : MonoBehaviour
 
         if (Input.GetMouseButtonUp(0))
         {
-            if (!isDragging)
+            if (!isDragging && !EventSystem.current.IsPointerOverGameObject())
             {
                 HandleClick();
             }
@@ -353,10 +354,8 @@ public class RegionManager : MonoBehaviour
         }
         else if (target.isVillaged)
         {
-            string a = target.name;
-            target.name.EndsWith("VillageArea");
-            target.name.EndsWith("VillageArea 2");
-            //VillageDataManager.Instance.SetCurrentVillageID(villageTile.name);
+            string villageID = target.name;
+            VillageDataManager.Instance.SetCurrentVillageID(villageID);
             SceneManager.LoadScene("VillageScene"); 
         }
         else if (target.name.StartsWith("Boss"))
