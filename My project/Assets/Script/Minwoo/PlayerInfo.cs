@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using BansheeGz.BGDatabase;
@@ -17,6 +18,7 @@ public class PlayerInfo : ScriptableObject
     
     public void Initialize()
     {
+        
         var database = BGRepo.I;
         var animaTable = database.GetMeta("Anima");
 
@@ -31,18 +33,18 @@ public class PlayerInfo : ScriptableObject
         animaData.Initialize(animaTable[a].Get<string>("name"),5);
         animaData.location = tmp;
         GetAnima(animaData);
-        BattleSetting(haveAnima[tmp++]);
+        BattleSetting(haveAnima[tmp]);
 
         animaData = ScriptableObject.CreateInstance<AnimaDataSO>();
         animaData.Initialize(animaTable[b].Get<string>("name"), 5);
         animaData.location = tmp;
         GetAnima(animaData);
-        BattleSetting(haveAnima[tmp++]);
+        BattleSetting(haveAnima[tmp]);
         for(int i = 0; i < 2; i++)
         {
             animaTable.ForEachEntity(entity =>
             {
-                if (entity.Get<string>("name") == haveAnima[i].Name && entity.Get<int>("Meeted") == 0)
+                if (entity.Get<string>("name") == battleAnima[i].Name && entity.Get<int>("Meeted") == 0)
                 {
                     entity.Set<int>("Meeted", 1);
                     DBUpdater.Save();
@@ -56,6 +58,7 @@ public class PlayerInfo : ScriptableObject
         if (haveAnima.Contains(animaData) && battleAnima.Count < maxAnimaNum)
         {
             battleAnima.Add(animaData);
+            haveAnima.Remove(animaData);
         }
     }
     

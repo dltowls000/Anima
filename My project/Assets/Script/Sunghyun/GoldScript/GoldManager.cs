@@ -30,7 +30,7 @@ public class GoldManager : MonoBehaviour
             goldTable = database.GetMeta("GoldData");
             entity = goldTable.FirstOrDefault(e => e.Get<string>("name").Equals("GoldData"));
             currentGold = entity.Get<int>("Gold");
-            
+            Debug.Log(currentGold);
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
@@ -72,7 +72,7 @@ public class GoldManager : MonoBehaviour
         currentGold += amount;
         entity.Set<int>("Gold", currentGold);
         OnGoldChanged?.Invoke(currentGold);
-        UpdateGoldDisplay();
+        //UpdateGoldDisplay();
     }
     
     public bool SpendGold(int amount)

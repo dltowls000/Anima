@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class AnimaInventoryManager : MonoBehaviour
@@ -22,7 +23,15 @@ public class AnimaInventoryManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
-
+        if (!File.Exists(Path.Combine(Application.persistentDataPath, "save.dat")))
+        {
+            Debug.Log("¾øÀ½");
+            DBUpdater.Save();
+        }
+        else
+        {
+            DBUpdater.Load();
+        }
         playerInfo = ScriptableObject.CreateInstance<PlayerInfo>();
         playerInfo.Initialize();
     }

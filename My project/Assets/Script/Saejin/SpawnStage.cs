@@ -298,13 +298,7 @@ public class SpawnStage : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < sections.Count; i++)
-        {
-            for (int j = 0; j < sections[i].Count; j++)
-            {
-                Debug.Log(sections[i][j].type);
-            }
-        }
+       
     }
 
     public void find_section(StageNode node)
