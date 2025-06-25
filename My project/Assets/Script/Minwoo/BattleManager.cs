@@ -81,8 +81,7 @@ public class BattleManager : MonoBehaviour
     float maxValue = 0;
     void Start()
     {
-        playerInfo = ScriptableObject.CreateInstance<PlayerInfo>();
-        playerInfo.Initialize();
+        playerInfo = GameObject.Find("Game Manager").GetComponent<AnimaInventoryManager>().playerInfo;
         eventSystem = EventSystem.current;
         pointerEventData = new PointerEventData(eventSystem);
         
@@ -229,8 +228,18 @@ public class BattleManager : MonoBehaviour
     {
         int level = 0;
         
-        
-        foreach (var anima in playerInfo.haveAnima)
+        if(playerInfo.haveAnima.Count > 0)
+        {
+            foreach(var anima in playerInfo.haveAnima)
+            {
+                if(anima.level >= level)
+                {
+                    level = anima.level;
+                }
+
+            }
+        }
+        foreach (var anima in playerInfo.battleAnima)
         {
             if(anima.level >= level)
             {
@@ -406,7 +415,7 @@ public class BattleManager : MonoBehaviour
     }
     void PlayerAttackButton()
     {
-        print("플레이어 턴");
+        
         selectEnemy = 0;
 
         if (state != State.playerTurn)
@@ -425,7 +434,7 @@ public class BattleManager : MonoBehaviour
     }
     void PlayerSkillButton()
     {
-        print("플레이어 턴");
+       
         selectEnemy = 0;
 
         if (state != State.playerTurn)
@@ -577,7 +586,7 @@ public class BattleManager : MonoBehaviour
                         }
                     }
                     battleLogManager.AddLog($"{enemyActions[selectEnemy].animaData.Name}is dead", false);
-                    //GoldManager.Instance.AddGold(enemyActions[selectEnemy].animaData.DropGold);
+                    GoldManager.Instance.AddGold(enemyActions[selectEnemy].animaData.DropGold);
                     turnList.Remove(enemyActions[selectEnemy].animaData);
                     DestroyImmediate(enemyBattleSetting.enemyhpinstance[selectEnemy]);
                     enemyBattleSetting.enemyhpinstance.RemoveAt(selectEnemy);
@@ -763,7 +772,7 @@ public class BattleManager : MonoBehaviour
                         }
                     }
                     battleLogManager.AddLog($"{enemyActions[selectEnemy].animaData.Name}is dead", false);
-                    //GoldManager.Instance.AddGold(enemyActions[selectEnemy].animaData.DropGold);
+                    GoldManager.Instance.AddGold(enemyActions[selectEnemy].animaData.DropGold);
                     turnList.Remove(enemyActions[selectEnemy].animaData);
                     DestroyImmediate(enemyBattleSetting.enemyhpinstance[selectEnemy]);
                     enemyBattleSetting.enemyhpinstance.RemoveAt(selectEnemy);
@@ -792,7 +801,6 @@ public class BattleManager : MonoBehaviour
                             ally.animaData.location = -1;
                         }
                         state = State.win;
-                        print("승리");
                         turnIndex = 0;
                         WinBattle();
                         StopCoroutine(runningCoroutine);
@@ -1013,7 +1021,6 @@ public class BattleManager : MonoBehaviour
                         if (allyAnimaNum == 0)
                         {
                             state = State.defeat;
-                            print("패배");
                             LoseBattle();
                             StopCoroutine(runningCoroutine);
 

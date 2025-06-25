@@ -114,45 +114,37 @@ public class DontDesManager : MonoBehaviour
         }
         else if (scene.name.EndsWith("FieldScene"))
         {
-            Debug.Log("Field »£√‚");
             var regionManager = GameObject.Find("RegionManager");
             tileManager = regionManager;
             var tManager = tileManager.GetComponent<RegionManager>();
 
             if (scene.name.StartsWith("Felix"))
             {
-                Debug.Log("Felix");
                 tManager.stageType = 0;
             }
             else if (scene.name.StartsWith("Phobia"))
             {
-                Debug.Log("Phobia");
                 tManager.stageType = 1;
             }
             else if (scene.name.StartsWith("Odium"))
             {
                 tManager.stageType = 2;
-                Debug.Log("Odium");
             }
             else if (scene.name.StartsWith("Amare"))
             {
                 tManager.stageType = 3;
-                Debug.Log("Amare");
             }
             else if (scene.name.StartsWith("Irascor"))
             {
                 tManager.stageType = 4;
-                Debug.Log("Irascor");
             }
             else if (scene.name.StartsWith("Lacrima"))
             {
                 tManager.stageType = 5;
-                Debug.Log("Lacrima");
             }
             else if (scene.name.StartsWith("Havet"))
             {
                 tManager.stageType = 6;
-                Debug.Log("Havet");
             }
             mapScreen.SetActive(false);
             DontDestroyOnLoad(tileManager);
