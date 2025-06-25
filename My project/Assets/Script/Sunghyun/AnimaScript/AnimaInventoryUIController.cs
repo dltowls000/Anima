@@ -67,7 +67,6 @@ public class AnimaInventoryUIController : MonoBehaviour
 
         for (int i = 0; i < requiredSlotCount; i++)
         {
-            Debug.Log(requiredSlotCount);
             var slot = Instantiate(animaSlotPrefab, inventorySlotParent);
             var slotUI = slot.GetComponent<AnimaSlotUI>();
             AnimaDataSO data = i < animaCount ? allAnimas[i] : null;

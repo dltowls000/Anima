@@ -73,6 +73,7 @@ public class AnimaDataSO : ScriptableObject
         animaTable.ForEachEntity(entity => {
             if (entity.Get<string>("name") == name)
             {
+                mood = int.Parse(Name.Substring(Name.Length - 1));
                 this.level = level;
                 weight = entity.Get<float>("Weight");
                 defHP = entity.Get<float>("HP");
