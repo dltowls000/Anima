@@ -82,10 +82,20 @@ public class EnemyActions : MonoBehaviour
         {
             damage = CalcSkillDamage(enemy.animaData.Damage, ally);
             yield return allyHealthBar.TakeDamage(damage);
-            ally.TakeSkillDamage(damage);
+            ally.TakeDamage(damage);
             yield return damageBar.PutDamage(damage);
         }
         
+    }
+    public IEnumerator Heal(EnemyActions healer, EnemyActions target, HealthBar enemyHealthBar, ParserBar healBar)
+    {
+        if (!healer.animaData.Animadie && !target.animaData.Animadie)
+        {
+            damage = CalcHealAmount(healer.animaData.Damage, target);
+            yield return enemyHealthBar.TakeHeal(damage);
+            target.TakeHeal(damage);
+            yield return healBar.PutDamage(damage);
+        }
     }
     public float CalcAttackDamage(float damage, AnimaActions ally)
     {
@@ -96,59 +106,35 @@ public class EnemyActions : MonoBehaviour
     {
         return damage * (1 - ally.animaData.defense * 0.002f) * Random.Range(0.95f, 1.11f) * 1.13f;
     }
-    public float BossAttack(EnemyActions enemy, AnimaActions ally, HealthBar allyHealthBar)
+    public float CalcHealAmount(float damage, EnemyActions target)
     {
-        if (!enemy.animaData.Animadie && !ally.animaData.Animadie)
-        {
-            damage = CalcBossAttackDamage(enemy.animaData.Damage, ally);
-            ally.TakeSkillDamage(damage);
-            allyHealthBar.TakeDamage(damage);
-        }
-        return damage;
+        float a = damage * Random.Range(0.95f, 1.11f) * 1.13f;
+        float b = target.animaData.Maxstamina * 0.4f;
+        return a >= b ? b : a;
     }
-
-    public float BossSkill(EnemyActions enemy, AnimaActions ally, HealthBar allyHealthBar, int skillnum)
-    {
-        if (!enemy.animaData.Animadie && !ally.animaData.Animadie)
-        {
-            damage = CalcBossSkillDamage(enemy.animaData.Damage, ally , skillnum);
-            ally.TakeSkillDamage(damage);
-            allyHealthBar.TakeDamage(damage);
-        }
-        return damage;
-    }
-    public float CalcBossAttackDamage(float damage, AnimaActions ally)
-    {
-        return damage * (1 - ally.animaData.defense * 0.002f) * Random.Range(0.98f, 1.11f);
-    }
-    public float CalcBossSkillDamage(float damage, AnimaActions ally , int skillnum)
-    {
-        return damage * (1 - ally.animaData.defense * 0.002f) * Random.Range(0.98f, 1.11f);
-    }
-    public float TakeSkillDamage(float damage)
-    {
-        this.damage = damage;
-        this.animaData.Stamina -= damage;
-
-        if (animaData.Stamina <= 0)
-        {
-            Die();
-        }
-        return damage;
-    }
-    public float TakeDamage(float damage)
+    public void TakeDamage(float damage)
     {
         this.damage = damage;
         this.animaData.Stamina -= damage;
         
-        if (animaData.Stamina <= 0)
+        if (this.animaData.Stamina <= 0)
         {
             Die();
         }
-        return damage;
+        
+    }
+    public void TakeHeal(float damage)
+    {
+        this.damage = damage;
+        this.animaData.Stamina += damage;
+        if (this.animaData.Stamina > animaData.Maxstamina)
+        {
+            animaData.Stamina = animaData.Maxstamina;
+        }
     }
     public void Die()
     {
+        this.animaData.Stamina = 0;
         this.animaData.Animadie = true;
     }
 }

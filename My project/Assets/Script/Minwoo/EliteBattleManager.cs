@@ -215,7 +215,7 @@ public class EliteBattleManager : MonoBehaviour
 
             allyDamageBar.Add(allyParser.transform.Find($"A{i}Damage").transform.Find($"A{i} Damage Bar").GetComponent<ParserBar>());
             //allyHealBar.Add(allyParser.transform.Find($"A{i}Heal").transform.Find($"A{i} Heal Bar").GetComponent<ParserBar>());
-            allyHealthBar[i].Initialize(allyActions[i].animaData.Stamina);
+            allyHealthBar[i].Initialize(allyActions[i].animaData.Maxstamina, allyActions[i].animaData.Stamina);
             allyDamageBar[i].Initialize();
             //allyHealBar[i].Initialize();
             allyParser.GetComponent<TextMeshProUGUI>().text = allyActions[i].animaData.Name;
@@ -240,13 +240,17 @@ public class EliteBattleManager : MonoBehaviour
 
             }
         }
-        foreach (var anima in playerInfo.haveAnima)
+        if(playerInfo.battleAnima.Count > 0)
         {
-            if (anima.level >= level)
+            foreach (var anima in playerInfo.battleAnima)
             {
-                level = anima.level;
+                if (anima.level >= level)
+                {
+                    level = anima.level;
+                }
             }
         }
+        
         level += 3;
         for (int i = 0; i < enemyActions.Count; i++)
         {
@@ -268,7 +272,7 @@ public class EliteBattleManager : MonoBehaviour
             enemyHealthBar.Add(GameObject.Find($"EnemyAnimaHP{i}").transform.Find("HP").GetComponent<HealthBar>());
             enemyDamageBar.Add(enemyParser.transform.Find($"E{i}Damage").transform.Find($"E{i} Damage Bar").GetComponent<ParserBar>());
             //enemyHealBar.Add(enemyParser.transform.Find($"E{i}Heal").transform.Find($"E{i} Heal Bar").GetComponent<ParserBar>());
-            enemyHealthBar[i].Initialize(enemyActions[i].animaData.Stamina);
+            enemyHealthBar[i].Initialize(enemyActions[i].animaData.Maxstamina, enemyActions[i].animaData.Stamina);
             enemyDamageBar[i].Initialize();
             //enemyHealBar[i].Initialize();
             enemyParser.GetComponent<TextMeshProUGUI>().text = enemyActions[i].animaData.Name;
@@ -500,7 +504,7 @@ public class EliteBattleManager : MonoBehaviour
 
 
                 /* Animation */
-                yield return cameraManager.ZoomIn(eliteAllyBattleSetting.allyinstance[allyActions.IndexOf(anima)].transform, eliteEnemyBattleSetting.enemyinstance[selectEnemy].transform, true, anima.animaData.attackName);
+                yield return cameraManager.ZoomSingleOpp(eliteAllyBattleSetting.allyinstance[allyActions.IndexOf(anima)].transform, eliteEnemyBattleSetting.enemyinstance[selectEnemy].transform, true, anima.animaData.attackName);
                 canvas.SetActive(true);
                 yield return anima.Attack(anima, enemyActions[selectEnemy], enemyHealthBar[selectEnemy], allyDamageBar[allyActions.IndexOf(anima)]);
                 damageNumber.Spawn(new Vector2(eliteEnemyBattleSetting.enemyinstance[selectEnemy].transform.position.x - 0.1f, eliteEnemyBattleSetting.enemyinstance[selectEnemy].transform.position.y + 0.1f), enemyActions[selectEnemy].damage);
@@ -671,7 +675,7 @@ public class EliteBattleManager : MonoBehaviour
                 canvas.SetActive(false);//체력 바 동기화 문제 발생 예상
                 /* Attack */
 
-                yield return cameraManager.ZoomIn(eliteAllyBattleSetting.allyinstance[allyActions.IndexOf(anima)].transform, eliteEnemyBattleSetting.enemyinstance[selectEnemy].transform, true, anima.animaData.skillName[0]);
+                yield return cameraManager.ZoomSingleOpp(eliteAllyBattleSetting.allyinstance[allyActions.IndexOf(anima)].transform, eliteEnemyBattleSetting.enemyinstance[selectEnemy].transform, true, anima.animaData.skillName[0]);
 
                 /* Animation */
                 canvas.SetActive(true);
@@ -810,7 +814,7 @@ public class EliteBattleManager : MonoBehaviour
 
 
                     /* Animation */
-                    yield return cameraManager.ZoomIn(eliteEnemyBattleSetting.enemyinstance[enemyActions.IndexOf(enemy)].transform, eliteAllyBattleSetting.allyinstance[selectAlly].transform, false, enemy.animaData.attackName);
+                    yield return cameraManager.ZoomSingleOpp(eliteEnemyBattleSetting.enemyinstance[enemyActions.IndexOf(enemy)].transform, eliteAllyBattleSetting.allyinstance[selectAlly].transform, false, enemy.animaData.attackName);
                     canvas.SetActive(true);
 
                     yield return enemy.Attack(enemy, allyActions[selectAlly], allyHealthBar[selectAlly], enemyDamageBar[enemy.animaData.enemyIndex]);
@@ -872,6 +876,7 @@ public class EliteBattleManager : MonoBehaviour
                         //allyBattleSetting.allyinstance.RemoveAt(selectAlly);
                         //allyAnimaNum--;
                         //turnList.Remove(allyActions[selectAlly].animaData);
+                        playerInfo.DieAnima(allyActions[selectAlly].animaData);
                         battleLogManager.AddLog($"{allyActions[selectAlly].animaData.Name}is dead", true);
                         dieAllyAnima.Add(allyActions.IndexOf(allyActions[selectAlly]));
                         turnList.Remove(allyActions[selectAlly].animaData);
@@ -909,7 +914,7 @@ public class EliteBattleManager : MonoBehaviour
 
                     /* Animation */
 
-                    yield return cameraManager.ZoomIn(eliteEnemyBattleSetting.enemyinstance[enemyActions.IndexOf(enemy)].transform, eliteAllyBattleSetting.allyinstance[selectAlly].transform, false, enemy.animaData.skillName[0]);
+                    yield return cameraManager.ZoomSingleOpp(eliteEnemyBattleSetting.enemyinstance[enemyActions.IndexOf(enemy)].transform, eliteAllyBattleSetting.allyinstance[selectAlly].transform, false, enemy.animaData.skillName[0]);
                     canvas.SetActive(true);
                     yield return enemy.Skill(enemy, allyActions[selectAlly], allyHealthBar[selectAlly], enemyDamageBar[enemy.animaData.enemyIndex]);
                     damageNumber.Spawn(new Vector2(eliteAllyBattleSetting.allyinstance[selectAlly].transform.position.x - 0.1f, eliteAllyBattleSetting.allyinstance[selectAlly].transform.position.y + 0.1f), allyActions[selectAlly].damage);
@@ -971,6 +976,7 @@ public class EliteBattleManager : MonoBehaviour
                         //eliteAllyBattleSetting.allyinstance.RemoveAt(selectAlly);
                         //allyAnimaNum--;
                         //turnList.Remove(allyActions[selectAlly].animaData);
+                        playerInfo.DieAnima(allyActions[selectAlly].animaData);
                         dieAllyAnima.Add(allyActions.IndexOf(allyActions[selectAlly]));
                         turnList.Remove(allyActions[selectAlly].animaData);
                         eliteAllyBattleSetting.allyhpinstance[allyActions[selectAlly].animaData.location].SetActive(false);

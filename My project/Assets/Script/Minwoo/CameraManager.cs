@@ -18,7 +18,7 @@ public class CameraManager : MonoBehaviour
     public AnimatorController animatorController;
     GameObject instance;
     ParticleSystem ps;
-    public IEnumerator ZoomIn(Transform hitter,Transform hitted,  bool isAlly, string skill)
+    public IEnumerator ZoomSingleOpp(Transform hitter,Transform hitted,  bool isAlly, string skill)
     {
         
         if (isAlly)
@@ -86,4 +86,5 @@ public class CameraManager : MonoBehaviour
         }
 
     }
+
 }

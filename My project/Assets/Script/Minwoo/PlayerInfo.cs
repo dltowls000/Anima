@@ -66,5 +66,12 @@ public class PlayerInfo : ScriptableObject
     {
         haveAnima.Add(animaData);
     }
-
+    public void DieAnima(AnimaDataSO animaData)
+    {
+        if (battleAnima.Contains(animaData))
+        {
+            haveAnima.Add(animaData);
+            battleAnima.Remove(animaData);
+        }
+    }
 }

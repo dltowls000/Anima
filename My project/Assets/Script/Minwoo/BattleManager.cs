@@ -7,84 +7,168 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 using BansheeGz.BGDatabase;
 using UnityEngine.UI;
-public class BattleManager : MonoBehaviour
+public class BattleManager : MonoBehaviour, IBattleManager
 {
     [SerializeField]
-    private CameraManager cameraManager;
+    CameraManager cameraManager;
+    public CameraManager CameraManager => cameraManager;
     [SerializeField]
-    private Transform turnUI;
+    Transform turnUI;
     [SerializeField]
-    private BattleLogManager battleLogManager;
+    BattleLogManager battleLogManager;
+    public BattleLogManager BattleLogManager => battleLogManager;
     [SerializeField]
-    private GameObject battleManager;
+    GameObject battleManager;
     [SerializeField]
-    private GameObject canvas;
+    GameObject canvas;
+    public GameObject Canvas => canvas;
     
     
     PointerEventData pointerEventData;
     Coroutine runningCoroutine = null;
+    public Coroutine RunningCoroutine
+    {
+        get => runningCoroutine; 
+        set => runningCoroutine = value;
+    }
     State state;
-    
+    public State stat
+    {
+        get => state;
+        set => state = value;
+    }
     public PlayerInfo playerInfo;
-
+    
     List<HealthBar> allyHealthBar;
+    public List<HealthBar> AllyHealthBar => allyHealthBar;
     List<HealthBar> enemyHealthBar;
+    public List<HealthBar> EnemyHealthBar => enemyHealthBar;
     List<ParserBar> allyDamageBar;
+    public List<ParserBar> AllyDamageBar => allyDamageBar;
     List<ParserBar> enemyDamageBar;
+    public List<ParserBar> EnemyDamageBar => enemyDamageBar;
     List<ParserBar> allyHealBar;
+    public List<ParserBar> AllyHealBar => allyHealBar;
     List<ParserBar> enemyHealBar;
+    public List<ParserBar> EnemyHealBar => enemyHealBar;
     List<TextMeshProUGUI> allyDamageText;
+    public List<TextMeshProUGUI> AllyDamageText => allyDamageText;
     List<TextMeshProUGUI> enemyDamageText;
+    public List<TextMeshProUGUI> EnemyDamageText => enemyDamageText;
     List<TextMeshProUGUI> allyHealText;
+    public List<TextMeshProUGUI> AllyHealText => allyHealText;
     List<TextMeshProUGUI> enemyHealText;
+    public List<TextMeshProUGUI> EnemyHealText => enemyHealText;
 
     EnemyBattleSetting enemyBattleSetting;
+    public EnemyBattleSetting EnemyBattleSetting => enemyBattleSetting;
     AllyBattleSetting allyBattleSetting;
-    
+    public AllyBattleSetting AllyBattleSetting => allyBattleSetting;
+
     List<AnimaActions> allyActions;
+    public List<AnimaActions> AllyActions => allyActions;
     List<EnemyActions> enemyActions;
-    
+    public List<EnemyActions> EnemyActions => enemyActions;
+
     List<GameObject> ally;
     List<GameObject> enemy;
-    
+
     List<int> dieAllyAnima;
     [SerializeField]
     DamageNumber damageNumber;
+    public DamageNumber DamageNumber => damageNumber;
+
     EventSystem eventSystem;
 
     
     List<GameObject> turn;
+    public List<GameObject> Turn => turn;
+
     List<AnimaDataSO> turnList;
+    public List<AnimaDataSO> TurnList => turnList;
+
     List<AnimaDataSO> tmpturnList;
+    public List<AnimaDataSO> TmpturnList => tmpturnList;
+
     List<GameObject> isTurn;
+    public List<GameObject> IsTurn => isTurn;
+
     List<GameObject> allyInfo;
     List<GameObject> enemyInfo;
-    List<AnimaDataSO> dropAnima;
     
+    List<AnimaDataSO> dropAnima;
+    public List<AnimaDataSO> DropAnima => dropAnima;
+
     GameObject animaActionUI;
+    public GameObject AnimaActionUI => animaActionUI;
+
     GameObject arrow;
+    
     GameObject rebuild;
 
     TurnManager turnManager;
-
-    UnityEngine.UI.Button attackButton;
-    UnityEngine.UI.Button skillButton;
+    Button attackButton;
+    public Button AttackButton => attackButton;
+    Button skillButton;
+    public Button SkillButton => skillButton;
+    Button skill1;
+    
+    Button skill2;
+    
     bool isZKeyPressed = false;
+    public bool IsZKeyPressed
+    {
+        get => isZKeyPressed;
+        set => isZKeyPressed = value;
+    }
+    
     bool isXKeyPressed = false;
+    
     BGRepo database;
     BGMetaEntity animaTable;
+    public BGMetaEntity AnimaTable => animaTable;
+    BGMetaEntity skillTable;
     int turnIndex = 0;
+    public int TurnIndex
+    {
+        get => turnIndex;
+        set => turnIndex = value;
+    }
     int enemyAnimaNum = 0;
+    public int EnemyAnimaNum
+    {
+        get => enemyAnimaNum;
+        set => enemyAnimaNum = value;
+    }
+    
     int allyAnimaNum = 0;
+    public int AllyAnimaNum
+    {
+        get => allyAnimaNum;
+        set => allyAnimaNum = value;
+    }
+    
     int roundNum = 1;
+    
     int selectEnemy = 0;
+    
     float maxValue = 0;
+    public float MaxValue
+    {
+        get => maxValue;
+        set => maxValue = value;
+    }
+    
+
+    SingleAttackSkill singleAttackSkill;
+    SingleBuffSkill singleBuffSkill;   
     void Start()
     {
         playerInfo = GameObject.Find("Game Manager").GetComponent<AnimaInventoryManager>().playerInfo;
         eventSystem = EventSystem.current;
         pointerEventData = new PointerEventData(eventSystem);
-        
+        singleAttackSkill = new SingleAttackSkill(this);
+        singleBuffSkill = new SingleBuffSkill();
         isTurn = new List<GameObject>();
 
         turn = new List<GameObject>();
@@ -94,12 +178,13 @@ public class BattleManager : MonoBehaviour
         state = State.start;
         database = BGRepo.I;
         animaTable = database.GetMeta("Anima");
+        skillTable = database.GetMeta("Skill");
         AnimaActionUISetting();
         AllyBattlePrepare();
         EnemyBattlePrepare();
         BattleStart();
     }
-    enum State
+    public enum State
     {
         start, playerTurn, enemyTurn, win, defeat
     }
@@ -213,7 +298,7 @@ public class BattleManager : MonoBehaviour
             
             allyDamageBar.Add(allyParser.transform.Find($"A{i}Damage").transform.Find($"A{i} Damage Bar").GetComponent<ParserBar>());
             //allyHealBar.Add(allyParser.transform.Find($"A{i}Heal").transform.Find($"A{i} Heal Bar").GetComponent<ParserBar>());
-            allyHealthBar[i].Initialize(allyActions[i].animaData.Stamina);
+            allyHealthBar[i].Initialize(allyActions[i].animaData.Maxstamina, allyActions[i].animaData.Stamina);
             allyDamageBar[i].Initialize();
             //allyHealBar[i].Initialize();
             allyParser.GetComponent<TextMeshProUGUI>().text = allyActions[i].animaData.Name;
@@ -239,13 +324,17 @@ public class BattleManager : MonoBehaviour
 
             }
         }
-        foreach (var anima in playerInfo.battleAnima)
+        if(playerInfo.battleAnima.Count > 0)
         {
-            if(anima.level >= level)
+            foreach (var anima in playerInfo.battleAnima)
             {
-                level = anima.level;
+                if (anima.level >= level)
+                {
+                    level = anima.level;
+                }
             }
-        }
+        } 
+        
         switch (enemyActions.Count)
         {
             case 1:
@@ -279,7 +368,7 @@ public class BattleManager : MonoBehaviour
             enemyHealthBar.Add(GameObject.Find($"EnemyAnimaHP{i}").transform.Find("HP").GetComponent<HealthBar>());
             enemyDamageBar.Add(enemyParser.transform.Find($"E{i}Damage").transform.Find($"E{i} Damage Bar").GetComponent<ParserBar>());
             //enemyHealBar.Add(enemyParser.transform.Find($"E{i}Heal").transform.Find($"E{i} Heal Bar").GetComponent<ParserBar>());
-            enemyHealthBar[i].Initialize(enemyActions[i].animaData.Stamina);
+            enemyHealthBar[i].Initialize(enemyActions[i].animaData.Maxstamina, enemyActions[i].animaData.Stamina);
             enemyDamageBar[i].Initialize();
             //enemyHealBar[i].Initialize();
             enemyParser.GetComponent<TextMeshProUGUI>().text = enemyActions[i].animaData.Name;
@@ -296,11 +385,14 @@ public class BattleManager : MonoBehaviour
         animaActionUI = GameObject.Find("Anima Action UI(Clone)");
         Transform attackAction = animaActionUI.transform.Find("Attack Button Frame").transform.Find("Attack Button");
         attackButton = attackAction.GetComponent<UnityEngine.UI.Button>();
-        Transform skillAction = animaActionUI.transform.Find("Skill Button Frame").transform.Find("Skill Button");
+        Transform skillAction = animaActionUI.transform.Find("Skill Button Frame2").transform.Find("Skill Button2");
         skillButton = skillAction.GetComponent<UnityEngine.UI.Button>();
-        
+        skill1 = animaActionUI.transform.Find("Skill Button Frame0").transform.Find("Skill Button0").GetComponent<Button>();
+        skill2 = animaActionUI.transform.Find("Skill Button Frame1").transform.Find("Skill Button1").GetComponent<Button>();
         attackButton.onClick.AddListener(battleManager.GetComponent<BattleManager>().PlayerAttackButton);
         skillButton.onClick.AddListener(battleManager.GetComponent<BattleManager>().PlayerSkillButton);
+        skill1.onClick.AddListener(battleManager.GetComponent<BattleManager>().SkillButton1);
+        skill2.onClick.AddListener(battleManager.GetComponent<BattleManager>().SkillButton2);
         animaActionUI.SetActive(false);
 
     }
@@ -393,7 +485,15 @@ public class BattleManager : MonoBehaviour
             arrow = GameObject.Find("Arrow_down(Clone)");
             GameObject.Find("Anima Portrait").GetComponent<UnityEngine.UI.Image>().sprite = Resources.Load<Sprite>("Minwoo/Portrait/" + turnList[0].Objectfile);
             GameObject.Find("Currunt Anima Name").GetComponent<TextMeshProUGUI>().text = turnList[0].Name;
-            skillButton.GetComponentInChildren<TextMeshProUGUI>().text = $"Skill\n{turnList[0].Skill_pp}/{turnList[0].MaxSkill_pp}";
+            skillButton.GetComponentInChildren<TextMeshProUGUI>().text = $"Skill\n";
+            for(int i = 0; i < turnList[0].skillName.Count ; i++)
+            {
+                animaActionUI.transform.Find($"Skill Button Frame{i}").Find($"Skill Text{i}").GetComponent<TextMeshProUGUI>().text = turnList[0].skillName[i];
+            }
+            if (turnList[0].skillName.Count == 1)
+            {
+                animaActionUI.transform.Find("Skill Button Frame1").Find($"Skill Button1").GetComponent<Button>().interactable = false;
+            }
             if (turnList[0].Skill_pp == 0)
             {
                 skillButton.interactable = false;
@@ -445,52 +545,98 @@ public class BattleManager : MonoBehaviour
         {
             isZKeyPressed = true;
             DestroyImmediate(arrow);
-            runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy));
-            attackButton.interactable = false;
-            skillButton.interactable = false;
+            for(int i = 0; i < 2; i++)
+            {
+                animaActionUI.transform.Find($"Skill Button Frame{i}").gameObject.SetActive(true);
+            }
+            GameObject.Find("Skill Button0").GetComponent<Button>().Select();
+            
         }
 
     }
+    void SkillButton1()
+    {
+        attackButton.interactable = false;
+        skillButton.interactable = false;
+        string type = "";
+        skillTable.ForEachEntity(entity => {
+            if (entity.Get<string>("name") == skill1.transform.Find("Skill Text0").GetComponent<TextMeshProUGUI>().text)
+            {
+                type = entity.Get<string>("Type");
+            }
+        });
+        switch (type)
+        {
+            case "SingleAttack":
+                runningCoroutine = StartCoroutine(PlayerSingleAttackSkill(selectEnemy, 0));
+                break;
+            //case "SingleHeal":
+            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 0));
+            //    break;
+            //case "SingleBuff":
+            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 0));
+            //    break;
+            //case "SingleDebuff":
+            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 0));
+            //    break;
+            //case "AreaAttack":
+            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 0));
+            //    break;
+            //case "AreaHeal":
+            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 0));
+            //    break;
+            //case "AreaBuff":
+            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 0));
+            //    break;
+            //case "AreaDebuff":
+            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 0));
+            //    break;
+        }
+        
+        
+    }
+    void SkillButton2()
+    {
+        string type = "";
+        skillTable.ForEachEntity(entity => {
+            if (entity.Get<string>("name") == skill2.transform.Find("Skill Text1").GetComponent<TextMeshProUGUI>().text)
+            {
+                type = entity.Get<string>("Type");
+            }
+        });
+        switch (type)
+        {
+            case "SingleAttack":
+                runningCoroutine = StartCoroutine(PlayerSingleAttackSkill(selectEnemy, 1));
+                break;
+            //case "SingleHeal":
+            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
+            //    break;
+            //case "SingleBuff":
+            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
+            //    break;
+            //case "SingleDebuff":
+            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
+            //    break;
+            //case "AreaAttack":
+            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
+            //    break;
+            //case "AreaHeal":
+            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
+            //    break;
+            //case "AreaBuff":
+            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
+            //    break;
+            //case "AreaDebuff":
+            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
+            //    break;
+        }
+        attackButton.interactable = false;
+        skillButton.interactable = false;
+    }
     IEnumerator PlayerAttack(int selectEnemy)
     {
-        arrow = GameObject.Find("Arrow_down(Clone)");
-        DestroyImmediate(arrow);
-        int index = 0;
-        Instantiate(Resources.Load<GameObject>("Minwoo/Arrow_down"), new Vector2(enemyBattleSetting.enemyinstance[index].transform.position.x, enemyBattleSetting.enemyinstance[index].transform.position.y + 1.2f), Quaternion.identity);
-        arrow = GameObject.Find("Arrow_down(Clone)");
-        while (true)
-        {
-            if (index != 2 && index < (enemyAnimaNum - 1) && Input.GetKeyUp(KeyCode.RightArrow))
-            {
-                index++;
-                GameObject.Find("Arrow_down(Clone)").transform.position = new Vector2(enemyBattleSetting.enemyinstance[index].transform.position.x, enemyBattleSetting.enemyinstance[index].transform.position.y + 1.2f);
-            }
-            if (index != 0 && Input.GetKeyUp(KeyCode.LeftArrow))
-            {
-                index--;
-                GameObject.Find("Arrow_down(Clone)").transform.position = new Vector2(enemyBattleSetting.enemyinstance[index].transform.position.x, enemyBattleSetting.enemyinstance[index].transform.position.y + 1.2f);
-            }
-            else if (Input.GetKeyDown(KeyCode.Z) && !attackButton.interactable)
-            {
-                selectEnemy = index;
-                DestroyImmediate(arrow);
-                yield return new WaitForSeconds(Time.deltaTime * 30);
-                break;
-            }
-            else if (Input.GetKeyDown(KeyCode.C))
-            {
-                DestroyImmediate(arrow);
-                yield return new WaitForSeconds(Time.deltaTime * 30);
-                isZKeyPressed = false;
-                attackButton.interactable = true;
-                skillButton.interactable = true;
-                SetState(turnList);
-                StopCoroutine(runningCoroutine);
-                runningCoroutine = null;
-                yield break;
-            }
-            yield return null;
-        }
+        yield return CursorInit();
 
         foreach (AnimaActions anima in allyActions)
         {
@@ -511,7 +657,7 @@ public class BattleManager : MonoBehaviour
 
 
                 /* Animation */
-                yield return cameraManager.ZoomIn(allyBattleSetting.allyinstance[allyActions.IndexOf(anima)].transform, enemyBattleSetting.enemyinstance[selectEnemy].transform, true, anima.animaData.attackName);
+                yield return cameraManager.ZoomSingleOpp(allyBattleSetting.allyinstance[allyActions.IndexOf(anima)].transform, enemyBattleSetting.enemyinstance[selectEnemy].transform, true, anima.animaData.attackName);
                 canvas.SetActive(true);
                 yield return anima.Attack(anima, enemyActions[selectEnemy], enemyHealthBar[selectEnemy], allyDamageBar[allyActions.IndexOf(anima)]);
                 damageNumber.Spawn(new Vector2(enemyBattleSetting.enemyinstance[selectEnemy].transform.position.x -0.1f, enemyBattleSetting.enemyinstance[selectEnemy].transform.position.y + 0.1f), enemyActions[selectEnemy].damage);
@@ -639,181 +785,11 @@ public class BattleManager : MonoBehaviour
 
     }
 
-    IEnumerator PlayerSkill(int selectEnemy)
+    IEnumerator PlayerSingleAttackSkill(int selectEnemy, int skillNum)
     {
-        arrow = GameObject.Find("Arrow_down(Clone)");
-        DestroyImmediate(arrow);
-        int index = 0;
-        Instantiate(Resources.Load<GameObject>("Minwoo/Arrow_down"), new Vector2(enemyBattleSetting.enemyinstance[index].transform.position.x, enemyBattleSetting.enemyinstance[index].transform.position.y + 1.2f), Quaternion.identity);
-        arrow = GameObject.Find("Arrow_down(Clone)");
-        while (true)
-        {
-            if (index != 2 && index < (enemyAnimaNum - 1) && Input.GetKeyUp(KeyCode.RightArrow))
-            {
-                index++;
-                GameObject.Find("Arrow_down(Clone)").transform.position = new Vector2(enemyBattleSetting.enemyinstance[index].transform.position.x, enemyBattleSetting.enemyinstance[index].transform.position.y +1.2f);
-            }
-            if (index != 0 && Input.GetKeyUp(KeyCode.LeftArrow))
-            {
-                index--;
-                GameObject.Find("Arrow_down(Clone)").transform.position = new Vector2(enemyBattleSetting.enemyinstance[index].transform.position.x, enemyBattleSetting.enemyinstance[index].transform.position.y + 1.2f);
-            }
-            else if (Input.GetKeyDown(KeyCode.Z) && !attackButton.interactable)
-            {
-                selectEnemy = index;
-                DestroyImmediate(arrow);
-                yield return new WaitForSeconds(Time.deltaTime * 30);
-                break;
-            }
-            else if (Input.GetKeyDown(KeyCode.C))
-            {
-                DestroyImmediate(arrow);
-                yield return new WaitForSeconds(Time.deltaTime * 30);
-                isZKeyPressed = false;
-                attackButton.interactable = true;
-                skillButton.interactable = true;
-                SetState(turnList);
-                StopCoroutine(runningCoroutine);
-                runningCoroutine = null;
-                yield break;
-            }
-            yield return null;
-        }
 
-        foreach (AnimaActions anima in allyActions)
-        {
-            if (turnList.Count == 0)
-            {
-                break;
-            }
-            if (ReferenceEquals(turnList[0], anima.animaData))
-            {
-                isZKeyPressed = false;
-                attackButton.interactable = true;
-                skillButton.interactable = true;
-                animaActionUI.SetActive(false);
-                isTurn[turnIndex].SetActive(false);
-                turnList.RemoveAt(0);
-                canvas.SetActive(false);//체력 바 동기화 문제 발생 예상
-                /* Attack */
-
-                yield return cameraManager.ZoomIn(allyBattleSetting.allyinstance[allyActions.IndexOf(anima)].transform, enemyBattleSetting.enemyinstance[selectEnemy].transform, true, anima.animaData.skillName[0]);
-
-                /* Animation */
-                canvas.SetActive(true);
-                yield return anima.Skill(anima, enemyActions[selectEnemy], enemyHealthBar[selectEnemy], allyDamageBar[allyActions.IndexOf(anima)]);
-                damageNumber.Spawn(new Vector2(enemyBattleSetting.enemyinstance[selectEnemy].transform.position.x - 0.1f, enemyBattleSetting.enemyinstance[selectEnemy].transform.position.y + 0.1f), enemyActions[selectEnemy].damage);
-                battleLogManager.AddLog($"{anima.animaData.Name} used \"{ anima.animaData.skillName}\" on {enemyActions[selectEnemy].animaData.Name} for {Mathf.Ceil(enemyActions[selectEnemy].damage)}damage", true);
-                allyDamageText[allyActions.IndexOf(anima)].text = Mathf.Ceil(allyDamageBar[allyActions.IndexOf(anima)].thisPoint).ToString();
-                foreach (var max in allyDamageBar)
-                {
-                    if (maxValue < max.maxPoint)
-                    {
-                        maxValue = max.maxPoint;
-                    }
-                }
-                foreach (var max in enemyDamageBar)
-                {
-                    if (maxValue < max.maxPoint)
-                    {
-                        maxValue = max.maxPoint;
-                    }
-                }
-                foreach (var foo in allyDamageBar)
-                {
-                    foo.maxPoint = maxValue;
-                    foo.Initialize();
-                }
-                foreach (var foo in enemyDamageBar)
-                {
-                    foo.maxPoint = maxValue;
-                    foo.Initialize();
-                }
-                if (enemyActions[selectEnemy].animaData.Animadie)
-                {
-                    if (anima.animaData.Speed <= enemyActions[selectEnemy].animaData.Speed)
-                    {
-                        turn[turnIndex].transform.Find("Player Turn Portrait").GetComponent<UnityEngine.UI.Image>().color = new Color(77f / 255f, 77f / 255f, 77f / 255f);
-                    }
-                    else
-                    {
-                        turn[turnIndex++].transform.Find("Player Turn Portrait").GetComponent<UnityEngine.UI.Image>().color = new Color(77f / 255f, 77f / 255f, 77f / 255f);
-                    }
-                    for (int i = 0; i < tmpturnList.Count; i++)
-                    {
-                        if (ReferenceEquals(tmpturnList[i], enemyActions[selectEnemy].animaData))
-                        {
-                            DestroyImmediate(turn[i]);
-                            tmpturnList.RemoveAt(i);
-                            turn.RemoveAt(i);
-                            isTurn.RemoveAt(i);
-                            if (UnityEngine.Random.Range(0, 101) <= enemyActions[selectEnemy].animaData.DropRate)
-                            {
-                                AnimaDataSO animadata = ScriptableObject.CreateInstance<AnimaDataSO>();
-                                animadata.GetAnima(enemyActions[selectEnemy].animaData.Name, enemyActions[selectEnemy].animaData.level);
-                                allyBattleSetting.playerinfo.GetAnima(animadata);
-                                animaTable.ForEachEntity(entity =>
-                                {
-                                    if (entity.Get<string>("name") == enemyActions[selectEnemy].animaData.Name)
-                                    {
-                                        entity.Set<int>("Meeted", 2);
-                                        DBUpdater.Save();
-                                    }
-                                });
-                            }
-                            foreach (var tmp in allyActions)
-                            {
-                                if (!tmp.animaData.Animadie)
-                                {
-                                    tmp.animaData.LevelUp();
-                                    GameObject.Find($"AllyAnimaHP{tmp.animaData.location}").transform.Find("LV UI").transform.Find("Current LV").GetComponent<TextMeshProUGUI>().text = tmp.animaData.level.ToString();
-                                }
-                            }
-                        }
-                    }
-                    battleLogManager.AddLog($"{enemyActions[selectEnemy].animaData.Name}is dead", false);
-                    GoldManager.Instance.AddGold(enemyActions[selectEnemy].animaData.DropGold);
-                    turnList.Remove(enemyActions[selectEnemy].animaData);
-                    DestroyImmediate(enemyBattleSetting.enemyhpinstance[selectEnemy]);
-                    enemyBattleSetting.enemyhpinstance.RemoveAt(selectEnemy);
-                    enemyHealthBar.RemoveAt(selectEnemy);
-                    enemyActions.RemoveAt(selectEnemy);
-                    enemyBattleSetting.animator.RemoveAt(selectEnemy);
-                    DestroyImmediate(enemyBattleSetting.enemyinstance[selectEnemy]);
-                    DestroyImmediate(enemyBattleSetting.enemyInfoInstance[selectEnemy]);
-                    enemyBattleSetting.enemyInfoInstance.RemoveAt(selectEnemy);
-                    enemyBattleSetting.enemyinstance.RemoveAt(selectEnemy);
-                    enemyAnimaNum--;
-                    
-                    for (int i = 0; i < 3; i++)
-                    {
-                        rebuild = GameObject.Find($"Enemy{i}");
-                        if (rebuild != null)
-                        {
-                            rebuild.transform.Find("Status").GetComponent<StatusSync>().dieanima++;
-                        }
-                    }
-                    
-                    if (enemyActions.Count == 0)
-                    {
-                        foreach (var ally in allyActions)
-                        {
-                            ally.animaData.location = -1;
-                        }
-                        state = State.win;
-                        turnIndex = 0;
-                        WinBattle();
-                        StopCoroutine(runningCoroutine);
-                    }
-
-                }
-                else
-                {
-                    turn[turnIndex++].transform.Find("Player Turn Portrait").GetComponent<UnityEngine.UI.Image>().color = new Color(77f / 255f, 77f / 255f, 77f / 255f);
-                }
-                break;
-            }
-        }
+        yield return CursorInit();
+        yield return StartCoroutine(singleAttackSkill.SingleAllySkill(selectEnemy, skillNum));
         if (enemyActions.Count > 0 && turnList.Count == 0)
         {
             runningCoroutine = null;
@@ -825,7 +801,9 @@ public class BattleManager : MonoBehaviour
             SetState(turnList);
         }
 
+
     }
+
     IEnumerator EnemyTurn()
     {
         yield return new WaitForSeconds(1.5f);
@@ -850,110 +828,14 @@ public class BattleManager : MonoBehaviour
 
 
                     /* Animation */
-                    yield return cameraManager.ZoomIn(enemyBattleSetting.enemyinstance[enemyActions.IndexOf(enemy)].transform, allyBattleSetting.allyinstance[selectAlly].transform, false, enemy.animaData.attackName);
+                    yield return cameraManager.ZoomSingleOpp(enemyBattleSetting.enemyinstance[enemyActions.IndexOf(enemy)].transform, allyBattleSetting.allyinstance[selectAlly].transform, false, enemy.animaData.attackName);
                     canvas.SetActive(true);
-                    
+
                     yield return enemy.Attack(enemy, allyActions[selectAlly], allyHealthBar[selectAlly], enemyDamageBar[enemy.animaData.enemyIndex]);
                     damageNumber.Spawn(new Vector2(allyBattleSetting.allyinstance[selectAlly].transform.position.x - 0.1f, allyBattleSetting.allyinstance[selectAlly].transform.position.y + 0.1f), allyActions[selectAlly].damage);
                     battleLogManager.AddLog($"{enemy.animaData.Name} hit {allyActions[selectAlly].animaData.Name} for {Mathf.Ceil(allyActions[selectAlly].damage)} damage", false);
                     enemyDamageText[enemy.animaData.enemyIndex].text = Mathf.Ceil(enemyDamageBar[enemy.animaData.enemyIndex].thisPoint).ToString();
-                    
-                    foreach( var max in allyDamageBar)
-                    {
-                        if(maxValue < max.maxPoint)
-                        {
-                            maxValue = max.maxPoint;
-                        }
-                    }
-                    foreach( var max in enemyDamageBar)
-                    {
-                        if (maxValue < max.maxPoint)
-                        {
-                            maxValue = max.maxPoint;
-                        }
-                    }
-                    foreach (var foo in allyDamageBar)
-                    {
-                        foo.maxPoint = maxValue;
-                        foo.Initialize();
-                    }
-                    foreach (var foo in enemyDamageBar)
-                    {
-                        foo.maxPoint = maxValue;
-                        foo.Initialize();
-                    }
-                    if (allyActions[selectAlly].animaData.Animadie)
-                    {
-                        if (enemy.animaData.Speed < allyActions[selectAlly].animaData.Speed)
-                        {
-                            turn[turnIndex].transform.Find("Enemy Turn Portrait").GetComponent<UnityEngine.UI.Image>().color = new Color(77f / 255f, 77f / 255f, 77f / 255f);
-                        }
-                        else
-                        {
-                            turn[turnIndex++].transform.Find("Enemy Turn Portrait").GetComponent<UnityEngine.UI.Image>().color = new Color(77f / 255f, 77f / 255f, 77f / 255f);
-                        }
-                        for (int i = 0; i < tmpturnList.Count; i++)
-                        {
-                            if (ReferenceEquals(tmpturnList[i], allyActions[selectAlly].animaData))
-                            {
-                                DestroyImmediate(turn[i]);
-                                tmpturnList.RemoveAt(i);
-                                turn.RemoveAt(i);
-                                isTurn.RemoveAt(i);
-                            }
-                        }
-                        //dieAllyAnima.Add(allyActions.IndexOf(allyActions[selectAlly]));
-                        //DestroyImmediate(allyBattleSetting.allyhpinstance[selectAlly]);
-                        //allyBattleSetting.allyhpinstance.RemoveAt(selectAlly);
-                        //allyHealthBar.RemoveAt(selectAlly);
-                        //allyBattleSetting.animator.RemoveAt(selectAlly);
-                        //DestroyImmediate(allyBattleSetting.allyinstance[selectAlly]);
-                        //DestroyImmediate(allyBattleSetting.allyInfoInstance[selectAlly]);
-                        //allyBattleSetting.allyinstance.RemoveAt(selectAlly);
-                        //allyAnimaNum--;
-                        //turnList.Remove(allyActions[selectAlly].animaData);
-                        battleLogManager.AddLog($"{allyActions[selectAlly].animaData.Name}is dead", true);
-                        dieAllyAnima.Add(allyActions.IndexOf(allyActions[selectAlly]));
-                        turnList.Remove(allyActions[selectAlly].animaData);
-                        allyBattleSetting.allyhpinstance[allyActions[selectAlly].animaData.location].SetActive(false);
-                        allyBattleSetting.allyinstance[allyActions[selectAlly].animaData.location].SetActive(false);
-                        allyBattleSetting.allyInfoInstance[selectAlly].SetActive(false);
-                        allyAnimaNum--;
-                        
-                        if (allyAnimaNum == 0)
-                        {
-                            state = State.defeat;
-                            print("패배");
-                            LoseBattle();
-                            StopCoroutine(runningCoroutine);
 
-
-                        }
-                    }
-                    else
-                    {
-                        turn[turnIndex++].transform.Find("Enemy Turn Portrait").GetComponent<UnityEngine.UI.Image>().color = new Color(77f / 255f, 77f / 255f, 77f / 255f);
-
-                    }
-
-                }
-                else if (enemy.performance.Equals("Skill"))
-                {
-                    yield return new WaitForSeconds(0.5f);
-                    isTurn[turnIndex].SetActive(false);
-                    turnList.RemoveAt(0);
-                    canvas.SetActive(false);//체력 바 동기화 문제 발생 예상
-                    /* Attack */
-
-
-                    /* Animation */
-
-                    yield return cameraManager.ZoomIn(enemyBattleSetting.enemyinstance[enemyActions.IndexOf(enemy)].transform, allyBattleSetting.allyinstance[selectAlly].transform, false, enemy.animaData.skillName[0]);
-                    canvas.SetActive(true);
-                    yield return enemy.Skill(enemy, allyActions[selectAlly], allyHealthBar[selectAlly], enemyDamageBar[enemy.animaData.enemyIndex]);
-                    damageNumber.Spawn(new Vector2(allyBattleSetting.allyinstance[selectAlly].transform.position.x - 0.1f, allyBattleSetting.allyinstance[selectAlly].transform.position.y + 0.1f), allyActions[selectAlly].damage);
-                    battleLogManager.AddLog($"{enemy.animaData.Name} used \"{enemy.animaData.skillName}\" on {allyActions[selectAlly].animaData.Name} for {Mathf.Ceil(allyActions[selectAlly].damage)} damage", false);
-                    enemyDamageText[enemy.animaData.enemyIndex].text = Mathf.Ceil(enemyDamageBar[enemy.animaData.enemyIndex].thisPoint).ToString();
                     foreach (var max in allyDamageBar)
                     {
                         if (maxValue < max.maxPoint)
@@ -998,18 +880,18 @@ public class BattleManager : MonoBehaviour
                                 isTurn.RemoveAt(i);
                             }
                         }
-                        battleLogManager.AddLog($"{allyActions[selectAlly].animaData.Name}is dead", true);
                         //dieAllyAnima.Add(allyActions.IndexOf(allyActions[selectAlly]));
                         //DestroyImmediate(allyBattleSetting.allyhpinstance[selectAlly]);
                         //allyBattleSetting.allyhpinstance.RemoveAt(selectAlly);
                         //allyHealthBar.RemoveAt(selectAlly);
-                        //allyActions.RemoveAt(selectAlly);
                         //allyBattleSetting.animator.RemoveAt(selectAlly);
                         //DestroyImmediate(allyBattleSetting.allyinstance[selectAlly]);
                         //DestroyImmediate(allyBattleSetting.allyInfoInstance[selectAlly]);
                         //allyBattleSetting.allyinstance.RemoveAt(selectAlly);
                         //allyAnimaNum--;
                         //turnList.Remove(allyActions[selectAlly].animaData);
+                        playerInfo.DieAnima(allyActions[selectAlly].animaData);
+                        battleLogManager.AddLog($"{allyActions[selectAlly].animaData.Name}is dead", true);
                         dieAllyAnima.Add(allyActions.IndexOf(allyActions[selectAlly]));
                         turnList.Remove(allyActions[selectAlly].animaData);
                         allyBattleSetting.allyhpinstance[allyActions[selectAlly].animaData.location].SetActive(false);
@@ -1017,23 +899,28 @@ public class BattleManager : MonoBehaviour
                         allyBattleSetting.allyInfoInstance[selectAlly].SetActive(false);
                         allyAnimaNum--;
 
-
                         if (allyAnimaNum == 0)
                         {
                             state = State.defeat;
+                            print("패배");
                             LoseBattle();
                             StopCoroutine(runningCoroutine);
+
 
                         }
                     }
                     else
                     {
                         turn[turnIndex++].transform.Find("Enemy Turn Portrait").GetComponent<UnityEngine.UI.Image>().color = new Color(77f / 255f, 77f / 255f, 77f / 255f);
+
                     }
 
                 }
+                else if (enemy.performance.Equals("Skill"))
+                { 
+                }
 
-                break;
+                    break;
 
             }
 
@@ -1057,15 +944,12 @@ public class BattleManager : MonoBehaviour
         } while (dieAllyAnima.Contains(randomNumber));
         return randomNumber;
     }
-    public List<AnimaActions> getAlly()
-    {
-        return allyActions;
-    }
-    public List<EnemyActions> getEnemy()
-    {
-        return enemyActions;
-    }
-    void WinBattle()
+    
+    public List<AnimaActions> GetAllyActions(){ return allyActions; }
+    public List<EnemyActions> GetEnemyActions(){ return enemyActions; }
+    
+    
+    public void WinBattle()
     {
         
         Instantiate(Resources.Load<GameObject>("Minwoo/Battle Win UI"), canvas.transform);
@@ -1086,6 +970,49 @@ public class BattleManager : MonoBehaviour
     void LoseBattle()
     {
         Instantiate(Resources.Load<GameObject>("Minwoo/Game Over UI"), canvas.transform);
+    }
+
+    IEnumerator CursorInit()
+    {
+        arrow = GameObject.Find("Arrow_down(Clone)");
+        DestroyImmediate(arrow);
+        int index = 0;
+        Instantiate(Resources.Load<GameObject>("Minwoo/Arrow_down"), new Vector2(enemyBattleSetting.enemyinstance[index].transform.position.x, enemyBattleSetting.enemyinstance[index].transform.position.y + 1.2f), Quaternion.identity);
+        arrow = GameObject.Find("Arrow_down(Clone)");
+        while (true)
+        {
+            if (index != 2 && index < (enemyAnimaNum - 1) && Input.GetKeyUp(KeyCode.RightArrow))
+            {
+                index++;
+                GameObject.Find("Arrow_down(Clone)").transform.position = new Vector2(enemyBattleSetting.enemyinstance[index].transform.position.x, enemyBattleSetting.enemyinstance[index].transform.position.y + 1.2f);
+            }
+            if (index != 0 && Input.GetKeyUp(KeyCode.LeftArrow))
+            {
+                index--;
+                GameObject.Find("Arrow_down(Clone)").transform.position = new Vector2(enemyBattleSetting.enemyinstance[index].transform.position.x, enemyBattleSetting.enemyinstance[index].transform.position.y + 1.2f);
+            }
+            else if (Input.GetKeyDown(KeyCode.Z) && !attackButton.interactable)
+            {
+                selectEnemy = index;
+                DestroyImmediate(arrow);
+                yield return new WaitForSeconds(Time.deltaTime * 30);
+                break;
+            }
+            else if (Input.GetKeyDown(KeyCode.C))
+            {
+                DestroyImmediate(arrow);
+                yield return new WaitForSeconds(Time.deltaTime * 30);
+                isZKeyPressed = false;
+                attackButton.interactable = true;
+                skillButton.interactable = true;
+                SetState(turnList);
+                StopCoroutine(runningCoroutine);
+                runningCoroutine = null;
+                yield break;
+            }
+            yield return null;
+        }
+
     }
 }
 

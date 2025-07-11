@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1045134569624224914}
   - component: {fileID: 8887236505052522043}
   m_Layer: 0
-  m_Name: AmareNomalAttack
+  m_Name: AmareNormalAttack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
