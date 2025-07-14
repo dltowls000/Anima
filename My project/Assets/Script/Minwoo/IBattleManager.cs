@@ -8,7 +8,8 @@ using UnityEngine.UI;
 public interface IBattleManager
 {
     void WinBattle();
-    BattleManager.State stat { get; set; }
+    PlayerInfo PlayerInfo { get; }
+    BattleState stat { get; set; }
     int TurnIndex { get; set; }
     int EnemyAnimaNum { get; set; }
     bool IsZKeyPressed { get; set; }
@@ -29,8 +30,8 @@ public interface IBattleManager
     CameraManager CameraManager { get; }
     DamageNumber DamageNumber { get; }
 
-    AllyBattleSetting AllyBattleSetting { get; }
-    EnemyBattleSetting EnemyBattleSetting { get; }
+    IAllyBattleSetting AllyBattleSetting { get; }
+    IEnemyBattleSetting EnemyBattleSetting { get; }
 
     float MaxValue { get; set; }
     List<ParserBar> AllyDamageBar { get; }

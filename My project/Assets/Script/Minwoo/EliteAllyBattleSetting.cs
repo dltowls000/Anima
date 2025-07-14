@@ -4,7 +4,7 @@ using BansheeGz.BGDatabase;
 using UnityEditor.Animations;
 using UnityEngine;
 
-public class EliteAllyBattleSetting : MonoBehaviour
+public class EliteAllyBattleSetting : MonoBehaviour,IAllyBattleSetting
 {
     public GameObject canvas;
     public List<GameObject> allyobjPrefab;
@@ -14,7 +14,6 @@ public class EliteAllyBattleSetting : MonoBehaviour
     public string objname;
     public PlayerInfo playerinfo;
     public GameObject prefab;
-    public List<Animator> animator;
     public List<GameObject> allyhpPrefab;
     public List<GameObject> allyhpinstance;
     public List<float> damagex;
@@ -23,7 +22,23 @@ public class EliteAllyBattleSetting : MonoBehaviour
     List<GameObject> allyParserPrefab;
     List<GameObject> allyParserInstance;
     GameObject battleParser;
-    //public SlotManager slotManager;
+    public GameObject Canvas => canvas;
+    public List<GameObject> AllyObjPrefab => allyobjPrefab;
+    public List<GameObject> AllyInstance => allyinstance;
+    public List<GameObject> AllyInfoPrefab => allyInfoPrefab;
+    public List<GameObject> AllyInfoInstance => allyInfoInstance;
+    public string ObjName => objname;
+    public PlayerInfo PlayerInfo => playerinfo;
+    public GameObject Prefab => prefab;
+    public List<GameObject> AllyHpPrefab => allyhpPrefab;
+    public List<GameObject> AllyHpInstance => allyhpinstance;
+    public List<float> DamageX => damagex;
+    public List<float> DamageY => damagey;
+
+    public List<GameObject> AllyParserPrefab => allyParserPrefab;
+    public List<GameObject> AllyParserInstance => allyParserInstance;
+    public GameObject BattleParser => battleParser;
+    
     public void initialize()
     {
         allyinstance = new List<GameObject>();
@@ -34,12 +49,11 @@ public class EliteAllyBattleSetting : MonoBehaviour
         allyInfoPrefab = new List<GameObject>();
         allyParserPrefab = new List<GameObject>();
         allyParserInstance = new List<GameObject>();
-        animator = new List<Animator>();
         damagex = new List<float>();
         damagey = new List<float>();
         eliteBattleManager = GameObject.Find("BattleManager").GetComponent<EliteBattleManager>();
         battleParser = GameObject.Find("Battle Parser");
-        playerinfo = eliteBattleManager.playerInfo;
+        playerinfo = eliteBattleManager.PlayerInfo;
         canvas = GameObject.Find("Main Battle UI");
     }
     public void SpawnAlly()
@@ -65,8 +79,6 @@ public class EliteAllyBattleSetting : MonoBehaviour
                     int index = allyinstance[i].name.IndexOf("(Clone)");
                     allyinstance[i].name = allyinstance[i].name.Substring(0, index) + i;
                     allyinstance[i].transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
-                    //damagex.Add(Random.Range(-4.5f * Mathf.Pow(i, 2) + 8.5f *i - 10.5f + 0.5f, -4.5f * Mathf.Pow(i, 2) + 8.5f *i - 10.5f + 1.5f));
-                    //damagey.Add(Random.Range(y - 2.5f *i + 0.25f, y - 2.5f *i + 1.25f));
                     allyhpinstance.Add(Instantiate(allyhpPrefab[i], Vector3.zero, Quaternion.identity, canvas.transform));
                     allyhpinstance[i].GetComponent<RectTransform>().anchoredPosition = new Vector3((i * 380f) - 380f, -390f, 0f);
                     index = allyhpinstance[i].name.IndexOf("(Clone)");
@@ -77,7 +89,6 @@ public class EliteAllyBattleSetting : MonoBehaviour
                     allyParserInstance.Add(Instantiate(allyParserPrefab[i], battleParser.transform));
                     index = allyParserInstance[i].name.IndexOf("(Clone)");
                     allyParserInstance[i].name = allyParserInstance[i].name.Substring(0, index);
-                    animator.Add(allyinstance[i].GetComponent<Animator>());
                 }
             }
             else if (allyobjPrefab.Count == 2)
@@ -89,8 +100,6 @@ public class EliteAllyBattleSetting : MonoBehaviour
                     int index = allyinstance[i].name.IndexOf("(Clone)");
                     allyinstance[i].name = allyinstance[i].name.Substring(0, index) + i;
                     allyinstance[i].transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
-                    //damagex.Add(Random.Range(-4.5f * Mathf.Pow(i, 2) + 8.5f *i - 10.5f + 0.5f, -4.5f * Mathf.Pow(i, 2) + 8.5f *i - 10.5f + 1.5f));
-                    //damagey.Add(Random.Range(y - 2.5f *i + 0.25f, y - 2.5f *i + 1.25f));
                     allyhpinstance.Add(Instantiate(allyhpPrefab[i], Vector3.zero, Quaternion.identity, canvas.transform));
                     allyhpinstance[i].GetComponent<RectTransform>().anchoredPosition = new Vector3((i * 380f) - 200f, -390f, 0f);
                     index = allyhpinstance[i].name.IndexOf("(Clone)");
@@ -101,7 +110,6 @@ public class EliteAllyBattleSetting : MonoBehaviour
                     allyParserInstance.Add(Instantiate(allyParserPrefab[i], battleParser.transform));
                     index = allyParserInstance[i].name.IndexOf("(Clone)");
                     allyParserInstance[i].name = allyParserInstance[i].name.Substring(0, index);
-                    animator.Add(allyinstance[i].GetComponent<Animator>());
                 }
             }
             else
@@ -111,8 +119,6 @@ public class EliteAllyBattleSetting : MonoBehaviour
                 int index = allyinstance[0].name.IndexOf("(Clone)");
                 allyinstance[0].name = allyinstance[0].name.Substring(0, index) + 0;
                 allyinstance[0].transform.Rotate(0, 180f, 0);
-                //damagex.Add(Random.Range(4.5f * Mathf.Pow(0, 2) - 8.5f * 0 + 10.5f - 1.5f, 4.5f * Mathf.Pow(0, 2) - 8.5f * i + 10.5f - 0.5f));
-                //damagey.Add(Random.Range(y - 2.5f * i + 0.25f, y - 2.5f * i + 1.25f));
                 allyinstance[0].transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
                 allyhpinstance.Add(Instantiate(allyhpPrefab[0], Vector3.zero, Quaternion.identity, canvas.transform));
                 allyhpinstance[0].GetComponent<RectTransform>().anchoredPosition = new Vector3(0f, -390f, 0f);
@@ -124,7 +130,6 @@ public class EliteAllyBattleSetting : MonoBehaviour
                 allyParserInstance.Add(Instantiate(allyParserPrefab[0], battleParser.transform));
                 index = allyParserInstance[0].name.IndexOf("(Clone)");
                 allyParserInstance[0].name = allyParserInstance[0].name.Substring(0, index);
-                animator.Add(allyinstance[0].GetComponent<Animator>());
             }
         }
 
