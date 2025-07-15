@@ -84,12 +84,18 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
     int selectEnemy = 0;
     float maxValue = 0;
     int index = 0;
+    public List<int> DieAllyAnima => dieAllyAnima;
     public PlayerInfo PlayerInfo => playerInfo;
 
     public BattleState stat
     {
         get => state;
         set => state = value;
+    }
+    public int AllyAnimaNum
+    {
+        get => allyAnimaNum;
+        set => allyAnimaNum = value;
     }
 
     public int TurnIndex
@@ -827,205 +833,14 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
                 enemy.DecideAction();
                 if (enemy.performance.Equals("Attack"))
                 {
-                    isTurn[turnIndex].SetActive(false);
-                    turnList.RemoveAt(0);
-                    canvas.SetActive(false);//체력 바 동기화 문제 발생 예상
-                    /* Attack */
-
-
-                    /* Animation */
-                    yield return cameraManager.ZoomSingleOpp(eliteEnemyBattleSetting.enemyinstance[enemyActions.IndexOf(enemy)].transform, eliteAllyBattleSetting.allyinstance[selectAlly].transform, false, enemy.animaData.attackName);
-                    canvas.SetActive(true);
-
-                    yield return enemy.Attack(enemy, allyActions[selectAlly], allyHealthBar[selectAlly], enemyDamageBar[enemy.animaData.enemyIndex]);
-                    damageNumber.Spawn(new Vector2(eliteAllyBattleSetting.allyinstance[selectAlly].transform.position.x - 0.1f, eliteAllyBattleSetting.allyinstance[selectAlly].transform.position.y + 0.1f), allyActions[selectAlly].damage);
-                    battleLogManager.AddLog($"{enemy.animaData.Name} hit {allyActions[selectAlly].animaData.Name} for {Mathf.Ceil(allyActions[selectAlly].damage)} damage", false);
-                    enemyDamageText[enemy.animaData.enemyIndex].text = Mathf.Ceil(enemyDamageBar[enemy.animaData.enemyIndex].thisPoint).ToString();
-
-                    foreach (var max in allyDamageBar)
-                    {
-                        if (maxValue < max.maxPoint)
-                        {
-                            maxValue = max.maxPoint;
-                        }
-                    }
-                    foreach (var max in enemyDamageBar)
-                    {
-                        if (maxValue < max.maxPoint)
-                        {
-                            maxValue = max.maxPoint;
-                        }
-                    }
-                    foreach (var foo in allyDamageBar)
-                    {
-                        foo.maxPoint = maxValue;
-                        foo.Initialize();
-                    }
-                    foreach (var foo in enemyDamageBar)
-                    {
-                        foo.maxPoint = maxValue;
-                        foo.Initialize();
-                    }
-                    if (allyActions[selectAlly].animaData.Animadie)
-                    {
-                        if (enemy.animaData.Speed < allyActions[selectAlly].animaData.Speed)
-                        {
-                            turn[turnIndex].transform.Find("Enemy Turn Portrait").GetComponent<UnityEngine.UI.Image>().color = new Color(77f / 255f, 77f / 255f, 77f / 255f);
-                        }
-                        else
-                        {
-                            turn[turnIndex++].transform.Find("Enemy Turn Portrait").GetComponent<UnityEngine.UI.Image>().color = new Color(77f / 255f, 77f / 255f, 77f / 255f);
-                        }
-                        for (int i = 0; i < tmpturnList.Count; i++)
-                        {
-                            if (ReferenceEquals(tmpturnList[i], allyActions[selectAlly].animaData))
-                            {
-                                DestroyImmediate(turn[i]);
-                                tmpturnList.RemoveAt(i);
-                                turn.RemoveAt(i);
-                                isTurn.RemoveAt(i);
-                            }
-                        }
-                        //dieAllyAnima.Add(allyActions.IndexOf(allyActions[selectAlly]));
-                        //DestroyImmediate(allyBattleSetting.allyhpinstance[selectAlly]);
-                        //allyBattleSetting.allyhpinstance.RemoveAt(selectAlly);
-                        //allyHealthBar.RemoveAt(selectAlly);
-                        //allyBattleSetting.animator.RemoveAt(selectAlly);
-                        //DestroyImmediate(allyBattleSetting.allyinstance[selectAlly]);
-                        //DestroyImmediate(allyBattleSetting.allyInfoInstance[selectAlly]);
-                        //allyBattleSetting.allyinstance.RemoveAt(selectAlly);
-                        //allyAnimaNum--;
-                        //turnList.Remove(allyActions[selectAlly].animaData);
-                        playerInfo.DieAnima(allyActions[selectAlly].animaData);
-                        battleLogManager.AddLog($"{allyActions[selectAlly].animaData.Name}is dead", true);
-                        dieAllyAnima.Add(allyActions.IndexOf(allyActions[selectAlly]));
-                        turnList.Remove(allyActions[selectAlly].animaData);
-                        eliteAllyBattleSetting.allyhpinstance[allyActions[selectAlly].animaData.location].SetActive(false);
-                        eliteAllyBattleSetting.allyinstance[allyActions[selectAlly].animaData.location].SetActive(false);
-                        eliteAllyBattleSetting.allyInfoInstance[selectAlly].SetActive(false);
-                        allyAnimaNum--;
-
-                        if (allyAnimaNum == 0)
-                        {
-                            state = BattleState.defeat;
-                            print("패배");
-                            LoseBattle();
-                            StopCoroutine(runningCoroutine);
-                            
-
-
-                        }
-                    }
-                    else
-                    {
-                        turn[turnIndex++].transform.Find("Enemy Turn Portrait").GetComponent<UnityEngine.UI.Image>().color = new Color(77f / 255f, 77f / 255f, 77f / 255f);
-
-                    }
-
+                    yield return StartCoroutine(singleAttack.SingleEnemyAttack(enemy, selectAlly));
                 }
                 else if (enemy.performance.Equals("Skill"))
                 {
-                    yield return new WaitForSeconds(0.5f);
-                    isTurn[turnIndex].SetActive(false);
-                    turnList.RemoveAt(0);
-                    canvas.SetActive(false);//체력 바 동기화 문제 발생 예상
-                    /* Attack */
-
-
-                    /* Animation */
-
-                    yield return cameraManager.ZoomSingleOpp(eliteEnemyBattleSetting.enemyinstance[enemyActions.IndexOf(enemy)].transform, eliteAllyBattleSetting.allyinstance[selectAlly].transform, false, enemy.animaData.skillName[0]);
-                    canvas.SetActive(true);
-                    yield return enemy.Skill(enemy, allyActions[selectAlly], allyHealthBar[selectAlly], enemyDamageBar[enemy.animaData.enemyIndex]);
-                    damageNumber.Spawn(new Vector2(eliteAllyBattleSetting.allyinstance[selectAlly].transform.position.x - 0.1f, eliteAllyBattleSetting.allyinstance[selectAlly].transform.position.y + 0.1f), allyActions[selectAlly].damage);
-                    battleLogManager.AddLog($"{enemy.animaData.Name} used \"{enemy.animaData.skillName}\" on {allyActions[selectAlly].animaData.Name} for {Mathf.Ceil(allyActions[selectAlly].damage)} damage", false);
-                    enemyDamageText[enemy.animaData.enemyIndex].text = Mathf.Ceil(enemyDamageBar[enemy.animaData.enemyIndex].thisPoint).ToString();
-                    foreach (var max in allyDamageBar)
-                    {
-                        if (maxValue < max.maxPoint)
-                        {
-                            maxValue = max.maxPoint;
-                        }
-                    }
-                    foreach (var max in enemyDamageBar)
-                    {
-                        if (maxValue < max.maxPoint)
-                        {
-                            maxValue = max.maxPoint;
-                        }
-                    }
-                    foreach (var foo in allyDamageBar)
-                    {
-                        foo.maxPoint = maxValue;
-                        foo.Initialize();
-                    }
-                    foreach (var foo in enemyDamageBar)
-                    {
-                        foo.maxPoint = maxValue;
-                        foo.Initialize();
-                    }
-                    if (allyActions[selectAlly].animaData.Animadie)
-                    {
-                        if (enemy.animaData.Speed < allyActions[selectAlly].animaData.Speed)
-                        {
-                            turn[turnIndex].transform.Find("Enemy Turn Portrait").GetComponent<UnityEngine.UI.Image>().color = new Color(77f / 255f, 77f / 255f, 77f / 255f);
-                        }
-                        else
-                        {
-                            turn[turnIndex++].transform.Find("Enemy Turn Portrait").GetComponent<UnityEngine.UI.Image>().color = new Color(77f / 255f, 77f / 255f, 77f / 255f);
-                        }
-                        for (int i = 0; i < tmpturnList.Count; i++)
-                        {
-                            if (ReferenceEquals(tmpturnList[i], allyActions[selectAlly].animaData))
-                            {
-                                DestroyImmediate(turn[i]);
-                                tmpturnList.RemoveAt(i);
-                                turn.RemoveAt(i);
-                                isTurn.RemoveAt(i);
-                            }
-                        }
-                        battleLogManager.AddLog($"{allyActions[selectAlly].animaData.Name}is dead", true);
-                        //dieAllyAnima.Add(allyActions.IndexOf(allyActions[selectAlly]));
-                        //DestroyImmediate(eliteAllyBattleSetting.allyhpinstance[selectAlly]);
-                        //eliteAllyBattleSetting.allyhpinstance.RemoveAt(selectAlly);
-                        //allyHealthBar.RemoveAt(selectAlly);
-                        //allyActions.RemoveAt(selectAlly);
-                        //eliteAllyBattleSetting.animator.RemoveAt(selectAlly);
-                        //DestroyImmediate(eliteAllyBattleSetting.allyinstance[selectAlly]);
-                        //DestroyImmediate(eliteAllyBattleSetting.allyInfoInstance[selectAlly]);
-                        //eliteAllyBattleSetting.allyinstance.RemoveAt(selectAlly);
-                        //allyAnimaNum--;
-                        //turnList.Remove(allyActions[selectAlly].animaData);
-                        playerInfo.DieAnima(allyActions[selectAlly].animaData);
-                        dieAllyAnima.Add(allyActions.IndexOf(allyActions[selectAlly]));
-                        turnList.Remove(allyActions[selectAlly].animaData);
-                        eliteAllyBattleSetting.allyhpinstance[allyActions[selectAlly].animaData.location].SetActive(false);
-                        eliteAllyBattleSetting.allyinstance[allyActions[selectAlly].animaData.location].SetActive(false);
-                        eliteAllyBattleSetting.allyInfoInstance[selectAlly].SetActive(false);
-                        allyAnimaNum--;
-
-
-                        if (allyAnimaNum == 0)
-                        {
-                            state = BattleState.defeat;
-                            print("패배");
-                            LoseBattle();
-                            StopCoroutine(runningCoroutine);
-                            
-
-                        }
-                    }
-                    else
-                    {
-                        turn[turnIndex++].transform.Find("Enemy Turn Portrait").GetComponent<UnityEngine.UI.Image>().color = new Color(77f / 255f, 77f / 255f, 77f / 255f);
-                    }
-
+                    yield return StartCoroutine(singleAttack.SingleEnemySkill(enemy, selectAlly));
                 }
-
                 break;
-
             }
-
         }
         runningCoroutine = null;
         if (turnList.Count == 0)
@@ -1072,7 +887,7 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
         }
 
     }
-    void LoseBattle()
+    public void LoseBattle()
     {
         Instantiate(Resources.Load<GameObject>("Minwoo/Game Over UI"), canvas.transform);
     }

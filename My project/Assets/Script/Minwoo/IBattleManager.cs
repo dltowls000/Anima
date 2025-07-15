@@ -8,13 +8,16 @@ using UnityEngine.UI;
 public interface IBattleManager
 {
     void WinBattle();
+    void LoseBattle();
     PlayerInfo PlayerInfo { get; }
     BattleState stat { get; set; }
     int TurnIndex { get; set; }
     int EnemyAnimaNum { get; set; }
+    int AllyAnimaNum { get; set; }
     bool IsZKeyPressed { get; set; }
     public Coroutine RunningCoroutine { get; set; }
 
+    List<int> DieAllyAnima { get; }
     List<AnimaActions> AllyActions { get; }
     List<EnemyActions> EnemyActions { get; }
     List<GameObject> Turn { get; }

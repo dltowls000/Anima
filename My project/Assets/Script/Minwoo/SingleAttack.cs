@@ -28,30 +28,7 @@ public class SingleAttack:MonoBehaviour
                 bm.DamageNumber.Spawn(new Vector2(bm.EnemyBattleSetting.EnemyInstance[selectEnemy].transform.position.x - 0.1f, bm.EnemyBattleSetting.EnemyInstance[selectEnemy].transform.position.y + 0.1f), bm.EnemyActions[selectEnemy].damage);
                 bm.BattleLogManager.AddLog($"{anima.animaData.Name} hit {bm.EnemyActions[selectEnemy].animaData.Name} for {Mathf.Ceil(bm.EnemyActions[selectEnemy].damage)}damage", true);
                 bm.AllyDamageText[bm.AllyActions.IndexOf(anima)].text = Mathf.Ceil(bm.AllyDamageBar[bm.AllyActions.IndexOf(anima)].thisPoint).ToString();
-                foreach (var max in bm.AllyDamageBar)
-                {
-                    if (bm.MaxValue < max.maxPoint)
-                    {
-                        bm.MaxValue = max.maxPoint;
-                    }
-                }
-                foreach (var max in bm.EnemyDamageBar)
-                {
-                    if (bm.MaxValue < max.maxPoint)
-                    {
-                        bm.MaxValue = max.maxPoint;
-                    }
-                }
-                foreach (var foo in bm.AllyDamageBar)
-                {
-                    foo.maxPoint = bm.MaxValue;
-                    foo.Initialize();
-                }
-                foreach (var foo in bm.EnemyDamageBar)
-                {
-                    foo.maxPoint = bm.MaxValue;
-                    foo.Initialize();
-                }
+                ParserUpdate();
 
                 if (bm.EnemyActions[selectEnemy].animaData.Animadie)
                 {
@@ -158,30 +135,7 @@ public class SingleAttack:MonoBehaviour
                     bm.DamageNumber.Spawn(new Vector2(bm.EnemyBattleSetting.EnemyInstance[selectEnemy].transform.position.x - 0.1f, bm.EnemyBattleSetting.EnemyInstance[selectEnemy].transform.position.y + 0.1f), bm.EnemyActions[selectEnemy].damage);
                     bm.BattleLogManager.AddLog($"{anima.animaData.Name} used \"{anima.animaData.skillName[skillNum]}\" on {bm.EnemyActions[selectEnemy].animaData.Name} for {Mathf.Ceil(bm.EnemyActions[selectEnemy].damage)}damage", true);
                     bm.AllyDamageText[bm.AllyActions.IndexOf(anima)].text = Mathf.Ceil(bm.AllyDamageBar[bm.AllyActions.IndexOf(anima)].thisPoint).ToString();
-                    foreach (var max in bm.AllyDamageBar)
-                    {
-                        if (bm.MaxValue < max.maxPoint)
-                        {
-                            bm.MaxValue = max.maxPoint;
-                        }
-                    }
-                    foreach (var max in bm.EnemyDamageBar)
-                    {
-                        if (bm.MaxValue < max.maxPoint)
-                        {
-                            bm.MaxValue = max.maxPoint;
-                        }
-                    }
-                    foreach (var foo in bm.AllyDamageBar)
-                    {
-                        foo.maxPoint = bm.MaxValue;
-                        foo.Initialize();
-                    }
-                    foreach (var foo in bm.EnemyDamageBar)
-                    {
-                        foo.maxPoint = bm.MaxValue;
-                        foo.Initialize();
-                    }
+                    ParserUpdate();
                     if (bm.EnemyActions[selectEnemy].animaData.Animadie)
                     {
                         if (anima.animaData.Speed <= bm.EnemyActions[selectEnemy].animaData.Speed)
@@ -271,105 +225,123 @@ public class SingleAttack:MonoBehaviour
         
         
     }
-    
-    //public IEnumerator SingleEnemySkill(int selectAlly)
-    //{
 
-    //        yield return new WaitForSeconds(0.5f);
-    //        isTurn[turnIndex].SetActive(false);
-    //        turnList.RemoveAt(0);
-    //        canvas.SetActive(false);//체력 바 동기화 문제 발생 예상
-    //        /* Attack */
+    public IEnumerator SingleEnemyAttack(EnemyActions enemy, int selectAlly)
+    {
+        yield return new WaitForSeconds(0.5f);
+        bm.IsTurn[bm.TurnIndex].SetActive(false);
+        bm.TurnList.RemoveAt(0);
+        bm.Canvas.SetActive(false);
 
-
-    //        /* Animation */
-
-    //        yield return cameraManager.ZoomSingleOpp(enemyBattleSetting.enemyinstance[enemyActions.IndexOf(enemy)].transform, allyBattleSetting.allyinstance[selectAlly].transform, false, enemy.animaData.skillName[0]);
-    //        canvas.SetActive(true);
-    //        yield return enemy.Skill(enemy, allyActions[selectAlly], allyHealthBar[selectAlly], enemyDamageBar[enemy.animaData.enemyIndex]);
-    //        damageNumber.Spawn(new Vector2(allyBattleSetting.allyinstance[selectAlly].transform.position.x - 0.1f, allyBattleSetting.allyinstance[selectAlly].transform.position.y + 0.1f), allyActions[selectAlly].damage);
-    //        battleLogManager.AddLog($"{enemy.animaData.Name} used \"{enemy.animaData.skillName}\" on {allyActions[selectAlly].animaData.Name} for {Mathf.Ceil(allyActions[selectAlly].damage)} damage", false);
-    //        enemyDamageText[enemy.animaData.enemyIndex].text = Mathf.Ceil(enemyDamageBar[enemy.animaData.enemyIndex].thisPoint).ToString();
-    //        foreach (var max in allyDamageBar)
-    //        {
-    //            if (maxValue < max.maxPoint)
-    //            {
-    //                maxValue = max.maxPoint;
-    //            }
-    //        }
-    //        foreach (var max in enemyDamageBar)
-    //        {
-    //            if (maxValue < max.maxPoint)
-    //            {
-    //                maxValue = max.maxPoint;
-    //            }
-    //        }
-    //        foreach (var foo in allyDamageBar)
-    //        {
-    //            foo.maxPoint = maxValue;
-    //            foo.Initialize();
-    //        }
-    //        foreach (var foo in enemyDamageBar)
-    //        {
-    //            foo.maxPoint = maxValue;
-    //            foo.Initialize();
-    //        }
-    //        if (allyActions[selectAlly].animaData.Animadie)
-    //        {
-    //            if (enemy.animaData.Speed < allyActions[selectAlly].animaData.Speed)
-    //            {
-    //                turn[turnIndex].transform.Find("Enemy Turn Portrait").GetComponent<UnityEngine.UI.Image>().color = new Color(77f / 255f, 77f / 255f, 77f / 255f);
-    //            }
-    //            else
-    //            {
-    //                turn[turnIndex++].transform.Find("Enemy Turn Portrait").GetComponent<UnityEngine.UI.Image>().color = new Color(77f / 255f, 77f / 255f, 77f / 255f);
-    //            }
-    //            for (int i = 0; i < tmpturnList.Count; i++)
-    //            {
-    //                if (ReferenceEquals(tmpturnList[i], allyActions[selectAlly].animaData))
-    //                {
-    //                    DestroyImmediate(turn[i]);
-    //                    tmpturnList.RemoveAt(i);
-    //                    turn.RemoveAt(i);
-    //                    isTurn.RemoveAt(i);
-    //                }
-    //            }
-    //            battleLogManager.AddLog($"{allyActions[selectAlly].animaData.Name}is dead", true);
-    //            //dieAllyAnima.Add(allyActions.IndexOf(allyActions[selectAlly]));
-    //            //DestroyImmediate(allyBattleSetting.allyhpinstance[selectAlly]);
-    //            //allyBattleSetting.allyhpinstance.RemoveAt(selectAlly);
-    //            //allyHealthBar.RemoveAt(selectAlly);
-    //            //allyActions.RemoveAt(selectAlly);
-    //            //allyBattleSetting.animator.RemoveAt(selectAlly);
-    //            //DestroyImmediate(allyBattleSetting.allyinstance[selectAlly]);
-    //            //DestroyImmediate(allyBattleSetting.allyInfoInstance[selectAlly]);
-    //            //allyBattleSetting.allyinstance.RemoveAt(selectAlly);
-    //            //allyAnimaNum--;
-    //            //turnList.Remove(allyActions[selectAlly].animaData);
-    //            playerInfo.DieAnima(allyActions[selectAlly].animaData);
-    //            dieAllyAnima.Add(allyActions.IndexOf(allyActions[selectAlly]));
-    //            turnList.Remove(allyActions[selectAlly].animaData);
-    //            allyBattleSetting.allyhpinstance[allyActions[selectAlly].animaData.location].SetActive(false);
-    //            allyBattleSetting.allyinstance[allyActions[selectAlly].animaData.location].SetActive(false);
-    //            allyBattleSetting.allyInfoInstance[selectAlly].SetActive(false);
-    //            allyAnimaNum--;
+        yield return bm.CameraManager.ZoomSingleOpp(bm.EnemyBattleSetting.EnemyInstance[bm.EnemyActions.IndexOf(enemy)].transform, bm.AllyBattleSetting.AllyInstance[selectAlly].transform, false, enemy.animaData.attackName);
+        bm.Canvas.SetActive(true);
+        yield return enemy.Attack(enemy, bm.AllyActions[selectAlly], bm.AllyHealthBar[selectAlly], bm.EnemyDamageBar[enemy.animaData.enemyIndex]);
+        bm.DamageNumber.Spawn(new Vector2(bm.AllyBattleSetting.AllyInstance[selectAlly].transform.position.x - 0.1f, bm.AllyBattleSetting.AllyInstance[selectAlly].transform.position.y + 0.1f), bm.AllyActions[selectAlly].damage);
+        bm.BattleLogManager.AddLog($"{enemy.animaData.Name} used \"{enemy.animaData.skillName[0]}\" on {bm.AllyActions[selectAlly].animaData.Name} for {Mathf.Ceil(bm.AllyActions[selectAlly].damage)} damage", false);
+        bm.EnemyDamageText[enemy.animaData.enemyIndex].text = Mathf.Ceil(bm.EnemyDamageBar[enemy.animaData.enemyIndex].thisPoint).ToString();
+        ParserUpdate();
+        if (bm.AllyActions[selectAlly].animaData.Animadie)
+        {
+            if (enemy.animaData.Speed < bm.AllyActions[selectAlly].animaData.Speed)
+            {
+                bm.Turn[bm.TurnIndex].transform.Find("Enemy Turn Portrait").GetComponent<UnityEngine.UI.Image>().color = new Color(77f / 255f, 77f / 255f, 77f / 255f);
+            }
+            else
+            {
+                bm.Turn[bm.TurnIndex++].transform.Find("Enemy Turn Portrait").GetComponent<UnityEngine.UI.Image>().color = new Color(77f / 255f, 77f / 255f, 77f / 255f);
+            }
+            for (int i = 0; i < bm.TmpturnList.Count; i++)
+            {
+                if (ReferenceEquals(bm.TmpturnList[i], bm.AllyActions[selectAlly].animaData))
+                {
+                    DestroyImmediate(bm.Turn[i]);
+                    bm.TmpturnList.RemoveAt(i);
+                    bm.Turn.RemoveAt(i);
+                    bm.IsTurn.RemoveAt(i);
+                }
+            }
+            bm.BattleLogManager.AddLog($"{bm.AllyActions[selectAlly].animaData.Name}is dead", true);
+            bm.PlayerInfo.DieAnima(bm.AllyActions[selectAlly].animaData);
+            bm.DieAllyAnima.Add(bm.AllyActions.IndexOf(bm.AllyActions[selectAlly]));
+            bm.TurnList.Remove(bm.AllyActions[selectAlly].animaData);
+            bm.AllyBattleSetting.AllyHpInstance[bm.AllyActions[selectAlly].animaData.location].SetActive(false);
+            bm.AllyBattleSetting.AllyInstance[bm.AllyActions[selectAlly].animaData.location].SetActive(false);
+            bm.AllyBattleSetting.AllyInfoInstance[selectAlly].SetActive(false);
+            bm.AllyAnimaNum--;
 
 
-    //            if (allyAnimaNum == 0)
-    //            {
-    //                state = State.defeat;
-    //                LoseBattle();
-    //                StopCoroutine(runningCoroutine);
+            if (bm.AllyAnimaNum == 0)
+            {
+                bm.stat = BattleState.defeat;
+                bm.LoseBattle();
+                StopCoroutine(bm.RunningCoroutine);
 
-    //            }
-    //        }
-    //        else
-    //        {
-    //            turn[turnIndex++].transform.Find("Enemy Turn Portrait").GetComponent<UnityEngine.UI.Image>().color = new Color(77f / 255f, 77f / 255f, 77f / 255f);
-    //        }
+            }
+        }
+        else
+        {
+            bm.Turn[bm.TurnIndex++].transform.Find("Enemy Turn Portrait").GetComponent<UnityEngine.UI.Image>().color = new Color(77f / 255f, 77f / 255f, 77f / 255f);
+        }
+    }
+    public IEnumerator SingleEnemySkill(EnemyActions enemy, int selectAlly)
+    {
+        yield return new WaitForSeconds(0.5f);
+        bm.IsTurn[bm.TurnIndex].SetActive(false);
+        bm.TurnList.RemoveAt(0);
+        bm.Canvas.SetActive(false);
+
+        yield return bm.CameraManager.ZoomSingleOpp(bm.EnemyBattleSetting.EnemyInstance[bm.EnemyActions.IndexOf(enemy)].transform, bm.AllyBattleSetting.AllyInstance[selectAlly].transform, false, enemy.animaData.skillName[0]);
+        bm.Canvas.SetActive(true);
+        yield return enemy.Skill(enemy, bm.AllyActions[selectAlly], bm.AllyHealthBar[selectAlly], bm.EnemyDamageBar[enemy.animaData.enemyIndex]);
+        bm.DamageNumber.Spawn(new Vector2(bm.AllyBattleSetting.AllyInstance[selectAlly].transform.position.x - 0.1f, bm.AllyBattleSetting.AllyInstance[selectAlly].transform.position.y + 0.1f), bm.AllyActions[selectAlly].damage);
+        bm.BattleLogManager.AddLog($"{enemy.animaData.Name} used \"{enemy.animaData.skillName[0]}\" on {bm.AllyActions[selectAlly].animaData.Name} for {Mathf.Ceil(bm.AllyActions[selectAlly].damage)} damage", false);
+        bm.EnemyDamageText[enemy.animaData.enemyIndex].text = Mathf.Ceil(bm.EnemyDamageBar[enemy.animaData.enemyIndex].thisPoint).ToString();
+        ParserUpdate();
+        if (bm.AllyActions[selectAlly].animaData.Animadie)
+        {
+            if (enemy.animaData.Speed < bm.AllyActions[selectAlly].animaData.Speed)
+            {
+                bm.Turn[bm.TurnIndex].transform.Find("Enemy Turn Portrait").GetComponent<UnityEngine.UI.Image>().color = new Color(77f / 255f, 77f / 255f, 77f / 255f);
+            }
+            else
+            {
+                bm.Turn[bm.TurnIndex++].transform.Find("Enemy Turn Portrait").GetComponent<UnityEngine.UI.Image>().color = new Color(77f / 255f, 77f / 255f, 77f / 255f);
+            }
+            for (int i = 0; i < bm.TmpturnList.Count; i++)
+            {
+                if (ReferenceEquals(bm.TmpturnList[i], bm.AllyActions[selectAlly].animaData))
+                {
+                    DestroyImmediate(bm.Turn[i]);
+                    bm.TmpturnList.RemoveAt(i);
+                    bm.Turn.RemoveAt(i);
+                    bm.IsTurn.RemoveAt(i);
+                }
+            }
+            bm.BattleLogManager.AddLog($"{bm.AllyActions[selectAlly].animaData.Name}is dead", true);
+            bm.PlayerInfo.DieAnima(bm.AllyActions[selectAlly].animaData);
+            bm.DieAllyAnima.Add(bm.AllyActions.IndexOf(bm.AllyActions[selectAlly]));
+            bm.TurnList.Remove(bm.AllyActions[selectAlly].animaData);
+            bm.AllyBattleSetting.AllyHpInstance[bm.AllyActions[selectAlly].animaData.location].SetActive(false);
+            bm.AllyBattleSetting.AllyInstance[bm.AllyActions[selectAlly].animaData.location].SetActive(false);
+            bm.AllyBattleSetting.AllyInfoInstance[selectAlly].SetActive(false);
+            bm.AllyAnimaNum--;
 
 
-    //}
+            if (bm.AllyAnimaNum == 0)
+            {
+                bm.stat = BattleState.defeat;
+                bm.LoseBattle();
+                StopCoroutine(bm.RunningCoroutine);
+
+            }
+        }
+        else
+        {
+            bm.Turn[bm.TurnIndex++].transform.Find("Enemy Turn Portrait").GetComponent<UnityEngine.UI.Image>().color = new Color(77f / 255f, 77f / 255f, 77f / 255f);
+        }
+
+
+    }
     private void PrepareAttack()
     {
         bm.IsZKeyPressed = false;
@@ -379,5 +351,32 @@ public class SingleAttack:MonoBehaviour
         bm.IsTurn[bm.TurnIndex].SetActive(false);
         bm.TurnList.RemoveAt(0);
         bm.Canvas.SetActive(false);
+    }
+    private void ParserUpdate()
+    {
+        foreach (var max in bm.AllyDamageBar)
+        {
+            if (bm.MaxValue < max.maxPoint)
+            {
+                bm.MaxValue = max.maxPoint;
+            }
+        }
+        foreach (var max in bm.EnemyDamageBar)
+        {
+            if (bm.MaxValue < max.maxPoint)
+            {
+                bm.MaxValue = max.maxPoint;
+            }
+        }
+        foreach (var foo in bm.AllyDamageBar)
+        {
+            foo.maxPoint = bm.MaxValue;
+            foo.Initialize();
+        }
+        foreach (var foo in bm.EnemyDamageBar)
+        {
+            foo.maxPoint = bm.MaxValue;
+            foo.Initialize();
+        }
     }
 }
