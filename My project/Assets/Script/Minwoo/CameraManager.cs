@@ -87,4 +87,18 @@ public class CameraManager : MonoBehaviour
 
     }
 
+    public IEnumerator ZoomMultiOpp(Transform hitter, GameObject[] hitted, bool isAlly, string skill)
+    {
+        yield return null;
+    }
+    public IEnumerator ZoomSingleIde(Transform hitter, Transform hitted, bool isAlly, string skill)
+    {
+        yield return null;
+    }
+    public IEnumerator ZoomMultiIde(Transform hitter, GameObject[] hitted, bool isAlly, string skill)
+    {
+        yield return null;
+    }
+
+
 }

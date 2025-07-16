@@ -609,7 +609,7 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
     }
     IEnumerator PlayerAttack()
     {
-        yield return CursorInit();
+        yield return AttackCursorInit();
 
         yield return StartCoroutine(singleAttack.SingleAllyAttack(selectEnemy));
 
@@ -628,7 +628,7 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
     IEnumerator PlayerSingleAttackSkill(int skillNum)
     {
 
-        yield return CursorInit();
+        yield return AttackCursorInit();
         yield return StartCoroutine(singleAttack.SingleAllySkill(selectEnemy, skillNum));
         if (enemyActions.Count > 0 && turnList.Count == 0)
         {
@@ -837,7 +837,21 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
                 }
                 else if (enemy.performance.Equals("Skill"))
                 {
-                    yield return StartCoroutine(singleAttack.SingleEnemySkill(enemy, selectAlly));
+                    string type = "";
+                    skillTable.ForEachEntity(entity =>
+                    {
+                        if (entity.Get<string>("name") == enemy.animaData.skillName[0])
+                        {
+                            type = entity.Get<string>("Type");
+                        }
+                    });
+                    switch (type)
+                    {
+                        case "SingleAttack":
+                            yield return StartCoroutine(singleAttack.SingleEnemySkill(enemy, selectAlly));
+                            break;
+                    }
+                    
                 }
                 break;
             }
@@ -894,7 +908,7 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
 
 
 
-    IEnumerator CursorInit()
+    IEnumerator AttackCursorInit()
     {
         arrow = GameObject.Find("Arrow_down(Clone)");
         DestroyImmediate(arrow);

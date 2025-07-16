@@ -520,7 +520,7 @@ public class BattleManager : MonoBehaviour, IBattleManager
         {
             isZKeyPressed = true;
             DestroyImmediate(arrow);
-            runningCoroutine = StartCoroutine(PlayerAttack(selectEnemy));
+            runningCoroutine = StartCoroutine(PlayerAttack());
             attackButton.interactable = false;
             skillButton.interactable = false;
         }
@@ -628,9 +628,9 @@ public class BattleManager : MonoBehaviour, IBattleManager
         attackButton.interactable = false;
         skillButton.interactable = false;
     }
-    IEnumerator PlayerAttack(int selectEnemy)
+    IEnumerator PlayerAttack()
     {
-        yield return CursorInit();
+        yield return AttackCursorInit();
         yield return StartCoroutine(singleAttack.SingleAllyAttack(selectEnemy));
         
         if (enemyActions.Count > 0 && turnList.Count == 0)
@@ -649,7 +649,7 @@ public class BattleManager : MonoBehaviour, IBattleManager
     IEnumerator PlayerSingleAttackSkill( int skillNum)
     {
 
-        yield return CursorInit();
+        yield return AttackCursorInit();
         yield return StartCoroutine(singleAttack.SingleAllySkill(selectEnemy, skillNum));
         if (enemyActions.Count > 0 && turnList.Count == 0)
         {
@@ -701,7 +701,7 @@ public class BattleManager : MonoBehaviour, IBattleManager
                             yield return StartCoroutine(singleAttack.SingleEnemySkill(enemy, selectAlly));
                             break;
                     }
-                    yield return StartCoroutine(singleAttack.SingleEnemySkill(enemy,selectAlly));
+                    
                 }
                 break;
             }
@@ -753,7 +753,7 @@ public class BattleManager : MonoBehaviour, IBattleManager
         Instantiate(Resources.Load<GameObject>("Minwoo/Game Over UI"), canvas.transform);
     }
 
-    IEnumerator CursorInit()
+    IEnumerator AttackCursorInit()
     {
         arrow = GameObject.Find("Arrow_down(Clone)");
         DestroyImmediate(arrow);

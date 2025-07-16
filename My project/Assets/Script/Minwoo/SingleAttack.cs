@@ -342,6 +342,11 @@ public class SingleAttack:MonoBehaviour
 
 
     }
+    
+    public IEnumerator SingleAllyHeal()
+    {
+        yield return null;
+    }
     private void PrepareAttack()
     {
         bm.IsZKeyPressed = false;
