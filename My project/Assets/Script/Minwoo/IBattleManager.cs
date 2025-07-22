@@ -43,6 +43,8 @@ public interface IBattleManager
     List<ParserBar> EnemyHealBar { get; }
     List<TextMeshProUGUI> AllyDamageText { get; }
     List<TextMeshProUGUI> EnemyDamageText { get; }
+    List<TextMeshProUGUI> AllyHealText { get; }
+    List<TextMeshProUGUI> EnemyHealText { get; }
     List<HealthBar> AllyHealthBar { get; }
     List<HealthBar> EnemyHealthBar { get; }
 

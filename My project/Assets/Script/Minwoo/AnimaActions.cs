@@ -7,7 +7,7 @@ public class AnimaActions : MonoBehaviour
     public AnimaDataSO animaData;
     public DamageNumber damageNumber;
     public float damage;
-    
+    public float heal;
     public IEnumerator Attack(AnimaActions ally, EnemyActions enemy, HealthBar enemyHealthBar, ParserBar damageBar)
     {
         if (!ally.animaData.Animadie && !enemy.animaData.Animadie)
@@ -33,15 +33,14 @@ public class AnimaActions : MonoBehaviour
     {
         if (!healer.animaData.Animadie && !target.animaData.Animadie)
         {
-            damage = CalcHealAmount(healer.animaData.Damage, target);
-            yield return allyHealthBar.TakeHeal(damage);
-            target.TakeHeal(damage);
-            yield return healBar.PutDamage(damage);
+            heal = CalcHealAmount(healer.animaData.Damage, target);
+            yield return allyHealthBar.TakeHeal(heal);
+            target.TakeHeal(heal);
+            yield return healBar.PutDamage(heal);
         }
     }
     public void TakeDamage(float damage)
     {
-        this.damage = damage;
         this.animaData.Stamina -= damage;
         
         if (this.animaData.Stamina <= 0)
@@ -50,10 +49,9 @@ public class AnimaActions : MonoBehaviour
         }
         
     }
-    public void TakeHeal(float damage)
+    public void TakeHeal(float heal)
     {
-        this.damage = damage;
-        this.animaData.Stamina += damage;
+        this.animaData.Stamina += heal;
         if(this.animaData.Stamina > animaData.Maxstamina)
         {
             animaData.Stamina = animaData.Maxstamina;

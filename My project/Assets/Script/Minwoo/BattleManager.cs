@@ -64,7 +64,7 @@ public class BattleManager : MonoBehaviour, IBattleManager
     public IEnemyBattleSetting EnemyBattleSetting => enemyBattleSetting;
     AllyBattleSetting allyBattleSetting;
     public IAllyBattleSetting AllyBattleSetting => allyBattleSetting;
-
+    AnimaActions tmpAnima;
     List<AnimaActions> allyActions;
     public List<AnimaActions> AllyActions => allyActions;
     List<EnemyActions> enemyActions;
@@ -162,14 +162,14 @@ public class BattleManager : MonoBehaviour, IBattleManager
     
 
     SingleAttack singleAttack;
-    SingleBuffSkill singleBuffSkill;   
+    MultipleAttack multipleAttack;   
     void Start()
     {
         playerInfo = GameObject.Find("Game Manager").GetComponent<AnimaInventoryManager>().playerInfo;
         eventSystem = EventSystem.current;
         pointerEventData = new PointerEventData(eventSystem);
         singleAttack = new SingleAttack(this);
-        singleBuffSkill = new SingleBuffSkill();
+        multipleAttack = new MultipleAttack(this);
         isTurn = new List<GameObject>();
 
         turn = new List<GameObject>();
@@ -631,7 +631,10 @@ public class BattleManager : MonoBehaviour, IBattleManager
     IEnumerator PlayerAttack()
     {
         yield return AttackCursorInit();
-        yield return StartCoroutine(singleAttack.SingleAllyAttack(selectEnemy));
+        
+        tmpAnima = PresentAllyTurn();
+        
+        yield return StartCoroutine(singleAttack.SingleAllyAttack(tmpAnima, selectEnemy));
         
         if (enemyActions.Count > 0 && turnList.Count == 0)
         {
@@ -645,12 +648,16 @@ public class BattleManager : MonoBehaviour, IBattleManager
         }
 
     }
-
+    
     IEnumerator PlayerSingleAttackSkill( int skillNum)
     {
 
         yield return AttackCursorInit();
-        yield return StartCoroutine(singleAttack.SingleAllySkill(selectEnemy, skillNum));
+        
+        tmpAnima = PresentAllyTurn();
+        
+        yield return StartCoroutine(singleAttack.SingleAllySkill(tmpAnima, selectEnemy, skillNum));
+           
         if (enemyActions.Count > 0 && turnList.Count == 0)
         {
             runningCoroutine = null;
@@ -664,7 +671,6 @@ public class BattleManager : MonoBehaviour, IBattleManager
 
 
     }
-
     IEnumerator EnemyTurn()
     {
         yield return new WaitForSeconds(1.5f);
@@ -752,7 +758,21 @@ public class BattleManager : MonoBehaviour, IBattleManager
     {
         Instantiate(Resources.Load<GameObject>("Minwoo/Game Over UI"), canvas.transform);
     }
-
+    AnimaActions PresentAllyTurn()
+    {
+        foreach (AnimaActions anima in allyActions)
+        {
+            if (TurnList.Count == 0)
+            {
+                BattleStart(); //라운드 재정비?
+            }
+            if (ReferenceEquals(TurnList[0], anima.animaData))
+            {
+                return anima;
+            }
+        }
+        return null;
+    }
     IEnumerator AttackCursorInit()
     {
         arrow = GameObject.Find("Arrow_down(Clone)");

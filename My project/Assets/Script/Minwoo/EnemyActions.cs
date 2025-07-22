@@ -10,6 +10,7 @@ public class EnemyActions : MonoBehaviour
     public List<ActionWeight> actionWeights;
     public string performance = "";
     public float damage;
+    public float heal;
     public class ActionWeight
     {
         public ActionType actionType;
@@ -91,10 +92,10 @@ public class EnemyActions : MonoBehaviour
     {
         if (!healer.animaData.Animadie && !target.animaData.Animadie)
         {
-            damage = CalcHealAmount(healer.animaData.Damage, target);
-            yield return enemyHealthBar.TakeHeal(damage);
-            target.TakeHeal(damage);
-            yield return healBar.PutDamage(damage);
+            heal = CalcHealAmount(healer.animaData.Damage, target);
+            yield return enemyHealthBar.TakeHeal(heal);
+            target.TakeHeal(heal);
+            yield return healBar.PutDamage(heal);
         }
     }
     public float CalcAttackDamage(float damage, AnimaActions ally)
@@ -114,7 +115,6 @@ public class EnemyActions : MonoBehaviour
     }
     public void TakeDamage(float damage)
     {
-        this.damage = damage;
         this.animaData.Stamina -= damage;
         
         if (this.animaData.Stamina <= 0)
@@ -123,10 +123,9 @@ public class EnemyActions : MonoBehaviour
         }
         
     }
-    public void TakeHeal(float damage)
+    public void TakeHeal(float heal)
     {
-        this.damage = damage;
-        this.animaData.Stamina += damage;
+        this.animaData.Stamina += heal;
         if (this.animaData.Stamina > animaData.Maxstamina)
         {
             animaData.Stamina = animaData.Maxstamina;

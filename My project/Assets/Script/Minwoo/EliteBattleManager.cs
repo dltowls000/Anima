@@ -42,6 +42,7 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
     EliteAllyBattleSetting eliteAllyBattleSetting;
 
     List<AnimaActions> allyActions;
+    AnimaActions tmpAnima;
     List<EnemyActions> enemyActions;
 
     List<GameObject> ally;
@@ -154,6 +155,8 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
 
     public List<TextMeshProUGUI> AllyDamageText => allyDamageText;
     public List<TextMeshProUGUI> EnemyDamageText => enemyDamageText;
+    public List<TextMeshProUGUI> AllyHealText => allyHealText;
+    public List<TextMeshProUGUI> EnemyHealText => enemyHealText;
     public List<HealthBar> AllyHealthBar => allyHealthBar;
     public List<HealthBar> EnemyHealthBar => enemyHealthBar;
 
@@ -611,7 +614,9 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
     {
         yield return AttackCursorInit();
 
-        yield return StartCoroutine(singleAttack.SingleAllyAttack(selectEnemy));
+        tmpAnima = PresentAllyTurn();
+
+        yield return StartCoroutine(singleAttack.SingleAllyAttack(tmpAnima, selectEnemy));
 
         if (enemyActions.Count > 0 && turnList.Count == 0)
         {
@@ -629,7 +634,10 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
     {
 
         yield return AttackCursorInit();
-        yield return StartCoroutine(singleAttack.SingleAllySkill(selectEnemy, skillNum));
+
+        tmpAnima = PresentAllyTurn();
+
+        yield return StartCoroutine(singleAttack.SingleAllySkill(tmpAnima, selectEnemy, skillNum));
         if (enemyActions.Count > 0 && turnList.Count == 0)
         {
             runningCoroutine = null;
@@ -906,8 +914,21 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
         Instantiate(Resources.Load<GameObject>("Minwoo/Game Over UI"), canvas.transform);
     }
 
-
-
+    AnimaActions PresentAllyTurn()
+    {
+        foreach (AnimaActions anima in allyActions)
+        {
+            if (TurnList.Count == 0)
+            {
+                BattleStart(); //라운드 재정비?
+            }
+            if (ReferenceEquals(TurnList[0], anima.animaData))
+            {
+                return anima;
+            }
+        }
+        return null;
+    }
     IEnumerator AttackCursorInit()
     {
         arrow = GameObject.Find("Arrow_down(Clone)");
