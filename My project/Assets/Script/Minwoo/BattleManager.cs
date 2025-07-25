@@ -486,7 +486,7 @@ public class BattleManager : MonoBehaviour, IBattleManager
             skillButton.GetComponentInChildren<TextMeshProUGUI>().text = $"Skill\n";
             for(int i = 0; i < turnList[0].skillName.Count ; i++)
             {
-                animaActionUI.transform.Find($"Skill Button Frame{i}").Find($"Skill Text{i}").GetComponent<TextMeshProUGUI>().text = turnList[0].skillName[i];
+                animaActionUI.transform.Find($"Skill Button Frame{i}").Find($"Skill Button{i}").Find($"Skill Text{i}").GetComponent<TextMeshProUGUI>().text = turnList[0].skillName[i];
             }
             if (turnList[0].skillName.Count == 1)
             {
@@ -564,9 +564,9 @@ public class BattleManager : MonoBehaviour, IBattleManager
             case "SingleAttack":
                 runningCoroutine = StartCoroutine(PlayerSingleAttackSkill( 0));
                 break;
-            //case "SingleHeal":
-            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 0));
-            //    break;
+            case "SingleHeal":
+                runningCoroutine = StartCoroutine(PlayerSingleHeal( 0));
+                break;
             //case "SingleBuff":
             //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 0));
             //    break;
@@ -603,9 +603,9 @@ public class BattleManager : MonoBehaviour, IBattleManager
             case "SingleAttack":
                 runningCoroutine = StartCoroutine(PlayerSingleAttackSkill( 1));
                 break;
-            //case "SingleHeal":
-            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
-            //    break;
+            case "SingleHeal":
+                runningCoroutine = StartCoroutine(PlayerSingleHeal( 1));
+                break;
             //case "SingleBuff":
             //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
             //    break;
@@ -668,8 +668,23 @@ public class BattleManager : MonoBehaviour, IBattleManager
             runningCoroutine = null;
             SetState(turnList);
         }
+    }
+    IEnumerator PlayerSingleHeal(int skillNum)
+    {
+        yield return SkillCursorInit();
 
-
+        tmpAnima = PresentAllyTurn();
+        yield return StartCoroutine(singleAttack.SingleAllyHeal(tmpAnima, selectEnemy, skillNum));
+        if (enemyActions.Count > 0 && turnList.Count == 0)
+        {
+            runningCoroutine = null;
+            BattleStart();
+        }
+        else if (enemyActions.Count > 0 && turnList.Count != 0)
+        {
+            runningCoroutine = null;
+            SetState(turnList);
+        }
     }
     IEnumerator EnemyTurn()
     {
@@ -813,7 +828,47 @@ public class BattleManager : MonoBehaviour, IBattleManager
             }
             yield return null;
         }
-
+    }
+    IEnumerator SkillCursorInit()
+    {
+        arrow = GameObject.Find("Arrow_down(Clone)");
+        DestroyImmediate(arrow);
+        index = 0;
+        Instantiate(Resources.Load<GameObject>("Minwoo/Arrow_down"), new Vector2(allyBattleSetting.allyinstance[index].transform.position.x, allyBattleSetting.allyinstance[index].transform.position.y + 1.2f), Quaternion.identity);
+        arrow = GameObject.Find("Arrow_down(Clone)");
+        while (true)
+        {
+            if (index != 2 && index < (allyAnimaNum - 1) && Input.GetKeyUp(KeyCode.RightArrow))
+            {
+                index++;
+                GameObject.Find("Arrow_down(Clone)").transform.position = new Vector2(allyBattleSetting.allyinstance[index].transform.position.x, allyBattleSetting.allyinstance[index].transform.position.y + 1.2f);
+            }
+            if (index != 0 && Input.GetKeyUp(KeyCode.LeftArrow))
+            {
+                index--;
+                GameObject.Find("Arrow_down(Clone)").transform.position = new Vector2(allyBattleSetting.allyinstance[index].transform.position.x, allyBattleSetting.allyinstance[index].transform.position.y + 1.2f);
+            }
+            else if (Input.GetKeyDown(KeyCode.Z) && !attackButton.interactable)
+            {
+                selectEnemy = index;
+                DestroyImmediate(arrow);
+                yield return new WaitForSeconds(Time.deltaTime * 30);
+                break;
+            }
+            else if (Input.GetKeyDown(KeyCode.C))
+            {
+                DestroyImmediate(arrow);
+                yield return new WaitForSeconds(Time.deltaTime * 30);
+                isZKeyPressed = false;
+                attackButton.interactable = true;
+                skillButton.interactable = true;
+                SetState(turnList);
+                StopCoroutine(runningCoroutine);
+                runningCoroutine = null;
+                yield break;
+            }
+            yield return null;
+        }
     }
 }
 

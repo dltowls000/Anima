@@ -22,7 +22,7 @@ public class PlayerInfo : ScriptableObject
         var database = BGRepo.I;
         var animaTable = database.GetMeta("Anima");
 
-        int a = Random.Range(0, 7);
+        int a = Random.Range(2, 3);
         int b;
         do
         {

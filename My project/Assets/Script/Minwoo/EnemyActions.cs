@@ -98,20 +98,118 @@ public class EnemyActions : MonoBehaviour
             yield return healBar.PutDamage(heal);
         }
     }
-    public float CalcAttackDamage(float damage, AnimaActions ally)
+    public IEnumerator IncreaseAbiltiy(EnemyActions buffer, EnemyActions target, string[] abi)
     {
-        return damage * (1 - ally.animaData.defense * 0.002f) * Random.Range(0.95f, 1.11f);
+        foreach (string stat in abi)
+        {
+            switch (stat)
+            {
+                case "strength":
+                    yield return StrengthUp(buffer, target);
+                    break;
+                case "speed":
+                    yield return SpeedUp(buffer, target);
+                    break;
+                case "defense":
+                    yield return DefenseUp(buffer, target);
+                    break;
+            }
+        }
+    }
+    private IEnumerator StrengthUp(EnemyActions buffer, EnemyActions target)
+    {
+        if (!buffer.animaData.Animadie && !target.animaData.Animadie)
+        {
+            target.animaData.tmpAbility["Damage"] = target.animaData.Damage;
+            target.animaData.Damage *= CalcBuffRatio(buffer.damage);
+        }
+        yield return null;
+    }
+    private IEnumerator StrengthDown(EnemyActions debuffer, AnimaActions target)
+    {
+        if (!debuffer.animaData.Animadie && !target.animaData.Animadie)
+        {
+            target.animaData.tmpAbility["Damage"] = target.animaData.Damage;
+            target.animaData.Damage *= CalcDebuffRatio(debuffer.damage);
+        }
+        yield return null;
+    }
+    private IEnumerator SpeedUp(EnemyActions buffer, EnemyActions target)
+    {
+        if (!buffer.animaData.Animadie && !target.animaData.Animadie)
+        {
+            target.animaData.tmpAbility["Speed"] = target.animaData.Speed;
+            target.animaData.Speed *= CalcBuffRatio(buffer.damage);
+        }
+        yield return null;
+    }
+    private IEnumerator SpeedDown(EnemyActions debuffer, AnimaActions target)
+    {
+        if (!debuffer.animaData.Animadie && !target.animaData.Animadie)
+        {
+            target.animaData.tmpAbility["Speed"] = target.animaData.Speed;
+            target.animaData.Speed *= CalcDebuffRatio(debuffer.damage);
+        }
+        yield return null;
+    }
+    private IEnumerator DefenseUp(EnemyActions buffer, EnemyActions target)
+    {
+        if (!buffer.animaData.Animadie && !target.animaData.Animadie)
+        {
+            target.animaData.tmpAbility["Defense"] = target.animaData.Defense;
+            target.animaData.Defense *= CalcBuffRatio(buffer.damage);
+        }
+        yield return null;
+    }
+    private IEnumerator DefenseDown(EnemyActions debuffer, AnimaActions target)
+    {
+        if (!debuffer.animaData.Animadie && !target.animaData.Animadie)
+        {
+            target.animaData.tmpAbility["Defense"] = target.animaData.Defense;
+            target.animaData.Defense *= CalcDebuffRatio(debuffer.damage);
+        }
+        yield return null;
+    }
+    public IEnumerator DecreseAbility(EnemyActions debuffer, AnimaActions target, string[] abi)
+    {
+        foreach (string stat in abi)
+        {
+            switch (stat)
+            {
+                case "strength":
+                    yield return StrengthDown(debuffer, target);
+                    break;
+                case "speed":
+                    yield return SpeedDown(debuffer, target);
+                    break;
+                case "defense":
+                    yield return DefenseDown(debuffer, target);
+                    break;
+            }
+        }
+    }
+    private float CalcAttackDamage(float damage, AnimaActions ally)
+    {
+        return damage * (1 - ally.animaData.Defense * 0.002f) * Random.Range(0.95f, 1.11f);
     }
 
-    public float CalcSkillDamage(float damage, AnimaActions ally)
+    private float CalcSkillDamage(float damage, AnimaActions ally)
     {
-        return damage * (1 - ally.animaData.defense * 0.002f) * Random.Range(0.95f, 1.11f) * 1.13f;
+        return damage * (1 - ally.animaData.Defense * 0.002f) * Random.Range(0.95f, 1.11f) * 1.13f;
     }
-    public float CalcHealAmount(float damage, EnemyActions target)
+    private float CalcHealAmount(float damage, EnemyActions target)
     {
         float a = damage * Random.Range(0.95f, 1.11f) * 1.13f;
         float b = target.animaData.Maxstamina * 0.4f;
         return a >= b ? b : a;
+    }
+    private float CalcBuffRatio(float damage)
+    {
+        return 0.0004f * damage + 1.02f;
+    }
+    private float CalcDebuffRatio(float damage)
+    {
+        return -0.0002f * damage + 0.94f;
     }
     public void TakeDamage(float damage)
     {

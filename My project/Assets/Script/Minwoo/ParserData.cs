@@ -7,7 +7,6 @@ public class ParserData : MonoBehaviour
 {
     bool damagecheck = false;
     bool healcheck = false;
-    bool logcheck = false;
     [SerializeField]
     GameObject battleParser;
     [SerializeField]

@@ -540,7 +540,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &532001022
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3521,12 +3521,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6861a315e9e01345b563f5735f04fcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  allyAttackCam: {fileID: 0}
-  enemyAttackCam: {fileID: 0}
+  animator: {fileID: 846945840}
+  allyAttackCam: {fileID: 800635999}
+  enemyAttackCam: {fileID: 423767207}
   mainCamera: {fileID: 1828373449}
   speed: 0.5
-  animatorController: {fileID: 0}
+  animatorController: {fileID: 846945839}
 --- !u!1 &2137846295
 GameObject:
   m_ObjectHideFlags: 0

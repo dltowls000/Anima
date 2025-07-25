@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 public class SingleAttack:MonoBehaviour
 {
     IBattleManager bm;
@@ -137,10 +138,10 @@ public class SingleAttack:MonoBehaviour
     public IEnumerator SingleAllyHeal(AnimaActions anima, int selectAlly, int skillNum)
     {
         PrepareAttack();
-        yield return bm.CameraManager.ZoomSingleOpp(bm.AllyBattleSetting.AllyInstance[bm.AllyActions.IndexOf(anima)].transform, bm.AllyBattleSetting.AllyInstance[selectAlly].transform, true, anima.animaData.skillName[skillNum]);
+        yield return bm.CameraManager.ZoomSingleIde(bm.AllyBattleSetting.AllyInstance[bm.AllyActions.IndexOf(anima)].transform, bm.AllyBattleSetting.AllyInstance[selectAlly].transform, true, anima.animaData.skillName[skillNum]);
         bm.Canvas.SetActive(true);
         yield return anima.Heal(anima, bm.AllyActions[selectAlly], bm.AllyHealthBar[selectAlly], bm.AllyHealBar[bm.AllyActions.IndexOf(anima)]);
-        bm.DamageNumber.Spawn(new Vector2(bm.AllyBattleSetting.AllyInstance[selectAlly].transform.position.x - 0.1f, bm.AllyBattleSetting.AllyInstance[selectAlly].transform.position.y + 0.1f), bm.AllyActions[selectAlly].heal);
+        bm.DamageNumber.Spawn(new Vector2(bm.AllyBattleSetting.AllyInstance[selectAlly].transform.position.x - 0.1f, bm.AllyBattleSetting.AllyInstance[selectAlly].transform.position.y + 0.1f), anima.heal);
         bm.BattleLogManager.AddLog($"{anima.animaData.Name} used \"{anima.animaData.skillName[skillNum]}\" on {bm.AllyActions[selectAlly].animaData.Name} for {Mathf.Ceil(anima.heal)}heal", true);
         bm.AllyHealText[bm.AllyActions.IndexOf(anima)].text = Mathf.Ceil(bm.AllyHealBar[bm.AllyActions.IndexOf(anima)].thisPoint).ToString();
         HealParserUpdate();
@@ -148,7 +149,20 @@ public class SingleAttack:MonoBehaviour
     }
     public IEnumerator SingleEnemyHeal(EnemyActions enemy, int selectEnemy)
     {
-        yield return null;
+        yield return new WaitForSeconds(0.5f);
+        bm.IsTurn[bm.TurnIndex].SetActive(false);
+        bm.TurnList.RemoveAt(0);
+        bm.Canvas.SetActive(false);
+
+        yield return bm.CameraManager.ZoomSingleIde(bm.EnemyBattleSetting.EnemyInstance[bm.EnemyActions.IndexOf(enemy)].transform, bm.EnemyBattleSetting.EnemyInstance[selectEnemy].transform, false, enemy.animaData.skillName[0]);
+        bm.Canvas.SetActive(true);
+        yield return enemy.Heal(enemy, bm.EnemyActions[selectEnemy], bm.EnemyHealthBar[selectEnemy], bm.EnemyHealBar[enemy.animaData.enemyIndex]);
+        bm.DamageNumber.Spawn(new Vector2(bm.EnemyBattleSetting.EnemyInstance[selectEnemy].transform.position.x - 0.1f, bm.EnemyBattleSetting.EnemyInstance[selectEnemy].transform.position.y + 0.1f), enemy.heal);
+        bm.BattleLogManager.AddLog($"{enemy.animaData.Name} used \"{enemy.animaData.skillName[0]}\" on {bm.EnemyActions[selectEnemy].animaData.Name} for {Mathf.Ceil(enemy.heal)} heal", false);
+        bm.EnemyHealText[enemy.animaData.enemyIndex].text = Mathf.Ceil(bm.EnemyHealBar[enemy.animaData.enemyIndex].thisPoint).ToString();
+        HealParserUpdate();
+        bm.Turn[bm.TurnIndex++].transform.Find("Enemy Turn Portrait").GetComponent<UnityEngine.UI.Image>().color = new Color(77f / 255f, 77f / 255f, 77f / 255f);
+
     }
     public IEnumerator SingleAllyBuff(int selectAlly)
     {

@@ -469,7 +469,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e53db4d1cb0412e4d88230918edab02c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parserBarController: {fileID: 0}
+  parserBarController: {fileID: 7413818114286259180}
   maxPoint: 0
   thisPoint: 0
 --- !u!114 &7413818114286259180
