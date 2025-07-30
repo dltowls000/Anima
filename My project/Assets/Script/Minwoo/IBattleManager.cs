@@ -50,5 +50,6 @@ public interface IBattleManager
 
     BGMetaEntity AnimaTable { get; }
     BattleLogManager BattleLogManager { get; }
-
+    
+    BuffManager BuffManager { get; }
 }

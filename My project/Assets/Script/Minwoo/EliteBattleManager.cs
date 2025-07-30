@@ -19,7 +19,7 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
     private GameObject eliteBattleManager;
     [SerializeField]
     private GameObject canvas;
-
+    private BuffManager buffManager;
 
     PointerEventData pointerEventData;
     Coroutine runningCoroutine = null;
@@ -162,6 +162,7 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
 
     public BGMetaEntity AnimaTable => animaTable;
     public BattleLogManager BattleLogManager => battleLogManager;
+    public BuffManager BuffManager => buffManager;
 
     SingleAttack singleAttack;
     void Start()

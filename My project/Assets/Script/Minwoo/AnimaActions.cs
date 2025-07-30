@@ -1,11 +1,7 @@
 using UnityEngine;
 using DamageNumbersPro;
 using System.Collections;
-using UnityEngine.UI;
-using System.Diagnostics.Contracts;
-using DG.Tweening.Plugins;
 using System;
-using UnityEngine.LightTransport;
 public class AnimaActions : MonoBehaviour
 {
     public AnimaDataSO animaData;
@@ -153,16 +149,16 @@ public class AnimaActions : MonoBehaviour
     }
     private float CalcAttackDamage(float damage , EnemyActions enemy)
     {
-        return damage * (1 - enemy.animaData.Defense * 0.002f) * Random.Range(0.95f, 1.11f);
+        return damage * (1 - enemy.animaData.Defense * 0.002f) * UnityEngine.Random.Range(0.95f, 1.11f);
     }
 
     private float CalcSkillDamage(float damage, EnemyActions enemy)
     {
-        return damage * (1 - enemy.animaData.Defense * 0.002f) * Random.Range(0.95f, 1.11f) * 1.13f;
+        return damage * (1 - enemy.animaData.Defense * 0.002f) * UnityEngine.Random.Range(0.95f, 1.11f) * 1.13f;
     }
     private float CalcHealAmount(float damage, AnimaActions target)
     {
-        float a = damage * Random.Range(0.95f, 1.11f) * 1.13f;
+        float a = damage * UnityEngine.Random.Range(0.95f, 1.11f) * 1.13f;
         float b = target.animaData.Maxstamina * 0.4f;
         return a >= b ? b : a;
     }

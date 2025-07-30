@@ -7,6 +7,7 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 using BansheeGz.BGDatabase;
 using UnityEngine.UI;
+using Unity.VisualScripting;
 public class BattleManager : MonoBehaviour, IBattleManager
 {
     [SerializeField]
@@ -21,8 +22,9 @@ public class BattleManager : MonoBehaviour, IBattleManager
     GameObject battleManager;
     [SerializeField]
     GameObject canvas;
+    private BuffManager buffManager;
+    public BuffManager BuffManager => buffManager;
     public GameObject Canvas => canvas;
-    
     
     PointerEventData pointerEventData;
     Coroutine runningCoroutine = null;
@@ -171,7 +173,7 @@ public class BattleManager : MonoBehaviour, IBattleManager
         singleAttack = new SingleAttack(this);
         multipleAttack = new MultipleAttack(this);
         isTurn = new List<GameObject>();
-
+        buffManager = new BuffManager();
         turn = new List<GameObject>();
 
         dieAllyAnima = new List<int>();
@@ -557,6 +559,10 @@ public class BattleManager : MonoBehaviour, IBattleManager
             if (entity.Get<string>("name") == skill1.transform.Find("Skill Text0").GetComponent<TextMeshProUGUI>().text)
             {
                 type = entity.Get<string>("Type");
+                if(type == "SingleBuff")
+                {
+                    //Buff buff = new Buff(entity)
+                }
             }
         });
         switch (type)
@@ -567,9 +573,9 @@ public class BattleManager : MonoBehaviour, IBattleManager
             case "SingleHeal":
                 runningCoroutine = StartCoroutine(PlayerSingleHeal( 0));
                 break;
-            //case "SingleBuff":
-            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 0));
-            //    break;
+            case "SingleBuff":
+                runningCoroutine = StartCoroutine(PlayerSingleBuff(0));
+                break;
             //case "SingleDebuff":
             //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 0));
             //    break;
@@ -606,9 +612,9 @@ public class BattleManager : MonoBehaviour, IBattleManager
             case "SingleHeal":
                 runningCoroutine = StartCoroutine(PlayerSingleHeal( 1));
                 break;
-            //case "SingleBuff":
-            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
-            //    break;
+            case "SingleBuff":
+                runningCoroutine = StartCoroutine(PlayerSingleBuff(1));
+                break;
             //case "SingleDebuff":
             //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
             //    break;
@@ -671,7 +677,7 @@ public class BattleManager : MonoBehaviour, IBattleManager
     }
     IEnumerator PlayerSingleHeal(int skillNum)
     {
-        yield return SkillCursorInit();
+        yield return BuffCursorInit();
 
         tmpAnima = PresentAllyTurn();
         yield return StartCoroutine(singleAttack.SingleAllyHeal(tmpAnima, selectEnemy, skillNum));
@@ -685,6 +691,12 @@ public class BattleManager : MonoBehaviour, IBattleManager
             runningCoroutine = null;
             SetState(turnList);
         }
+    }
+    IEnumerator PlayerSingleBuff(int skillNum)
+    {
+        yield return BuffCursorInit();
+        tmpAnima = PresentAllyTurn();
+        yield return StartCoroutine(singleAttack.SingleAllyBuff(tmpAnima, selectEnemy, skillNum));
     }
     IEnumerator EnemyTurn()
     {
@@ -829,7 +841,7 @@ public class BattleManager : MonoBehaviour, IBattleManager
             yield return null;
         }
     }
-    IEnumerator SkillCursorInit()
+    IEnumerator BuffCursorInit()
     {
         arrow = GameObject.Find("Arrow_down(Clone)");
         DestroyImmediate(arrow);
