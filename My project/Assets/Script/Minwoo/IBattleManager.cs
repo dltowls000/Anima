@@ -48,6 +48,7 @@ public interface IBattleManager
     List<HealthBar> AllyHealthBar { get; }
     List<HealthBar> EnemyHealthBar { get; }
 
+    List<SkillData> MatchedSkill { get; }
     BGMetaEntity AnimaTable { get; }
     BattleLogManager BattleLogManager { get; }
     

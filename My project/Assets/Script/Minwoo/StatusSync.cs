@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -11,6 +12,7 @@ public class StatusSync : MonoBehaviour
     string objname;
     public int idx = -1;
     public int dieanima = 0;
+    StringBuilder tmp = new StringBuilder();
     void Awake()
     {
         objname = this.transform.parent.name;
@@ -19,16 +21,14 @@ public class StatusSync : MonoBehaviour
         var status = GameObject.Find(objname);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if(this != null)
         {
             this.enabled = false;
             this.enabled = true;
         }
-        
     }
-    // Update is called once per frame
     void OnEnable()
     {
         if(idx != 0)
@@ -41,7 +41,16 @@ public class StatusSync : MonoBehaviour
             this.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = battleAlly[idx].animaData.Name;
             this.transform.Find("Level").GetComponent<TextMeshProUGUI>().text = "Lv. " + battleAlly[idx].animaData.level.ToString();
             this.transform.Find("Exp").GetComponent<TextMeshProUGUI>().text = battleAlly[idx].animaData.EXP.ToString();
-            this.transform.Find("Hp").GetComponent<TextMeshProUGUI>().text = Mathf.CeilToInt(battleAlly[idx].animaData.Stamina) + " / " + battleAlly[idx].animaData.Maxstamina.ToString();
+            this.transform.Find("Hp").GetComponent<TextMeshProUGUI>().text = Mathf.CeilToInt(battleAlly[idx].animaData.Stamina) + " / " + battleAlly[idx].animaData.Maxstamina.ToString();            
+            for(int i = 0; i < battleManager.BuffManager.GetBuffList().Count; i++)
+            {
+                if (ReferenceEquals(battleManager.BuffManager.GetBuffList()[i].target, battleAlly[idx].animaData))
+                {
+                    tmp.Append(battleManager.BuffManager.GetBuffList()[i].type.ToString());
+                }
+            }
+            this.transform.Find("Buff").GetComponent<TextMeshProUGUI>().text = tmp.ToString();
+            tmp.Clear();
         }
         else
         {

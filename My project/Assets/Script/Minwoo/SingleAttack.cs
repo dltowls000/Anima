@@ -1,12 +1,14 @@
 using DamageNumbersPro;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 public class SingleAttack:MonoBehaviour
 {
     IBattleManager bm;
+    List<string> expiredBuffList;
     public SingleAttack(IBattleManager bm)
     {
         this.bm = bm;
@@ -40,6 +42,7 @@ public class SingleAttack:MonoBehaviour
         {
             bm.Turn[bm.TurnIndex++].transform.Find("Player Turn Portrait").GetComponent<UnityEngine.UI.Image>().color = new Color(77f / 255f, 77f / 255f, 77f / 255f);
         }
+        BuffUpdate(anima.animaData);
 
     }
     public IEnumerator SingleAllySkill(AnimaActions anima, int selectEnemy, int skillNum)
@@ -70,6 +73,7 @@ public class SingleAttack:MonoBehaviour
         {
             bm.Turn[bm.TurnIndex++].transform.Find("Player Turn Portrait").GetComponent<UnityEngine.UI.Image>().color = new Color(77f / 255f, 77f / 255f, 77f / 255f);
         }
+        BuffUpdate(anima.animaData);
     }
 
     public IEnumerator SingleEnemyAttack(EnemyActions enemy, int selectAlly)
@@ -102,6 +106,7 @@ public class SingleAttack:MonoBehaviour
         {
             bm.Turn[bm.TurnIndex++].transform.Find("Enemy Turn Portrait").GetComponent<UnityEngine.UI.Image>().color = new Color(77f / 255f, 77f / 255f, 77f / 255f);
         }
+        BuffUpdate(enemy.animaData);
     }
     public IEnumerator SingleEnemySkill(EnemyActions enemy, int selectAlly)
     {
@@ -133,6 +138,7 @@ public class SingleAttack:MonoBehaviour
         {
             bm.Turn[bm.TurnIndex++].transform.Find("Enemy Turn Portrait").GetComponent<UnityEngine.UI.Image>().color = new Color(77f / 255f, 77f / 255f, 77f / 255f);
         }
+        BuffUpdate(enemy.animaData);
     }
     
     public IEnumerator SingleAllyHeal(AnimaActions anima, int selectAlly, int skillNum)
@@ -146,6 +152,7 @@ public class SingleAttack:MonoBehaviour
         bm.AllyHealText[bm.AllyActions.IndexOf(anima)].text = Mathf.Ceil(bm.AllyHealBar[bm.AllyActions.IndexOf(anima)].thisPoint).ToString();
         HealParserUpdate();
         bm.Turn[bm.TurnIndex++].transform.Find("Player Turn Portrait").GetComponent<UnityEngine.UI.Image>().color = new Color(77f / 255f, 77f / 255f, 77f / 255f);
+        BuffUpdate(anima.animaData);
     }
     public IEnumerator SingleEnemyHeal(EnemyActions enemy, int selectEnemy)
     {
@@ -162,27 +169,32 @@ public class SingleAttack:MonoBehaviour
         bm.EnemyHealText[enemy.animaData.enemyIndex].text = Mathf.Ceil(bm.EnemyHealBar[enemy.animaData.enemyIndex].thisPoint).ToString();
         HealParserUpdate();
         bm.Turn[bm.TurnIndex++].transform.Find("Enemy Turn Portrait").GetComponent<UnityEngine.UI.Image>().color = new Color(77f / 255f, 77f / 255f, 77f / 255f);
-
+        BuffUpdate(enemy.animaData);
     }
     public IEnumerator SingleAllyBuff(AnimaActions anima, int selectAlly, int skillNum)
     {
         PrepareAttack();
         yield return bm.CameraManager.ZoomSingleIde(bm.AllyBattleSetting.AllyInstance[bm.AllyActions.IndexOf(anima)].transform, bm.AllyBattleSetting.AllyInstance[selectAlly].transform, true, anima.animaData.skillName[skillNum]);
         bm.Canvas.SetActive(true);
-        //yield return anima.IncreaseAbiltiy()
-        
+        yield return anima.IncreaseAbiltiy(anima, bm.AllyActions[selectAlly], bm.MatchedSkill[0].Affect.ToArray());
+        bm.BattleLogManager.AddLog($"{anima.animaData.Name} used \"{anima.animaData.skillName[skillNum]}\" on {bm.AllyActions[selectAlly].animaData.Name} for {bm.MatchedSkill[0].Affect.ToArray()} up", true);
+        bm.Turn[bm.TurnIndex++].transform.Find("Player Turn Portrait").GetComponent<UnityEngine.UI.Image>().color = new Color(77f / 255f, 77f / 255f, 77f / 255f);
+        BuffUpdate(anima.animaData);
     }
     public IEnumerator SingleEnemyBuff(EnemyActions enemy, int selectEnemy)
     {
         yield return null;
+        BuffUpdate(enemy.animaData);
     }
-    public IEnumerator SingleAllyDebuff(int selectAlly)
+    public IEnumerator SingleAllyDebuff(AnimaActions anima, int selectAlly, int skillNum)
     {
         yield return null;
+        BuffUpdate(anima.animaData);
     }
     public IEnumerator SingleEnemyDebuff(EnemyActions enemy, int selectEnemy)
     {
         yield return null;
+        BuffUpdate(enemy.animaData);
     }
     private void PrepareAttack()
     {
@@ -346,4 +358,25 @@ public class SingleAttack:MonoBehaviour
 
         }
     }
+    private void BuffUpdate(AnimaDataSO anima)
+    {
+        expiredBuffList = bm.BuffManager.TickOne(anima);
+        while (expiredBuffList.Count < 0)
+        {
+            switch (expiredBuffList[0])
+            {
+                case "strength":
+                    anima.Damage = anima.tmpAbility["strength"];
+                    break;
+                case "speed":
+                    anima.Speed = anima.tmpAbility["speed"];
+                    break;
+                case "defense":
+                    anima.Defense = anima.tmpAbility["defense"];
+                    break;
+            }
+            expiredBuffList.RemoveAt(0);
+        }
+    }
+
 }

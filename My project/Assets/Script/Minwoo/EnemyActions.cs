@@ -120,7 +120,7 @@ public class EnemyActions : MonoBehaviour
     {
         if (!buffer.animaData.Animadie && !target.animaData.Animadie)
         {
-            target.animaData.tmpAbility["Damage"] = target.animaData.Damage;
+            target.animaData.tmpAbility["strength"] = target.animaData.Damage;
             target.animaData.Damage *= CalcBuffRatio(buffer.damage);
         }
         yield return null;
@@ -129,7 +129,7 @@ public class EnemyActions : MonoBehaviour
     {
         if (!debuffer.animaData.Animadie && !target.animaData.Animadie)
         {
-            target.animaData.tmpAbility["Damage"] = target.animaData.Damage;
+            target.animaData.tmpAbility["strength"] = target.animaData.Damage;
             target.animaData.Damage *= CalcDebuffRatio(debuffer.damage);
         }
         yield return null;
@@ -138,7 +138,7 @@ public class EnemyActions : MonoBehaviour
     {
         if (!buffer.animaData.Animadie && !target.animaData.Animadie)
         {
-            target.animaData.tmpAbility["Speed"] = target.animaData.Speed;
+            target.animaData.tmpAbility["speed"] = target.animaData.Speed;
             target.animaData.Speed *= CalcBuffRatio(buffer.damage);
         }
         yield return null;
@@ -147,7 +147,7 @@ public class EnemyActions : MonoBehaviour
     {
         if (!debuffer.animaData.Animadie && !target.animaData.Animadie)
         {
-            target.animaData.tmpAbility["Speed"] = target.animaData.Speed;
+            target.animaData.tmpAbility["speed"] = target.animaData.Speed;
             target.animaData.Speed *= CalcDebuffRatio(debuffer.damage);
         }
         yield return null;
@@ -156,7 +156,7 @@ public class EnemyActions : MonoBehaviour
     {
         if (!buffer.animaData.Animadie && !target.animaData.Animadie)
         {
-            target.animaData.tmpAbility["Defense"] = target.animaData.Defense;
+            target.animaData.tmpAbility["defense"] = target.animaData.Defense;
             target.animaData.Defense *= CalcBuffRatio(buffer.damage);
         }
         yield return null;
@@ -165,7 +165,7 @@ public class EnemyActions : MonoBehaviour
     {
         if (!debuffer.animaData.Animadie && !target.animaData.Animadie)
         {
-            target.animaData.tmpAbility["Defense"] = target.animaData.Defense;
+            target.animaData.tmpAbility["defense"] = target.animaData.Defense;
             target.animaData.Defense *= CalcDebuffRatio(debuffer.damage);
         }
         yield return null;

@@ -7,6 +7,9 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 using BansheeGz.BGDatabase;
 using UnityEngine.UI;
+using System.Resources;
+using Newtonsoft.Json;
+using System.Linq;
 public class EliteBattleManager : MonoBehaviour, IBattleManager
 {
     [SerializeField]
@@ -26,7 +29,11 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
     BattleState state;
 
     public PlayerInfo playerInfo;
+    TextAsset skillData;
+    List<SkillData> skills;
 
+    List<SkillData> matchedSkill;
+    public List<SkillData> MatchedSkill => matchedSkill;
     List<HealthBar> allyHealthBar;
     List<HealthBar> enemyHealthBar;
     List<ParserBar> allyDamageBar;
@@ -174,7 +181,8 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
         isTurn = new List<GameObject>();
         singleAttack = new SingleAttack(this);
         turn = new List<GameObject>();
-
+        skillData = Resources.Load<TextAsset>("Minwoo/SkillList");
+        skills = JsonConvert.DeserializeObject<List<SkillData>>(skillData.text);
         dieAllyAnima = new List<int>();
 
         state = BattleState.start;
@@ -537,24 +545,19 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
     {
         attackButton.interactable = false;
         skillButton.interactable = false;
-        string type = "";
-        skillTable.ForEachEntity(entity => {
-            if (entity.Get<string>("name") == skill1.transform.Find("Skill Text0").GetComponent<TextMeshProUGUI>().text)
-            {
-                type = entity.Get<string>("Type");
-            }
-        });
-        switch (type)
+        matchedSkill = skills.Where(s => s.name == skill1.transform.Find("Skill Text0").GetComponent<TextMeshProUGUI>().text).ToList();
+
+        switch (matchedSkill[0].Type)
         {
             case "SingleAttack":
                 runningCoroutine = StartCoroutine(PlayerSingleAttackSkill( 0));
                 break;
-                //case "SingleHeal":
-                //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 0));
-                //    break;
-                //case "SingleBuff":
-                //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 0));
-                //    break;
+            case "SingleHeal":
+                runningCoroutine = StartCoroutine(PlayerSingleHeal(0));
+                break;
+            case "SingleBuff":
+                runningCoroutine = StartCoroutine(PlayerSingleBuff(0));
+                break;
                 //case "SingleDebuff":
                 //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 0));
                 //    break;
@@ -574,24 +577,21 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
     }
     void SkillButton2()
     {
-        string type = "";
-        skillTable.ForEachEntity(entity => {
-            if (entity.Get<string>("name") == skill2.transform.Find("Skill Text1").GetComponent<TextMeshProUGUI>().text)
-            {
-                type = entity.Get<string>("Type");
-            }
-        });
-        switch (type)
+        attackButton.interactable = false;
+        skillButton.interactable = false;
+        matchedSkill = skills.Where(s => s.name == skill1.transform.Find("Skill Text0").GetComponent<TextMeshProUGUI>().text).ToList();
+
+        switch (matchedSkill[0].Type)
         {
             case "SingleAttack":
                 runningCoroutine = StartCoroutine(PlayerSingleAttackSkill( 1));
                 break;
-                //case "SingleHeal":
-                //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
-                //    break;
-                //case "SingleBuff":
-                //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
-                //    break;
+            case "SingleHeal":
+                runningCoroutine = StartCoroutine(PlayerSingleHeal(1));
+                break;
+            case "SingleBuff":
+                runningCoroutine = StartCoroutine(PlayerSingleBuff(1));
+                break;
                 //case "SingleDebuff":
                 //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
                 //    break;
@@ -608,8 +608,6 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
                 //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
                 //    break;
         }
-        attackButton.interactable = false;
-        skillButton.interactable = false;
     }
     IEnumerator PlayerAttack()
     {
@@ -651,6 +649,41 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
         }
 
 
+    }
+    IEnumerator PlayerSingleHeal(int skillNum)
+    {
+        yield return BuffCursorInit();
+
+        tmpAnima = PresentAllyTurn();
+        yield return StartCoroutine(singleAttack.SingleAllyHeal(tmpAnima, selectEnemy, skillNum));
+        if (enemyActions.Count > 0 && turnList.Count == 0)
+        {
+            runningCoroutine = null;
+            BattleStart();
+        }
+        else if (enemyActions.Count > 0 && turnList.Count != 0)
+        {
+            runningCoroutine = null;
+            SetState(turnList);
+        }
+    }
+    IEnumerator PlayerSingleBuff(int skillNum)
+    {
+        yield return BuffCursorInit();
+        tmpAnima = PresentAllyTurn();
+        yield return StartCoroutine(singleAttack.SingleAllyBuff(tmpAnima, selectEnemy, skillNum));
+        Buff buff = new Buff(matchedSkill[0].Affect, matchedSkill[0].Weight, matchedSkill[0].Turn, AllyActions[selectEnemy].animaData);
+        buffManager.AddOrRenuwBuff(buff);
+        if (enemyActions.Count > 0 && turnList.Count == 0)
+        {
+            runningCoroutine = null;
+            BattleStart();
+        }
+        else if (enemyActions.Count > 0 && turnList.Count != 0)
+        {
+            runningCoroutine = null;
+            SetState(turnList);
+        }
     }
     IEnumerator PlayerSkill()
     {
@@ -846,21 +879,36 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
                 }
                 else if (enemy.performance.Equals("Skill"))
                 {
-                    string type = "";
-                    skillTable.ForEachEntity(entity =>
-                    {
-                        if (entity.Get<string>("name") == enemy.animaData.skillName[0])
-                        {
-                            type = entity.Get<string>("Type");
-                        }
-                    });
-                    switch (type)
+                    matchedSkill = skills.Where(s => s.name == enemy.animaData.skillName[0]).ToList();
+
+                    switch (matchedSkill[0].Type)
                     {
                         case "SingleAttack":
                             yield return StartCoroutine(singleAttack.SingleEnemySkill(enemy, selectAlly));
                             break;
+                        case "SingleHeal":
+                            yield return StartCoroutine(singleAttack.SingleEnemyHeal(enemy, selectAlly));
+                            break;
+                        case "SingleBuff":
+                            yield return StartCoroutine(singleAttack.SingleEnemyBuff(enemy, selectAlly));
+                            break;
+                            //case "SingleDebuff":
+                            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
+                            //    break;
+                            //case "AreaAttack":
+                            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
+                            //    break;
+                            //case "AreaHeal":
+                            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
+                            //    break;
+                            //case "AreaBuff":
+                            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
+                            //    break;
+                            //case "AreaDebuff":
+                            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
+                            //    break;
                     }
-                    
+
                 }
                 break;
             }
@@ -971,6 +1019,47 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
             yield return null;
         }
 
+    }
+    IEnumerator BuffCursorInit()
+    {
+        arrow = GameObject.Find("Arrow_down(Clone)");
+        DestroyImmediate(arrow);
+        index = 0;
+        Instantiate(Resources.Load<GameObject>("Minwoo/Arrow_down"), new Vector2(eliteAllyBattleSetting.allyinstance[index].transform.position.x, eliteAllyBattleSetting.allyinstance[index].transform.position.y + 1.2f), Quaternion.identity);
+        arrow = GameObject.Find("Arrow_down(Clone)");
+        while (true)
+        {
+            if (index != 2 && index < (allyAnimaNum - 1) && Input.GetKeyUp(KeyCode.RightArrow))
+            {
+                index++;
+                GameObject.Find("Arrow_down(Clone)").transform.position = new Vector2(eliteAllyBattleSetting.allyinstance[index].transform.position.x, eliteAllyBattleSetting.allyinstance[index].transform.position.y + 1.2f);
+            }
+            if (index != 0 && Input.GetKeyUp(KeyCode.LeftArrow))
+            {
+                index--;
+                GameObject.Find("Arrow_down(Clone)").transform.position = new Vector2(eliteAllyBattleSetting.allyinstance[index].transform.position.x, eliteAllyBattleSetting.allyinstance[index].transform.position.y + 1.2f);
+            }
+            else if (Input.GetKeyDown(KeyCode.Z) && !attackButton.interactable)
+            {
+                selectEnemy = index;
+                DestroyImmediate(arrow);
+                yield return new WaitForSeconds(Time.deltaTime * 30);
+                break;
+            }
+            else if (Input.GetKeyDown(KeyCode.C))
+            {
+                DestroyImmediate(arrow);
+                yield return new WaitForSeconds(Time.deltaTime * 30);
+                isZKeyPressed = false;
+                attackButton.interactable = true;
+                skillButton.interactable = true;
+                SetState(turnList);
+                StopCoroutine(runningCoroutine);
+                runningCoroutine = null;
+                yield break;
+            }
+            yield return null;
+        }
     }
 }
 
