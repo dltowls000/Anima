@@ -591,6 +591,7 @@ GameObject:
   - component: {fileID: 532001025}
   - component: {fileID: 532001024}
   - component: {fileID: 532001023}
+  - component: {fileID: 532001026}
   m_Layer: 5
   m_Name: Heal Button
   m_TagString: Untagged
@@ -661,7 +662,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 532001024}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 532001026}
+        m_TargetAssemblyTypeName: ParserData, Assembly-CSharp
+        m_MethodName: HealButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &532001024
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -700,6 +713,24 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 532001021}
   m_CullTransparentMesh: 1
+--- !u!114 &532001026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 532001021}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 831184b0c2090d44fb6b560db1dc17d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  battleParser: {fileID: 0}
+  battleLog: {fileID: 0}
+  maxButton: {fileID: 0}
+  minButton: {fileID: 0}
+  damageButton: {fileID: 0}
+  healButton: {fileID: 0}
 --- !u!1 &568646872
 GameObject:
   m_ObjectHideFlags: 0
@@ -891,6 +922,8 @@ MonoBehaviour:
   battleLog: {fileID: 1747086202}
   maxButton: {fileID: 628076324}
   minButton: {fileID: 1176424864}
+  damageButton: {fileID: 0}
+  healButton: {fileID: 0}
 --- !u!114 &628076327
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1811,6 +1844,8 @@ MonoBehaviour:
   battleLog: {fileID: 1747086202}
   maxButton: {fileID: 628076324}
   minButton: {fileID: 1176424864}
+  damageButton: {fileID: 0}
+  healButton: {fileID: 0}
 --- !u!114 &1176424867
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2189,6 +2224,7 @@ GameObject:
   - component: {fileID: 1487243707}
   - component: {fileID: 1487243706}
   - component: {fileID: 1487243705}
+  - component: {fileID: 1487243708}
   m_Layer: 5
   m_Name: Damage Button
   m_TagString: Untagged
@@ -2259,7 +2295,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1487243706}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1487243708}
+        m_TargetAssemblyTypeName: ParserData, Assembly-CSharp
+        m_MethodName: DamageButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1487243706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2298,6 +2346,24 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1487243703}
   m_CullTransparentMesh: 1
+--- !u!114 &1487243708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1487243703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 831184b0c2090d44fb6b560db1dc17d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  battleParser: {fileID: 0}
+  battleLog: {fileID: 0}
+  maxButton: {fileID: 0}
+  minButton: {fileID: 0}
+  damageButton: {fileID: 0}
+  healButton: {fileID: 0}
 --- !u!1 &1503959493
 GameObject:
   m_ObjectHideFlags: 0
@@ -2951,7 +3017,7 @@ MonoBehaviour:
     Camera: {fileID: 330285225}
     ActivateAfter: 0
     MinDuration: 0
-  - FullHash: -1762453272
+  - FullHash: -332182648
     Camera: {fileID: 568646876}
     ActivateAfter: 0
     MinDuration: 0
@@ -2988,7 +3054,7 @@ MonoBehaviour:
     HashOfParent: 756556552
   - Hash: -633685024
     HashOfParent: 756556552
-  - Hash: -1762453272
+  - Hash: -332182648
     HashOfParent: 756556552
   m_LegacyLookAt: {fileID: 0}
   m_LegacyFollow: {fileID: 0}
@@ -3287,6 +3353,8 @@ MonoBehaviour:
   battleLog: {fileID: 0}
   maxButton: {fileID: 0}
   minButton: {fileID: 0}
+  damageButton: {fileID: 1487243705}
+  healButton: {fileID: 532001023}
 --- !u!1 &1899271732
 GameObject:
   m_ObjectHideFlags: 0

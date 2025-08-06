@@ -10,6 +10,7 @@ using UnityEngine.UI;
 using System.Resources;
 using Newtonsoft.Json;
 using System.Linq;
+using Unity.VisualScripting;
 public class EliteBattleManager : MonoBehaviour, IBattleManager
 {
     [SerializeField]
@@ -172,6 +173,7 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
     public BuffManager BuffManager => buffManager;
 
     SingleAttack singleAttack;
+    MultipleAttack multipleAttack;
     void Start()
     {
         playerInfo = GameObject.Find("Game Manager").GetComponent<AnimaInventoryManager>().playerInfo;
@@ -179,7 +181,10 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
         pointerEventData = new PointerEventData(eventSystem);
         dropAnima = new List<AnimaDataSO>();
         isTurn = new List<GameObject>();
-        singleAttack = new SingleAttack(this);
+        singleAttack = this.AddComponent<SingleAttack>();
+        singleAttack.initialize(this);
+        multipleAttack = this.AddComponent<MultipleAttack>();
+        multipleAttack.initialize(this);
         turn = new List<GameObject>();
         skillData = Resources.Load<TextAsset>("Minwoo/SkillList");
         skills = JsonConvert.DeserializeObject<List<SkillData>>(skillData.text);

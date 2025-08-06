@@ -46,9 +46,10 @@ public class StatusSync : MonoBehaviour
             {
                 if (ReferenceEquals(battleManager.BuffManager.GetBuffList()[i].target, battleAlly[idx].animaData))
                 {
-                    tmp.Append(battleManager.BuffManager.GetBuffList()[i].type.ToString());
+                    tmp.AppendLine(string.Join(", ",battleManager.BuffManager.GetBuffList()[i].type));
                 }
             }
+            Debug.Log(tmp.ToString());
             this.transform.Find("Buff").GetComponent<TextMeshProUGUI>().text = tmp.ToString();
             tmp.Clear();
         }

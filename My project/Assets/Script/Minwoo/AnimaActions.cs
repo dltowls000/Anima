@@ -39,7 +39,7 @@ public class AnimaActions : MonoBehaviour
         }
     }
     
-    public IEnumerator IncreaseAbiltiy(AnimaActions buffer, AnimaActions target, string[] abi)
+    public IEnumerator IncreaseAbility(AnimaActions buffer, AnimaActions target, string[] abi)
     {
         foreach (string stat in abi)
         {
@@ -111,7 +111,7 @@ public class AnimaActions : MonoBehaviour
         }
         yield return null;
     }
-    public IEnumerator DecreseAbility(AnimaActions debuffer, EnemyActions target, string[] abi)
+    public IEnumerator DecreaseAbility(AnimaActions debuffer, EnemyActions target, string[] abi)
     {
         foreach (string stat in abi)
         {

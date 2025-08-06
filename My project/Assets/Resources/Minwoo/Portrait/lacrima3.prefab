@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8427067082975086482}
   - component: {fileID: 4199400286636085484}
+  - component: {fileID: 7804954888972316466}
   m_Layer: 0
   m_Name: lacrima3
   m_TagString: Untagged
@@ -87,3 +88,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &7804954888972316466
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6141936363207281385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4dc106772d254904697d240d707c6618, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animaData: {fileID: 0}
+  performance: Attack
+  damage: 80.38144
+  heal: 0

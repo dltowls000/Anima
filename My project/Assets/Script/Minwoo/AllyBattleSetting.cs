@@ -38,7 +38,6 @@ public class AllyBattleSetting : MonoBehaviour,IAllyBattleSetting
     public List<GameObject> AllyParserPrefab => allyParserPrefab;
     public List<GameObject> AllyParserInstance => allyParserInstance;
     public GameObject BattleParser => battleParser;
-    //public SlotManager slotManager;
     public void initialize()
     {
         allyinstance = new List<GameObject>();

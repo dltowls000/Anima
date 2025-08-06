@@ -5,7 +5,7 @@ public class MultipleAttack : MonoBehaviour
 {
     IBattleManager bm;
     
-    public MultipleAttack(IBattleManager bm)
+    public void initialize(IBattleManager bm)
     {
         this.bm = bm;
     }

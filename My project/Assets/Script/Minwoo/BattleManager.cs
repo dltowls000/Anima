@@ -177,8 +177,10 @@ public class BattleManager : MonoBehaviour, IBattleManager
         playerInfo = GameObject.Find("Game Manager").GetComponent<AnimaInventoryManager>().playerInfo;
         eventSystem = EventSystem.current;
         pointerEventData = new PointerEventData(eventSystem);
-        singleAttack = new SingleAttack(this);
-        multipleAttack = new MultipleAttack(this);
+        singleAttack = this.AddComponent<SingleAttack>();
+        singleAttack.initialize(this);
+        multipleAttack = this.AddComponent<MultipleAttack>();
+        multipleAttack.initialize(this);
         isTurn = new List<GameObject>();
         buffManager = new BuffManager();
         turn = new List<GameObject>();
@@ -432,14 +434,7 @@ public class BattleManager : MonoBehaviour, IBattleManager
         tmpturnList = new List<AnimaDataSO>(turnList);
 
         turnIndex = 0;
-        if (buffManager.GetBuffList().Count > 0) 
-        {
-            buffManager.TickAll();
-            for(int i = 0; i<buffManager.GetBuffList().Count; i++)
-            {
-                Debug.Log($"{buffManager.GetBuffList()[i].remainingTurns}³²À½");
-            }
-        }
+        
         TurnUISetting(turnList);
         SetState(turnList);
     }
@@ -582,21 +577,21 @@ public class BattleManager : MonoBehaviour, IBattleManager
             case "SingleBuff":
                 runningCoroutine = StartCoroutine(PlayerSingleBuff(0));
                 break;
-            //case "SingleDebuff":
-            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 0));
-            //    break;
-            //case "AreaAttack":
-            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 0));
-            //    break;
-            //case "AreaHeal":
-            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 0));
-            //    break;
-            //case "AreaBuff":
-            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 0));
-            //    break;
-            //case "AreaDebuff":
-            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 0));
-            //    break;
+            case "SingleDebuff":
+                runningCoroutine = StartCoroutine(PlayerSingleDebuff(0));
+                break;
+                //case "AreaAttack":
+                //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 0));
+                //    break;
+                //case "AreaHeal":
+                //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 0));
+                //    break;
+                //case "AreaBuff":
+                //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 0));
+                //    break;
+                //case "AreaDebuff":
+                //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 0));
+                //    break;
         }
         
         
@@ -617,21 +612,21 @@ public class BattleManager : MonoBehaviour, IBattleManager
             case "SingleBuff":
                 runningCoroutine = StartCoroutine(PlayerSingleBuff(1));
                 break;
-            //case "SingleDebuff":
-            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
-            //    break;
-            //case "AreaAttack":
-            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
-            //    break;
-            //case "AreaHeal":
-            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
-            //    break;
-            //case "AreaBuff":
-            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
-            //    break;
-            //case "AreaDebuff":
-            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
-            //    break;
+            case "SingleDebuff":
+                runningCoroutine = StartCoroutine(PlayerSingleDebuff(1));
+                break;
+                //case "AreaAttack":
+                //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
+                //    break;
+                //case "AreaHeal":
+                //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
+                //    break;
+                //case "AreaBuff":
+                //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
+                //    break;
+                //case "AreaDebuff":
+                //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
+                //    break;
         }
     }
     IEnumerator PlayerAttack()
@@ -697,7 +692,25 @@ public class BattleManager : MonoBehaviour, IBattleManager
         yield return BuffCursorInit();
         tmpAnima = PresentAllyTurn();
         yield return StartCoroutine(singleAttack.SingleAllyBuff(tmpAnima, selectEnemy, skillNum));
-        Buff buff = new Buff(matchedSkill[0].Affect, matchedSkill[0].Weight, matchedSkill[0].Turn, AllyActions[selectEnemy].animaData);
+        Buff buff = new Buff(matchedSkill[0].Affect, matchedSkill[0].Weight, matchedSkill[0].Turn, allyActions[selectEnemy].animaData);
+        buffManager.AddOrRenuwBuff(buff);
+        if (enemyActions.Count > 0 && turnList.Count == 0)
+        {
+            runningCoroutine = null;
+            BattleStart();
+        }
+        else if (enemyActions.Count > 0 && turnList.Count != 0)
+        {
+            runningCoroutine = null;
+            SetState(turnList);
+        }
+    }
+    IEnumerator PlayerSingleDebuff(int skillNum)
+    {
+        yield return AttackCursorInit();
+        tmpAnima = PresentAllyTurn();
+        yield return StartCoroutine(singleAttack.SingleAllyDebuff(tmpAnima, selectEnemy, skillNum));
+        Buff buff = new Buff(matchedSkill[0].Affect, matchedSkill[0].Weight, matchedSkill[0].Turn, enemyActions[selectEnemy].animaData);
         buffManager.AddOrRenuwBuff(buff);
         if (enemyActions.Count > 0 && turnList.Count == 0)
         {
@@ -712,9 +725,8 @@ public class BattleManager : MonoBehaviour, IBattleManager
     }
     IEnumerator EnemyTurn()
     {
-        yield return new WaitForSeconds(1.5f);
         int selectAlly = selectNoDieAnima();
-
+        selectEnemy = Random.Range(0, enemyActions.Count);
         foreach (EnemyActions enemy in enemyActions)
         {
             if (turnList.Count == 0)
@@ -733,33 +745,37 @@ public class BattleManager : MonoBehaviour, IBattleManager
                 else if (enemy.performance.Equals("Skill"))
                 {
                     matchedSkill = skills.Where(s => s.name == enemy.animaData.skillName[0]).ToList();
-                    
+                    Buff buff;
                     switch (matchedSkill[0].Type)
                     {
                         case "SingleAttack":
                             yield return StartCoroutine(singleAttack.SingleEnemySkill(enemy, selectAlly));
                             break;
                         case "SingleHeal":
-                            yield return StartCoroutine(singleAttack.SingleEnemyHeal(enemy, selectAlly));
+                            yield return StartCoroutine(singleAttack.SingleEnemyHeal(enemy, selectEnemy));
                             break;
                         case "SingleBuff":
-                            yield return StartCoroutine(singleAttack.SingleEnemyBuff(enemy, selectAlly));
+                            yield return StartCoroutine(singleAttack.SingleEnemyBuff(enemy, selectEnemy));
+                            buff = new Buff(matchedSkill[0].Affect, matchedSkill[0].Weight, matchedSkill[0].Turn, enemyActions[selectEnemy].animaData);
+                            buffManager.AddOrRenuwBuff(buff);
                             break;
-                       //case "SingleDebuff":
-                       //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
-                       //    break;
-                       //case "AreaAttack":
-                       //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
-                       //    break;
-                       //case "AreaHeal":
-                       //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
-                       //    break;
-                       //case "AreaBuff":
-                       //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
-                       //    break;
-                       //case "AreaDebuff":
-                       //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
-                       //    break;
+                        case "SingleDebuff":
+                            runningCoroutine = StartCoroutine(singleAttack.SingleEnemyDebuff(enemy, selectAlly));
+                            buff = new Buff(matchedSkill[0].Affect, matchedSkill[0].Weight, matchedSkill[0].Turn, allyActions[selectAlly].animaData);
+                            buffManager.AddOrRenuwBuff(buff);
+                            break;
+                            //case "AreaAttack":
+                            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
+                            //    break;
+                            //case "AreaHeal":
+                            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
+                            //    break;
+                            //case "AreaBuff":
+                            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
+                            //    break;
+                            //case "AreaDebuff":
+                            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
+                            //    break;
                     }
 
                 }

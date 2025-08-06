@@ -35,20 +35,22 @@ public class EnemyActions : MonoBehaviour
 
     public void DecideAction()
     {
-        float totalWeight = 0;
+        float totalWeight = 0f;
         foreach (ActionWeight actionWeight in actionWeights)
         {
             totalWeight += actionWeight.weight;
         }
 
-        float randomValue = Random.Range(0, totalWeight);
-        float cumulativeWeight = 0;
+        float randomValue = Random.Range(0f, totalWeight);
+        Debug.Log("Random value: " + randomValue);
+        float cumulativeWeight = 0f;
 
         foreach (ActionWeight actionWeight in actionWeights)
         {
             cumulativeWeight += actionWeight.weight;
             if (randomValue <= cumulativeWeight)
             {
+                Debug.Log("Selected: " + actionWeight.actionType);
                 SetAction(actionWeight.actionType);
                 return;
             }
@@ -98,7 +100,7 @@ public class EnemyActions : MonoBehaviour
             yield return healBar.PutDamage(heal);
         }
     }
-    public IEnumerator IncreaseAbiltiy(EnemyActions buffer, EnemyActions target, string[] abi)
+    public IEnumerator IncreaseAbility(EnemyActions buffer, EnemyActions target, string[] abi)
     {
         foreach (string stat in abi)
         {
@@ -170,7 +172,7 @@ public class EnemyActions : MonoBehaviour
         }
         yield return null;
     }
-    public IEnumerator DecreseAbility(EnemyActions debuffer, AnimaActions target, string[] abi)
+    public IEnumerator DecreaseAbility(EnemyActions debuffer, AnimaActions target, string[] abi)
     {
         foreach (string stat in abi)
         {
