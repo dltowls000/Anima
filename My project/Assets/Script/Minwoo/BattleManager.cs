@@ -692,7 +692,7 @@ public class BattleManager : MonoBehaviour, IBattleManager
         yield return BuffCursorInit();
         tmpAnima = PresentAllyTurn();
         yield return StartCoroutine(singleAttack.SingleAllyBuff(tmpAnima, selectEnemy, skillNum));
-        Buff buff = new Buff(matchedSkill[0].Affect, matchedSkill[0].Weight, matchedSkill[0].Turn, allyActions[selectEnemy].animaData);
+        Buff buff = new Buff(matchedSkill[0].Affect, matchedSkill[0].Weight, matchedSkill[0].Turn, allyActions[selectEnemy].animaData, 0);
         buffManager.AddOrRenuwBuff(buff);
         if (enemyActions.Count > 0 && turnList.Count == 0)
         {
@@ -710,7 +710,7 @@ public class BattleManager : MonoBehaviour, IBattleManager
         yield return AttackCursorInit();
         tmpAnima = PresentAllyTurn();
         yield return StartCoroutine(singleAttack.SingleAllyDebuff(tmpAnima, selectEnemy, skillNum));
-        Buff buff = new Buff(matchedSkill[0].Affect, matchedSkill[0].Weight, matchedSkill[0].Turn, enemyActions[selectEnemy].animaData);
+        Buff buff = new Buff(matchedSkill[0].Affect, matchedSkill[0].Weight, matchedSkill[0].Turn, enemyActions[selectEnemy].animaData, 1);
         buffManager.AddOrRenuwBuff(buff);
         if (enemyActions.Count > 0 && turnList.Count == 0)
         {
@@ -739,7 +739,7 @@ public class BattleManager : MonoBehaviour, IBattleManager
                 enemy.DecideAction();
                 if (enemy.performance.Equals("Attack"))
                 {
-                    yield return StartCoroutine(singleAttack.SingleEnemyAttack(enemy, selectAlly));
+                    yield return runningCoroutine = StartCoroutine(singleAttack.SingleEnemyAttack(enemy, selectAlly));
 
                 }
                 else if (enemy.performance.Equals("Skill"))
@@ -749,19 +749,19 @@ public class BattleManager : MonoBehaviour, IBattleManager
                     switch (matchedSkill[0].Type)
                     {
                         case "SingleAttack":
-                            yield return StartCoroutine(singleAttack.SingleEnemySkill(enemy, selectAlly));
+                            yield return runningCoroutine = StartCoroutine(singleAttack.SingleEnemySkill(enemy, selectAlly));
                             break;
                         case "SingleHeal":
-                            yield return StartCoroutine(singleAttack.SingleEnemyHeal(enemy, selectEnemy));
+                            yield return runningCoroutine = StartCoroutine(singleAttack.SingleEnemyHeal(enemy, selectEnemy));
                             break;
                         case "SingleBuff":
-                            yield return StartCoroutine(singleAttack.SingleEnemyBuff(enemy, selectEnemy));
-                            buff = new Buff(matchedSkill[0].Affect, matchedSkill[0].Weight, matchedSkill[0].Turn, enemyActions[selectEnemy].animaData);
+                            yield return runningCoroutine = StartCoroutine(singleAttack.SingleEnemyBuff(enemy, selectEnemy));
+                            buff = new Buff(matchedSkill[0].Affect, matchedSkill[0].Weight, matchedSkill[0].Turn, enemyActions[selectEnemy].animaData, 0);
                             buffManager.AddOrRenuwBuff(buff);
                             break;
                         case "SingleDebuff":
-                            runningCoroutine = StartCoroutine(singleAttack.SingleEnemyDebuff(enemy, selectAlly));
-                            buff = new Buff(matchedSkill[0].Affect, matchedSkill[0].Weight, matchedSkill[0].Turn, allyActions[selectAlly].animaData);
+                            yield return runningCoroutine = StartCoroutine(singleAttack.SingleEnemyDebuff(enemy, selectAlly));
+                            buff = new Buff(matchedSkill[0].Affect, matchedSkill[0].Weight, matchedSkill[0].Turn, allyActions[selectAlly].animaData, 1);
                             buffManager.AddOrRenuwBuff(buff);
                             break;
                             //case "AreaAttack":

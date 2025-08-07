@@ -677,7 +677,7 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
         yield return BuffCursorInit();
         tmpAnima = PresentAllyTurn();
         yield return StartCoroutine(singleAttack.SingleAllyBuff(tmpAnima, selectEnemy, skillNum));
-        Buff buff = new Buff(matchedSkill[0].Affect, matchedSkill[0].Weight, matchedSkill[0].Turn, AllyActions[selectEnemy].animaData);
+        Buff buff = new Buff(matchedSkill[0].Affect, matchedSkill[0].Weight, matchedSkill[0].Turn, AllyActions[selectEnemy].animaData, 1);
         buffManager.AddOrRenuwBuff(buff);
         if (enemyActions.Count > 0 && turnList.Count == 0)
         {

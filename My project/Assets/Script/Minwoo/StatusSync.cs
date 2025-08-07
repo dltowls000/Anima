@@ -12,7 +12,10 @@ public class StatusSync : MonoBehaviour
     string objname;
     public int idx = -1;
     public int dieanima = 0;
-    StringBuilder tmp = new StringBuilder();
+    StringBuilder allyBuff = new StringBuilder();
+    StringBuilder enemyBuff = new StringBuilder();
+    StringBuilder allyDebuff = new StringBuilder();
+    StringBuilder enemyDebuff = new StringBuilder();
     void Awake()
     {
         objname = this.transform.parent.name;
@@ -46,12 +49,20 @@ public class StatusSync : MonoBehaviour
             {
                 if (ReferenceEquals(battleManager.BuffManager.GetBuffList()[i].target, battleAlly[idx].animaData))
                 {
-                    tmp.AppendLine(string.Join(", ",battleManager.BuffManager.GetBuffList()[i].type));
+                    if (battleManager.BuffManager.GetBuffList()[i].distinct == 0)
+                    {
+                        allyBuff.AppendLine(string.Join(", ", battleManager.BuffManager.GetBuffList()[i].type));
+                    }
+                    else
+                    {
+                        allyDebuff.AppendLine(string.Join(", ", battleManager.BuffManager.GetBuffList()[i].type));
+                    }
                 }
             }
-            Debug.Log(tmp.ToString());
-            this.transform.Find("Buff").GetComponent<TextMeshProUGUI>().text = tmp.ToString();
-            tmp.Clear();
+            this.transform.Find("Buff").GetComponent<TextMeshProUGUI>().text = allyBuff.ToString();
+            this.transform.Find("Debuff").GetComponent<TextMeshProUGUI>().text = allyDebuff.ToString();
+            allyBuff.Clear();
+            allyDebuff.Clear();
         }
         else
         {
@@ -60,6 +71,24 @@ public class StatusSync : MonoBehaviour
             this.transform.Find("Level").GetComponent<TextMeshProUGUI>().text = "Lv. " + battleEnemy[idx].animaData.level.ToString();
             this.transform.Find("Exp").GetComponent<TextMeshProUGUI>().text = battleEnemy[idx].animaData.EXP.ToString();
             this.transform.Find("Hp").GetComponent<TextMeshProUGUI>().text = Mathf.CeilToInt(battleEnemy[idx].animaData.Stamina) + " / " + battleEnemy[idx].animaData.Maxstamina.ToString();
+            for (int i = 0; i < battleManager.BuffManager.GetBuffList().Count; i++)
+            {
+                if (ReferenceEquals(battleManager.BuffManager.GetBuffList()[i].target, battleEnemy[idx].animaData))
+                {
+                    if (battleManager.BuffManager.GetBuffList()[i].distinct == 0)
+                    {
+                        enemyBuff.AppendLine(string.Join(", ", battleManager.BuffManager.GetBuffList()[i].type));
+                    }
+                    else
+                    {
+                        enemyDebuff.AppendLine(string.Join(", ", battleManager.BuffManager.GetBuffList()[i].type));
+                    }
+                }
+            }
+            this.transform.Find("Buff").GetComponent<TextMeshProUGUI>().text = enemyBuff.ToString();
+            this.transform.Find("Debuff").GetComponent<TextMeshProUGUI>().text = enemyDebuff.ToString();
+            enemyBuff.Clear();
+            enemyDebuff.Clear();
         }
     }
 }

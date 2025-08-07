@@ -87,7 +87,7 @@ public class SingleAttack:MonoBehaviour
         bm.Canvas.SetActive(true);
         yield return enemy.Attack(enemy, bm.AllyActions[selectAlly], bm.AllyHealthBar[selectAlly], bm.EnemyDamageBar[enemy.animaData.enemyIndex]);
         bm.DamageNumber.Spawn(new Vector2(bm.AllyBattleSetting.AllyInstance[selectAlly].transform.position.x - 0.1f, bm.AllyBattleSetting.AllyInstance[selectAlly].transform.position.y + 0.1f), enemy.damage);
-        bm.BattleLogManager.AddLog($"{enemy.animaData.Name} used \"{enemy.animaData.skillName[0]}\" on {bm.AllyActions[selectAlly].animaData.Name} for {Mathf.Ceil(enemy.damage)} damage", false);
+        bm.BattleLogManager.AddLog($"{enemy.animaData.Name} hit {bm.AllyActions[selectAlly].animaData.Name} for {Mathf.Ceil(enemy.damage)} damage", false);
         bm.EnemyDamageText[enemy.animaData.enemyIndex].text = Mathf.Ceil(bm.EnemyDamageBar[enemy.animaData.enemyIndex].thisPoint).ToString();
         DamageParserUpdate();
         if (bm.AllyActions[selectAlly].animaData.Animadie)
@@ -345,6 +345,7 @@ public class SingleAttack:MonoBehaviour
             }
             bm.stat = BattleState.win;
             bm.TurnIndex = 0;
+            StopCoroutine(bm.RunningCoroutine);
             bm.WinBattle();
         }
     }
@@ -373,6 +374,7 @@ public class SingleAttack:MonoBehaviour
         if (bm.AllyAnimaNum == 0)
         {
             bm.stat = BattleState.defeat;
+            StopCoroutine(bm.RunningCoroutine);
             bm.LoseBattle();
 
         }

@@ -482,7 +482,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c7281d80ed69f74284a4cff455ad4e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraManager: {fileID: 0}
+  cameraManager: {fileID: 1800434944}
   turnUI: {fileID: 1006071827}
   battleLogManager: {fileID: 2114633342}
   battleManager: {fileID: 230224972}

@@ -7,12 +7,14 @@ public class Buff
     public float weight;
     public int remainingTurns;
     public AnimaDataSO target;
-    public Buff(List<string> type, float weight, int remainingTurns, AnimaDataSO target)
+    public int distinct = -1;
+    public Buff(List<string> type, float weight, int remainingTurns, AnimaDataSO target, int distinct)
     {
         this.type = type;
         this.weight = weight;
         this.remainingTurns = remainingTurns;
         this.target = target;
+        this.distinct = distinct;
     }
     public void Tick() => remainingTurns--;
     
