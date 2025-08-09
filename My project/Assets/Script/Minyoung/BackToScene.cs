@@ -10,4 +10,10 @@ public class BackToScene : MonoBehaviour
         var gameM = gameManager.GetComponent<SceneManagerCorridor>();
         SceneManager.LoadScene(gameM.sceneName);
     }
+    public void BackToTiles()
+    {
+        gameManager = GameObject.Find("Game Manager");
+        var gameM = gameManager.GetComponent<SceneManagerCorridor>();
+        SceneManager.LoadScene(gameM.tileSceneName);
+    }
 }

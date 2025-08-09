@@ -302,7 +302,8 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
         {
             allyActions[i].animaData = eliteAllyBattleSetting.playerinfo.battleAnima[i];
             allyActions[i].animaData.isAlly = true;
-            var allyStatus = GameObject.Find($"AllyElite{i}");
+            allyActions[i].animaData.location = i;
+            var allyStatus = GameObject.Find($"Ally{i}");
             var allyParser = GameObject.Find($"Ally{i}Name");
             allyStatus.transform.Find("Image").GetComponent<UnityEngine.UI.Image>().sprite = Resources.Load<Sprite>("Minwoo/Portrait/" + allyActions[i].animaData.Objectfile);
             allyHealthBar.Add(GameObject.Find($"AllyAnimaHP{i}").transform.Find("HP").GetComponent<HealthBar>());
@@ -383,7 +384,7 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
         animaActionUI = GameObject.Find("Anima Action UI(Clone)");
         Transform attackAction = animaActionUI.transform.Find("Attack Button Frame").transform.Find("Attack Button");
         attackButton = attackAction.GetComponent<UnityEngine.UI.Button>();
-        Transform skillAction = animaActionUI.transform.Find("Skill Button Frame").transform.Find("Skill Button");
+        Transform skillAction = animaActionUI.transform.Find("Skill Button Frame2").transform.Find("Skill Button2");
         skillButton = skillAction.GetComponent<UnityEngine.UI.Button>();
         skill1 = animaActionUI.transform.Find("Skill Button Frame0").transform.Find("Skill Button0").GetComponent<Button>();
         skill2 = animaActionUI.transform.Find("Skill Button Frame1").transform.Find("Skill Button1").GetComponent<Button>();
@@ -563,9 +564,9 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
             case "SingleBuff":
                 runningCoroutine = StartCoroutine(PlayerSingleBuff(0));
                 break;
-                //case "SingleDebuff":
-                //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 0));
-                //    break;
+            case "SingleDebuff":
+                runningCoroutine = StartCoroutine(PlayerSingleDebuff(0));
+                break;
                 //case "AreaAttack":
                 //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 0));
                 //    break;
@@ -584,7 +585,7 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
     {
         attackButton.interactable = false;
         skillButton.interactable = false;
-        matchedSkill = skills.Where(s => s.name == skill1.transform.Find("Skill Text0").GetComponent<TextMeshProUGUI>().text).ToList();
+        matchedSkill = skills.Where(s => s.name == skill1.transform.Find("Skill Text1").GetComponent<TextMeshProUGUI>().text).ToList();
 
         switch (matchedSkill[0].Type)
         {
@@ -597,9 +598,9 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
             case "SingleBuff":
                 runningCoroutine = StartCoroutine(PlayerSingleBuff(1));
                 break;
-                //case "SingleDebuff":
-                //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
-                //    break;
+            case "SingleDebuff":
+                runningCoroutine = StartCoroutine(PlayerSingleDebuff( 1));
+                break;
                 //case "AreaAttack":
                 //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
                 //    break;
@@ -690,167 +691,13 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
             SetState(turnList);
         }
     }
-    IEnumerator PlayerSkill()
+    IEnumerator PlayerSingleDebuff(int skillNum)
     {
-        arrow = GameObject.Find("Arrow_down(Clone)");
-        DestroyImmediate(arrow);
-        int index = 0;
-        Instantiate(Resources.Load<GameObject>("Minwoo/Arrow_down"), new Vector2(eliteEnemyBattleSetting.enemyinstance[index].transform.position.x, eliteEnemyBattleSetting.enemyinstance[index].transform.position.y + 1.2f), Quaternion.identity);
-        arrow = GameObject.Find("Arrow_down(Clone)");
-        while (true)
-        {
-            if (index != 2 && index < (enemyAnimaNum - 1) && Input.GetKeyUp(KeyCode.RightArrow))
-            {
-                index++;
-                GameObject.Find("Arrow_down(Clone)").transform.position = new Vector2(eliteEnemyBattleSetting.enemyinstance[index].transform.position.x, eliteEnemyBattleSetting.enemyinstance[index].transform.position.y + 1.2f);
-            }
-            if (index != 0 && Input.GetKeyUp(KeyCode.LeftArrow))
-            {
-                index--;
-                GameObject.Find("Arrow_down(Clone)").transform.position = new Vector2(eliteEnemyBattleSetting.enemyinstance[index].transform.position.x, eliteEnemyBattleSetting.enemyinstance[index].transform.position.y + 1.2f);
-            }
-            else if (Input.GetKeyDown(KeyCode.Z) && !attackButton.interactable)
-            {
-                selectEnemy = index;
-                DestroyImmediate(arrow);
-                yield return new WaitForSeconds(Time.deltaTime * 30);
-                break;
-            }
-            else if (Input.GetKeyDown(KeyCode.C))
-            {
-                DestroyImmediate(arrow);
-                yield return new WaitForSeconds(Time.deltaTime * 30);
-                isZKeyPressed = false;
-                attackButton.interactable = true;
-                skillButton.interactable = true;
-                SetState(turnList);
-                StopCoroutine(runningCoroutine);
-                runningCoroutine = null;
-                yield break;
-            }
-            yield return null;
-        }
-
-        foreach (AnimaActions anima in allyActions)
-        {
-            if (turnList.Count == 0)
-            {
-                break;
-            }
-            if (ReferenceEquals(turnList[0], anima.animaData))
-            {
-                isZKeyPressed = false;
-                attackButton.interactable = true;
-                skillButton.interactable = true;
-                animaActionUI.SetActive(false);
-                isTurn[turnIndex].SetActive(false);
-                turnList.RemoveAt(0);
-                canvas.SetActive(false);//체력 바 동기화 문제 발생 예상
-                /* Attack */
-
-                yield return cameraManager.ZoomSingleOpp(eliteAllyBattleSetting.allyinstance[allyActions.IndexOf(anima)].transform, eliteEnemyBattleSetting.enemyinstance[selectEnemy].transform, true, anima.animaData.skillName[0]);
-
-                /* Animation */
-                canvas.SetActive(true);
-                yield return anima.Skill(anima, enemyActions[selectEnemy], enemyHealthBar[selectEnemy], allyDamageBar[allyActions.IndexOf(anima)]);
-                damageNumber.Spawn(new Vector2(eliteEnemyBattleSetting.enemyinstance[selectEnemy].transform.position.x - 0.1f, eliteEnemyBattleSetting.enemyinstance[selectEnemy].transform.position.y + 0.1f), enemyActions[selectEnemy].damage);
-                battleLogManager.AddLog($"{anima.animaData.Name} used \"{anima.animaData.skillName}\" on {enemyActions[selectEnemy].animaData.Name} for {Mathf.Ceil(enemyActions[selectEnemy].damage)}damage", true);
-                allyDamageText[allyActions.IndexOf(anima)].text = Mathf.Ceil(allyDamageBar[allyActions.IndexOf(anima)].thisPoint).ToString();
-                foreach (var max in allyDamageBar)
-                {
-                    if (maxValue < max.maxPoint)
-                    {
-                        maxValue = max.maxPoint;
-                    }
-                }
-                foreach (var max in enemyDamageBar)
-                {
-                    if (maxValue < max.maxPoint)
-                    {
-                        maxValue = max.maxPoint;
-                    }
-                }
-                foreach (var foo in allyDamageBar)
-                {
-                    foo.maxPoint = maxValue;
-                    foo.Initialize();
-                }
-                foreach (var foo in enemyDamageBar)
-                {
-                    foo.maxPoint = maxValue;
-                    foo.Initialize();
-                }
-                if (enemyActions[selectEnemy].animaData.Animadie)
-                {
-                    if (anima.animaData.Speed <= enemyActions[selectEnemy].animaData.Speed)
-                    {
-                        turn[turnIndex].transform.Find("Player Turn Portrait").GetComponent<UnityEngine.UI.Image>().color = new Color(77f / 255f, 77f / 255f, 77f / 255f);
-                    }
-                    else
-                    {
-                        turn[turnIndex++].transform.Find("Player Turn Portrait").GetComponent<UnityEngine.UI.Image>().color = new Color(77f / 255f, 77f / 255f, 77f / 255f);
-                    }
-                    for (int i = 0; i < tmpturnList.Count; i++)
-                    {
-                        if (ReferenceEquals(tmpturnList[i], enemyActions[selectEnemy].animaData))
-                        {
-                            DestroyImmediate(turn[i]);
-                            tmpturnList.RemoveAt(i);
-                            turn.RemoveAt(i);
-                            isTurn.RemoveAt(i);
-                        }
-                        foreach (var tmp in allyActions)
-                        {
-                            if (!tmp.animaData.Animadie)
-                            {
-                                tmp.animaData.LevelUp();
-                            }
-                        }
-                    }
-                    battleLogManager.AddLog($"{enemyActions[selectEnemy].animaData.Name}is dead", false);
-                    GoldManager.Instance.AddGold(enemyActions[selectEnemy].animaData.DropGold);
-                    turnList.Remove(enemyActions[selectEnemy].animaData);
-                    DestroyImmediate(eliteEnemyBattleSetting.enemyhpinstance[selectEnemy]);
-                    eliteEnemyBattleSetting.enemyhpinstance.RemoveAt(selectEnemy);
-                    enemyHealthBar.RemoveAt(selectEnemy);
-                    enemyActions.RemoveAt(selectEnemy);
-                    eliteEnemyBattleSetting.animator.RemoveAt(selectEnemy);
-                    DestroyImmediate(eliteEnemyBattleSetting.enemyinstance[selectEnemy]);
-                    DestroyImmediate(eliteEnemyBattleSetting.enemyInfoInstance[selectEnemy]);
-                    eliteEnemyBattleSetting.enemyInfoInstance.RemoveAt(selectEnemy);
-                    eliteEnemyBattleSetting.enemyinstance.RemoveAt(selectEnemy);
-                    enemyAnimaNum--;
-
-                    for (int i = 0; i < 3; i++)
-                    {
-                        rebuild = GameObject.Find($"Enemy{i}");
-                        if (rebuild != null)
-                        {
-                            rebuild.transform.Find("Status").GetComponent<EliteStatusSync>().dieanima++;
-                        }
-                    }
-
-                    if (enemyActions.Count == 0)
-                    {
-                        foreach (var ally in allyActions)
-                        {
-                            ally.animaData.location = -1;
-                        }
-                        state = BattleState.win;
-                        print("승리");
-                        turnIndex = 0;
-                        WinBattle();
-                        StopCoroutine(runningCoroutine);
-                    }
-
-                }
-                else
-                {
-                    turn[turnIndex++].transform.Find("Player Turn Portrait").GetComponent<UnityEngine.UI.Image>().color = new Color(77f / 255f, 77f / 255f, 77f / 255f);
-                }
-                break;
-            }
-        }
+        yield return AttackCursorInit();
+        tmpAnima = PresentAllyTurn();
+        yield return StartCoroutine(singleAttack.SingleAllyDebuff(tmpAnima, selectEnemy, skillNum));
+        Buff buff = new Buff(matchedSkill[0].Affect, matchedSkill[0].Weight, matchedSkill[0].Turn, enemyActions[selectEnemy].animaData, 1);
+        buffManager.AddOrRenuwBuff(buff);
         if (enemyActions.Count > 0 && turnList.Count == 0)
         {
             runningCoroutine = null;
@@ -861,13 +708,11 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
             runningCoroutine = null;
             SetState(turnList);
         }
-
     }
     IEnumerator EnemyTurn()
     {
-        yield return new WaitForSeconds(1.5f);
         int selectAlly = selectNoDieAnima();
-
+        selectEnemy = Random.Range(0, enemyActions.Count);
         foreach (EnemyActions enemy in enemyActions)
         {
             if (turnList.Count == 0)
@@ -885,21 +730,25 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
                 else if (enemy.performance.Equals("Skill"))
                 {
                     matchedSkill = skills.Where(s => s.name == enemy.animaData.skillName[0]).ToList();
-
+                    Buff buff;
                     switch (matchedSkill[0].Type)
                     {
                         case "SingleAttack":
                             yield return StartCoroutine(singleAttack.SingleEnemySkill(enemy, selectAlly));
                             break;
                         case "SingleHeal":
-                            yield return StartCoroutine(singleAttack.SingleEnemyHeal(enemy, selectAlly));
+                            yield return StartCoroutine(singleAttack.SingleEnemyHeal(enemy, selectEnemy));
                             break;
                         case "SingleBuff":
-                            yield return StartCoroutine(singleAttack.SingleEnemyBuff(enemy, selectAlly));
+                            yield return StartCoroutine(singleAttack.SingleEnemyBuff(enemy, selectEnemy));
+                            buff = new Buff(matchedSkill[0].Affect, matchedSkill[0].Weight, matchedSkill[0].Turn, enemyActions[selectEnemy].animaData, 0);
+                            buffManager.AddOrRenuwBuff(buff);
                             break;
-                            //case "SingleDebuff":
-                            //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
-                            //    break;
+                        case "SingleDebuff":
+                            runningCoroutine = StartCoroutine(singleAttack.SingleEnemyDebuff(enemy,selectAlly));
+                            buff = new Buff(matchedSkill[0].Affect, matchedSkill[0].Weight, matchedSkill[0].Turn, allyActions[selectAlly].animaData, 1);
+                            buffManager.AddOrRenuwBuff(buff);
+                            break;
                             //case "AreaAttack":
                             //    runningCoroutine = StartCoroutine(PlayerSkill(selectEnemy, 1));
                             //    break;
@@ -937,11 +786,11 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
         } while (dieAllyAnima.Contains(randomNumber));
         return randomNumber;
     }
-    public List<AnimaActions> getAlly()
+    public List<AnimaActions> GetAllyActions()
     {
         return allyActions;
     }
-    public List<EnemyActions> getEnemy()
+    public List<EnemyActions> GetEnemyActions()
     {
         return enemyActions;
     }
@@ -974,7 +823,7 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
         {
             if (TurnList.Count == 0)
             {
-                BattleStart(); //라운드 재정비?
+                BattleStart(); 
             }
             if (ReferenceEquals(TurnList[0], anima.animaData))
             {

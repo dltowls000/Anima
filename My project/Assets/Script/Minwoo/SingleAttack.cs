@@ -345,7 +345,10 @@ public class SingleAttack:MonoBehaviour
             }
             bm.stat = BattleState.win;
             bm.TurnIndex = 0;
-            StopCoroutine(bm.RunningCoroutine);
+            if (bm.RunningCoroutine != null)
+            {
+                StopCoroutine(bm.RunningCoroutine);
+            }
             bm.WinBattle();
         }
     }
@@ -374,7 +377,10 @@ public class SingleAttack:MonoBehaviour
         if (bm.AllyAnimaNum == 0)
         {
             bm.stat = BattleState.defeat;
-            StopCoroutine(bm.RunningCoroutine);
+            if(bm.RunningCoroutine != null)
+            {
+                StopCoroutine(bm.RunningCoroutine);
+            }
             bm.LoseBattle();
 
         }

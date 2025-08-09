@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class StatusSync : MonoBehaviour
 {
-    BattleManager battleManager;
+    IBattleManager battleManager;
     List<AnimaActions> battleAlly;
     List<EnemyActions> battleEnemy;
     string objname;
@@ -19,7 +19,7 @@ public class StatusSync : MonoBehaviour
     void Awake()
     {
         objname = this.transform.parent.name;
-        battleManager = GameObject.Find("BattleManager").GetComponent<BattleManager>();
+        battleManager = GameObject.Find("BattleManager").GetComponent<IBattleManager>();
         idx = int.Parse(objname.Substring(objname.Length - 1, 1) + "");
         var status = GameObject.Find(objname);
     }
@@ -40,7 +40,7 @@ public class StatusSync : MonoBehaviour
         }
         if (objname.StartsWith("A"))
         {
-            battleAlly = battleManager.GetAllyActions();
+            battleAlly = battleManager.AllyActions;
             this.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = battleAlly[idx].animaData.Name;
             this.transform.Find("Level").GetComponent<TextMeshProUGUI>().text = "Lv. " + battleAlly[idx].animaData.level.ToString();
             this.transform.Find("Exp").GetComponent<TextMeshProUGUI>().text = battleAlly[idx].animaData.EXP.ToString();
@@ -66,7 +66,7 @@ public class StatusSync : MonoBehaviour
         }
         else
         {
-            battleEnemy = battleManager.GetEnemyActions();
+            battleEnemy = battleManager.EnemyActions;
             this.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = battleEnemy[idx].animaData.Name;
             this.transform.Find("Level").GetComponent<TextMeshProUGUI>().text = "Lv. " + battleEnemy[idx].animaData.level.ToString();
             this.transform.Find("Exp").GetComponent<TextMeshProUGUI>().text = battleEnemy[idx].animaData.EXP.ToString();

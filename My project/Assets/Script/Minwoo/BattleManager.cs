@@ -600,7 +600,7 @@ public class BattleManager : MonoBehaviour, IBattleManager
     {
         attackButton.interactable = false;
         skillButton.interactable = false;
-        matchedSkill = skills.Where(s => s.name == skill1.transform.Find("Skill Text0").GetComponent<TextMeshProUGUI>().text).ToList();
+        matchedSkill = skills.Where(s => s.name == skill1.transform.Find("Skill Text1").GetComponent<TextMeshProUGUI>().text).ToList();
         switch (matchedSkill[0].Type)
         {
             case "SingleAttack":
@@ -834,7 +834,7 @@ public class BattleManager : MonoBehaviour, IBattleManager
         {
             if (TurnList.Count == 0)
             {
-                BattleStart(); //라운드 재정비?
+                BattleStart(); 
             }
             if (ReferenceEquals(TurnList[0], anima.animaData))
             {

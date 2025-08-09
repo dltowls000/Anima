@@ -3712,7 +3712,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 964921803}
         m_TargetAssemblyTypeName: BackToScene, Assembly-CSharp
-        m_MethodName: backToScenes
+        m_MethodName: BackToTiles
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
