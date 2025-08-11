@@ -42,7 +42,6 @@ public class EnemyActions : MonoBehaviour
         }
 
         float randomValue = Random.Range(0f, totalWeight);
-        Debug.Log("Random value: " + randomValue);
         float cumulativeWeight = 0f;
 
         foreach (ActionWeight actionWeight in actionWeights)
@@ -50,7 +49,6 @@ public class EnemyActions : MonoBehaviour
             cumulativeWeight += actionWeight.weight;
             if (randomValue <= cumulativeWeight)
             {
-                Debug.Log("Selected: " + actionWeight.actionType);
                 SetAction(actionWeight.actionType);
                 return;
             }

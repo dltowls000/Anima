@@ -181,6 +181,7 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
         pointerEventData = new PointerEventData(eventSystem);
         dropAnima = new List<AnimaDataSO>();
         isTurn = new List<GameObject>();
+        buffManager = new BuffManager();
         singleAttack = this.AddComponent<SingleAttack>();
         singleAttack.initialize(this);
         multipleAttack = this.AddComponent<MultipleAttack>();
@@ -361,7 +362,7 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
             });
             enemyActions[i].animaData.location = i;
             enemyActions[i].animaData.enemyIndex = i;
-            var enemyStatus = GameObject.Find($"EnemyElite{i}");
+            var enemyStatus = GameObject.Find($"Enemy{i}");
             var enemyParser = GameObject.Find($"Enemy{i}Name");
             enemyStatus.transform.Find("Image").GetComponent<UnityEngine.UI.Image>().sprite = Resources.Load<Sprite>("Minwoo/Portrait/" + enemyActions[i].animaData.Objectfile);
             enemyHealthBar.Add(GameObject.Find($"EnemyAnimaHP{i}").transform.Find("HP").GetComponent<HealthBar>());
@@ -487,7 +488,7 @@ public class EliteBattleManager : MonoBehaviour, IBattleManager
             skillButton.GetComponentInChildren<TextMeshProUGUI>().text = $"Skill\n";
             for (int i = 0; i < turnList[0].skillName.Count; i++)
             {
-                animaActionUI.transform.Find($"Skill Button Frame{i}").Find($"Skill Text{i}").GetComponent<TextMeshProUGUI>().text = turnList[0].skillName[i];
+                animaActionUI.transform.Find($"Skill Button Frame{i}").Find($"Skill Button{i}").Find($"Skill Text{i}").GetComponent<TextMeshProUGUI>().text = turnList[0].skillName[i];
             }
             if (turnList[0].skillName.Count == 1)
             {

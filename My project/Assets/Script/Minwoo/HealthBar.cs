@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,6 +14,10 @@ public class HealthBar : MonoBehaviour
         maxHealth = maxStamina;
         currentHealth = curStamina;
         healthBarController.UpdateHealth(currentHealth / maxHealth);
+    }
+    public IEnumerator UpdateHealthBar()
+    {
+        yield return StartCoroutine(healthBarController.SmoothHealthChange(healthBarController.healthBarFill.fillAmount, currentHealth/maxHealth, 1.3f));
     }
 
     public IEnumerator TakeDamage(float damage)

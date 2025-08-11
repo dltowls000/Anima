@@ -64,7 +64,7 @@ public class EliteAllyBattleSetting : MonoBehaviour,IAllyBattleSetting
         {
             allyobjPrefab.Add(Resources.Load<GameObject>("Minwoo/Portrait/" + playerinfo.battleAnima[i].Objectfile));
             allyhpPrefab.Add(Resources.Load<GameObject>("Minwoo/AllyAnimaHP"));
-            allyInfoPrefab.Add(Resources.Load<GameObject>($"Minwoo/AllyElite{i}"));
+            allyInfoPrefab.Add(Resources.Load<GameObject>($"Minwoo/Ally{i}"));
             allyParserPrefab.Add(Resources.Load<GameObject>($"Minwoo/Battle Parser/Ally{i}Name"));
 
         }

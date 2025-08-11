@@ -312,6 +312,7 @@ public class SingleAttack:MonoBehaviour
                     if (!tmp.animaData.Animadie)
                     {
                         tmp.animaData.LevelUp();
+                        bm.AllyHealthBar[bm.AllyActions.IndexOf(tmp)].UpdateHealthBar();
                         GameObject.Find($"AllyAnimaHP{tmp.animaData.location}").transform.Find("LV UI").transform.Find("Current LV").GetComponent<TextMeshProUGUI>().text = tmp.animaData.level.ToString();
                     }
                 }

@@ -111,7 +111,7 @@ public class EliteEnemyBattleSetting : MonoBehaviour, IEnemyBattleSetting
             int randomIndex = Random.Range(mood, mood+1);
             enemyobjPrefab.Add(Resources.Load<GameObject>("Minwoo/Portrait/" + objectfileList[randomIndex]));
             enemyhpPrefab.Add(Resources.Load<GameObject>("Minwoo/EnemyAnimaHP"));
-            enemyInfoPrefab.Add(Resources.Load<GameObject>($"Minwoo/EnemyElite{i}"));
+            enemyInfoPrefab.Add(Resources.Load<GameObject>($"Minwoo/Enemy{i}"));
             enemyParserPrefab.Add(Resources.Load<GameObject>($"Minwoo/Battle Parser/Enemy{i}Name"));
             battleEnemyAnima.Add(objectfileList[randomIndex]);
         }

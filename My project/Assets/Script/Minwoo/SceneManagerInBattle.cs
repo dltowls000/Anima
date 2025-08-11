@@ -44,5 +44,6 @@ public class SceneManagerInBattle : MonoBehaviour
     public void resetGame()
     {
         SceneManager.LoadScene("TitleScene");
+        GameObject.Find("Game Manager").GetComponent<AnimaInventoryManager>().playerInfo.Initialize();
     }
 }

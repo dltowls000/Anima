@@ -60,7 +60,7 @@ public class AnimaInventoryUIController : MonoBehaviour
             Destroy(child.gameObject);
         inventorySlots.Clear();
 
-        var allAnimas = AnimaInventoryManager.Instance.GetAllAnima();
+        var allAnimas = AnimaInventoryManager.Instance.GetHaveAnima();
         int animaCount = allAnimas.Count;
 
         int requiredSlotCount = Mathf.Max(12, Mathf.CeilToInt(animaCount / 4f) * 4);
@@ -103,7 +103,7 @@ public class AnimaInventoryUIController : MonoBehaviour
 
     private void UpdateInventorySlots()
     {
-        var allAnimas = AnimaInventoryManager.Instance.GetAllAnima();
+        var allAnimas = AnimaInventoryManager.Instance.GetHaveAnima();
         int animaCount = allAnimas.Count;
         
         if (inventorySlots.Count == 0)
