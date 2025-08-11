@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2156460617507900068}
   - component: {fileID: 3223553097466048209}
   - component: {fileID: 9134460248198107877}
+  - component: {fileID: 5313450080045191081}
   m_Layer: 5
   m_Name: A1Damage
   m_TagString: Untagged
@@ -137,6 +138,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!225 &5313450080045191081
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2257622726265785372}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &5393027462473837066
 GameObject:
   m_ObjectHideFlags: 0
@@ -391,13 +404,14 @@ GameObject:
   - component: {fileID: 151648984322244433}
   - component: {fileID: 6499036561663293520}
   - component: {fileID: 2082413412342901453}
+  - component: {fileID: 3314500049912829644}
   m_Layer: 5
   m_Name: A1Heal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &151648984322244433
 RectTransform:
   m_ObjectHideFlags: 0
@@ -517,6 +531,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!225 &3314500049912829644
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6788259063610239127}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &8461448848012413408
 GameObject:
   m_ObjectHideFlags: 0
@@ -606,7 +632,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e53db4d1cb0412e4d88230918edab02c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parserBarController: {fileID: 0}
+  parserBarController: {fileID: 5074751115416884608}
   maxPoint: 0
   thisPoint: 0
 --- !u!114 &5074751115416884608

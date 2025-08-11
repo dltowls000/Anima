@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using BansheeGz.BGDatabase;
 using UnityEngine;
 
-public class EliteEnemyBattleSetting : MonoBehaviour
+public class EliteEnemyBattleSetting : MonoBehaviour, IEnemyBattleSetting 
 {
     public List<float> damagex;
     public List<float> damagey;
@@ -22,6 +22,23 @@ public class EliteEnemyBattleSetting : MonoBehaviour
     public GameObject canvas;
     GameObject battleParser;
     public string stage;
+    public List<float> DamageX => damagex;
+    public List<float> DamageY => damagey;
+    public List<GameObject> EnemyObjPrefab => enemyobjPrefab;
+    public List<GameObject> EnemyInstance => enemyinstance;
+    public string ObjName => objname;
+    public List<string> ObjectFileList => objectfileList;
+    public List<string> BattleEnemyAnima => battleEnemyAnima;
+    public List<Animator> AnimatorList => animator;
+    public List<GameObject> EnemyHpPrefab => enemyhpPrefab;
+    public List<GameObject> EnemyHpInstance => enemyhpinstance;
+    public List<GameObject> EnemyInfoPrefab => enemyInfoPrefab;
+    public List<GameObject> EnemyInfoInstance => enemyInfoInstance;
+    public List<GameObject> EnemyParserPrefab => enemyParserPrefab;
+    public List<GameObject> EnemyParserInstance => enemyParserInstance;
+    public GameObject Canvas => canvas;
+    public GameObject BattleParser => battleParser;
+    public string Stage => stage;
     public void SpawnEnemy(int level)
     {
         animator = new List<Animator>();
@@ -94,7 +111,7 @@ public class EliteEnemyBattleSetting : MonoBehaviour
             int randomIndex = Random.Range(mood, mood+1);
             enemyobjPrefab.Add(Resources.Load<GameObject>("Minwoo/Portrait/" + objectfileList[randomIndex]));
             enemyhpPrefab.Add(Resources.Load<GameObject>("Minwoo/EnemyAnimaHP"));
-            enemyInfoPrefab.Add(Resources.Load<GameObject>($"Minwoo/EnemyElite{i}"));
+            enemyInfoPrefab.Add(Resources.Load<GameObject>($"Minwoo/Enemy{i}"));
             enemyParserPrefab.Add(Resources.Load<GameObject>($"Minwoo/Battle Parser/Enemy{i}Name"));
             battleEnemyAnima.Add(objectfileList[randomIndex]);
         }

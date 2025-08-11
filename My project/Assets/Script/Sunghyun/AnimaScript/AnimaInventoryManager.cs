@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 public class AnimaInventoryManager : MonoBehaviour
@@ -44,9 +45,9 @@ public class AnimaInventoryManager : MonoBehaviour
         }
     }
 
-    public List<AnimaDataSO> GetAllAnima() => new List<AnimaDataSO>(playerInfo.haveAnima);
+    public List<AnimaDataSO> GetAllAnima() => new List<AnimaDataSO>(playerInfo.haveAnima).Concat(new List<AnimaDataSO>(playerInfo.battleAnima)).ToList();
     public List<AnimaDataSO> GetActiveAnima() => new List<AnimaDataSO>(playerInfo.battleAnima);
-
+    public List<AnimaDataSO> GetHaveAnima() => new List<AnimaDataSO>(playerInfo.haveAnima);
     public bool IsAnimaDefeated(AnimaDataSO anima)
     {
         return anima != null && (anima.Animadie || anima.Stamina <= 0);

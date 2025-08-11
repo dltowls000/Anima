@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 public class SceneManagerCorridor : MonoBehaviour
 {
     public string sceneName;
-
+    public string tileSceneName;
     void Awake()
     {
         SceneManager.sceneUnloaded -= OnSceneUnloaded;
@@ -12,6 +12,11 @@ public class SceneManagerCorridor : MonoBehaviour
 
     public void OnSceneUnloaded(Scene scene)
     {
+        if (scene.name.Contains("Field"))
+        {
+            tileSceneName = scene.name;
+        }
         sceneName = scene.name;
+        
     }
 }

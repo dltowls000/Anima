@@ -5,7 +5,7 @@ using UnityEngine;
 public class TurnManager : ScriptableObject
 {
     List <AnimaDataSO> turnList;
-    
+   
     public void ResetTurnList()
     {
         turnList = new List <AnimaDataSO>();
@@ -19,5 +19,5 @@ public class TurnManager : ScriptableObject
         turnList.Sort((a,b) => b.Speed.CompareTo(a.Speed));
         return turnList;
     }
-        
+    
 }

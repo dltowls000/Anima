@@ -24,7 +24,7 @@ public class AnimaDataSO : ScriptableObject
     public float defSP;
     public string Objectfile;
     public int location = -1;
-    public float defense = 0;
+    public float Defense = 0;
     public float EXP = 0;
     public float MAX_EXP = 0;
     public float weight;
@@ -34,6 +34,7 @@ public class AnimaDataSO : ScriptableObject
     public List <string> skillName = new List<string>();
     public string attackName = "";
     private int[] maxLevel = new int[10]{ 9, 12, 15, 18, 21, 24, 27, 30, 33, 36 };
+    public Dictionary<string, float> tmpAbility = new Dictionary<string, float>();
     public void Initialize(string name, int level)
     {
         
@@ -54,7 +55,7 @@ public class AnimaDataSO : ScriptableObject
                 Maxstamina = Mathf.Ceil(CalcStat(level, weight, defHP));
                 Stamina = Maxstamina;
                 Damage = Mathf.Ceil(CalcStat(level, weight, defAP));
-                defense = Mathf.Ceil(CalcStat(level, weight, defDP));
+                Defense = Mathf.Ceil(CalcStat(level, weight, defDP));
                 DropGold = entity.Get<int>("DropGold");
                 Speed = Mathf.Ceil(CalcStat(level, weight, defSP));
                 DropRate = entity.Get<float>("DropRate");
@@ -83,7 +84,7 @@ public class AnimaDataSO : ScriptableObject
                 Maxstamina = Mathf.Ceil(CalcStat(level, weight, defHP));
                 Stamina = Maxstamina * 0.4f;
                 Damage = Mathf.Ceil(CalcStat(level, weight, defAP));
-                defense = Mathf.Ceil(CalcStat(level, weight, defDP));
+                Defense = Mathf.Ceil(CalcStat(level, weight, defDP));
                 DropGold = entity.Get<int>("DropGold");
                 Speed = Mathf.Ceil(CalcStat(level, weight, defSP));
                 DropRate = entity.Get<float>("DropRate");
@@ -107,7 +108,7 @@ public class AnimaDataSO : ScriptableObject
             level++;
             Maxstamina = Mathf.Ceil(CalcStat(level, weight, defHP));
             Damage = CalcStat(level, weight, defAP);
-            defense = CalcStat(level, weight, defDP);
+            Defense = CalcStat(level, weight, defDP);
             Speed = CalcStat(level, weight, defSP);
         }
         

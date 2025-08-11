@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -62,7 +63,7 @@ public class DontDesManager : MonoBehaviour
             Destroy(tileManager);
         }
 
-        if (lastUnloaded.EndsWith("BattleScene") && scene.name != "MapScene")
+        if (lastUnloaded.EndsWith("BattleScene")|| lastUnloaded.Equals("VillageScene") && scene.name != "MapScene")
         {
             if (grid == null)
             {
@@ -174,6 +175,7 @@ public class DontDesManager : MonoBehaviour
     public void SetTile(RegionController target, RegionManager m)
     {
         tile = target;
+        
     }
 
     public void setCamPosition(Vector3 cp)

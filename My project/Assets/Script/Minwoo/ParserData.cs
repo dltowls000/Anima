@@ -1,13 +1,12 @@
 using System.Collections.Generic;
-using System.Linq;
-using Unity.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
-    
+using UnityEngine.UI;
+
 public class ParserData : MonoBehaviour
 {
-    bool damagecheck = false;
-    bool healcheck = false;
-    bool logcheck = false;
+    bool init = false;
+    bool parsercheck = false;
     [SerializeField]
     GameObject battleParser;
     [SerializeField]
@@ -16,19 +15,97 @@ public class ParserData : MonoBehaviour
     GameObject maxButton;
     [SerializeField]
     GameObject minButton;
+    [SerializeField]
+    Button damageButton;
+    [SerializeField]
+    Button healButton;
+    List<GameObject> allyDamage;
+    List<GameObject> allyHeal;
+    List<GameObject> enemyDamage;
+    List<GameObject> enemyHeal;
+    void Start()
+    {
+        allyDamage = new List<GameObject>();
+        enemyDamage = new List<GameObject>();
+        allyHeal = new List<GameObject>();
+        enemyHeal = new List<GameObject>();
+    }
     public void OnClickParser()
     {
-        if (!damagecheck)
+        if (!init)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                if (GameObject.Find($"Ally{i}Name") != null)
+                {
+                    allyDamage.Add(GameObject.Find($"A{i}Damage"));
+                    allyHeal.Add(GameObject.Find($"A{i}Heal"));
+                }
+            }
+            for (int i = 0; i < 3; i++)
+            {
+                if (battleParser.transform.Find($"Enemy{i}Name") != null)
+                {
+                    enemyDamage.Add(GameObject.Find($"E{i}Damage"));
+                    enemyHeal.Add(GameObject.Find($"E{i}Heal"));
+                }
+            }
+            init = true;
+        }
+        if (!parsercheck)
         {
             battleParser.GetComponent<CanvasGroup>().alpha = 1;
             battleParser.GetComponent<CanvasGroup>().interactable = true;
-            damagecheck = true;
+            parsercheck = true;
         }
         else
         {
             battleParser.GetComponent<CanvasGroup>().alpha = 0;
             battleParser.GetComponent<CanvasGroup>().interactable = false;
-            damagecheck = false;
+            parsercheck = false;
+        }
+    }
+    public void DamageButton()
+    {
+        damageButton.interactable = false;
+        healButton.interactable = true;
+        for (int i = 0; i < allyDamage.Count; i++)
+        {
+            allyDamage[i].GetComponent<CanvasGroup>().alpha = 1;
+        }
+        for (int i = 0; i < enemyDamage.Count; i++)
+        {
+            enemyDamage[i].GetComponent<CanvasGroup>().alpha = 1;
+        }
+        for (int i = 0; i < allyHeal.Count; i++)
+        {
+            allyHeal[i].GetComponent<CanvasGroup>().alpha = 0;
+        }
+        for (int i = 0; i < enemyHeal.Count; i++)
+        {
+            enemyHeal[i].GetComponent<CanvasGroup>().alpha = 0;
+        }
+
+    }
+    public void HealButton()
+    {
+        healButton.interactable = false;
+        damageButton.interactable = true;
+        for (int i = 0; i < allyDamage.Count; i++)
+        {
+            allyDamage[i].GetComponent<CanvasGroup>().alpha = 0;
+        }
+        for (int i = 0; i < enemyDamage.Count; i++)
+        {
+            enemyDamage[i].GetComponent<CanvasGroup>().alpha = 0;
+        }
+        for (int i = 0; i < allyHeal.Count; i++)
+        {
+            allyHeal[i].GetComponent<CanvasGroup>().alpha = 1;
+        }
+        for (int i = 0; i < enemyHeal.Count; i++)
+        {
+            enemyHeal[i].GetComponent<CanvasGroup>().alpha = 1;
         }
     }
     public void OpenLog()
