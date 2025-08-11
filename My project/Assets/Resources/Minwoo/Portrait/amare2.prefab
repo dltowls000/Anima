@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 264328765252285610}
   - component: {fileID: 5527952916073128854}
   - component: {fileID: 1000470851218348960}
+  - component: {fileID: 4739885107092310673}
   m_Layer: 0
   m_Name: amare2
   m_TagString: Untagged
@@ -104,6 +105,7 @@ MonoBehaviour:
   animaData: {fileID: 0}
   performance: 
   damage: 142.72235
+  heal: 0
 --- !u!114 &1000470851218348960
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -119,3 +121,20 @@ MonoBehaviour:
   animaData: {fileID: 0}
   performance: Attack
   damage: 70.97508
+  heal: 0
+--- !u!114 &4739885107092310673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9036936208503228929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4dc106772d254904697d240d707c6618, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animaData: {fileID: 0}
+  performance: 
+  damage: 0
+  heal: 0

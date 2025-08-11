@@ -195,6 +195,7 @@ MonoBehaviour:
   battleManager: {fileID: 230224972}
   canvas: {fileID: 599841604}
   playerInfo: {fileID: 0}
+  damageNumber: {fileID: 0}
 --- !u!4 &230224974
 Transform:
   m_ObjectHideFlags: 0
@@ -913,7 +914,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4852560883536172154, guid: 93a2da44f4bd23747aeb980811f49692, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 760
+      value: 620
       objectReference: {fileID: 0}
     - target: {fileID: 4852560883536172154, guid: 93a2da44f4bd23747aeb980811f49692, type: 3}
       propertyPath: m_AnchoredPosition.y

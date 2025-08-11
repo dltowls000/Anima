@@ -10,6 +10,7 @@ public class EnemyActions : MonoBehaviour
     public List<ActionWeight> actionWeights;
     public string performance = "";
     public float damage;
+    public float heal;
     public class ActionWeight
     {
         public ActionType actionType;
@@ -34,14 +35,14 @@ public class EnemyActions : MonoBehaviour
 
     public void DecideAction()
     {
-        float totalWeight = 0;
+        float totalWeight = 0f;
         foreach (ActionWeight actionWeight in actionWeights)
         {
             totalWeight += actionWeight.weight;
         }
 
-        float randomValue = Random.Range(0, totalWeight);
-        float cumulativeWeight = 0;
+        float randomValue = Random.Range(0f, totalWeight);
+        float cumulativeWeight = 0f;
 
         foreach (ActionWeight actionWeight in actionWeights)
         {
@@ -82,73 +83,155 @@ public class EnemyActions : MonoBehaviour
         {
             damage = CalcSkillDamage(enemy.animaData.Damage, ally);
             yield return allyHealthBar.TakeDamage(damage);
-            ally.TakeSkillDamage(damage);
+            ally.TakeDamage(damage);
             yield return damageBar.PutDamage(damage);
         }
         
     }
-    public float CalcAttackDamage(float damage, AnimaActions ally)
+    public IEnumerator Heal(EnemyActions healer, EnemyActions target, HealthBar enemyHealthBar, ParserBar healBar)
     {
-        return damage * (1 - ally.animaData.defense * 0.002f) * Random.Range(0.95f, 1.11f);
+        if (!healer.animaData.Animadie && !target.animaData.Animadie)
+        {
+            heal = CalcHealAmount(healer.animaData.Damage, target);
+            yield return enemyHealthBar.TakeHeal(heal);
+            target.TakeHeal(heal);
+            yield return healBar.PutDamage(heal);
+        }
+    }
+    public IEnumerator IncreaseAbility(EnemyActions buffer, EnemyActions target, string[] abi)
+    {
+        foreach (string stat in abi)
+        {
+            switch (stat)
+            {
+                case "strength":
+                    yield return StrengthUp(buffer, target);
+                    break;
+                case "speed":
+                    yield return SpeedUp(buffer, target);
+                    break;
+                case "defense":
+                    yield return DefenseUp(buffer, target);
+                    break;
+            }
+        }
+    }
+    private IEnumerator StrengthUp(EnemyActions buffer, EnemyActions target)
+    {
+        if (!buffer.animaData.Animadie && !target.animaData.Animadie)
+        {
+            target.animaData.tmpAbility["strength"] = target.animaData.Damage;
+            target.animaData.Damage *= CalcBuffRatio(buffer.damage);
+        }
+        yield return null;
+    }
+    private IEnumerator StrengthDown(EnemyActions debuffer, AnimaActions target)
+    {
+        if (!debuffer.animaData.Animadie && !target.animaData.Animadie)
+        {
+            target.animaData.tmpAbility["strength"] = target.animaData.Damage;
+            target.animaData.Damage *= CalcDebuffRatio(debuffer.damage);
+        }
+        yield return null;
+    }
+    private IEnumerator SpeedUp(EnemyActions buffer, EnemyActions target)
+    {
+        if (!buffer.animaData.Animadie && !target.animaData.Animadie)
+        {
+            target.animaData.tmpAbility["speed"] = target.animaData.Speed;
+            target.animaData.Speed *= CalcBuffRatio(buffer.damage);
+        }
+        yield return null;
+    }
+    private IEnumerator SpeedDown(EnemyActions debuffer, AnimaActions target)
+    {
+        if (!debuffer.animaData.Animadie && !target.animaData.Animadie)
+        {
+            target.animaData.tmpAbility["speed"] = target.animaData.Speed;
+            target.animaData.Speed *= CalcDebuffRatio(debuffer.damage);
+        }
+        yield return null;
+    }
+    private IEnumerator DefenseUp(EnemyActions buffer, EnemyActions target)
+    {
+        if (!buffer.animaData.Animadie && !target.animaData.Animadie)
+        {
+            target.animaData.tmpAbility["defense"] = target.animaData.Defense;
+            target.animaData.Defense *= CalcBuffRatio(buffer.damage);
+        }
+        yield return null;
+    }
+    private IEnumerator DefenseDown(EnemyActions debuffer, AnimaActions target)
+    {
+        if (!debuffer.animaData.Animadie && !target.animaData.Animadie)
+        {
+            target.animaData.tmpAbility["defense"] = target.animaData.Defense;
+            target.animaData.Defense *= CalcDebuffRatio(debuffer.damage);
+        }
+        yield return null;
+    }
+    public IEnumerator DecreaseAbility(EnemyActions debuffer, AnimaActions target, string[] abi)
+    {
+        foreach (string stat in abi)
+        {
+            switch (stat)
+            {
+                case "strength":
+                    yield return StrengthDown(debuffer, target);
+                    break;
+                case "speed":
+                    yield return SpeedDown(debuffer, target);
+                    break;
+                case "defense":
+                    yield return DefenseDown(debuffer, target);
+                    break;
+            }
+        }
+    }
+    private float CalcAttackDamage(float damage, AnimaActions ally)
+    {
+        return damage * (1 - ally.animaData.Defense * 0.002f) * Random.Range(0.95f, 1.11f);
     }
 
-    public float CalcSkillDamage(float damage, AnimaActions ally)
+    private float CalcSkillDamage(float damage, AnimaActions ally)
     {
-        return damage * (1 - ally.animaData.defense * 0.002f) * Random.Range(0.95f, 1.11f) * 1.13f;
+        return damage * (1 - ally.animaData.Defense * 0.002f) * Random.Range(0.95f, 1.11f) * 1.13f;
     }
-    public float BossAttack(EnemyActions enemy, AnimaActions ally, HealthBar allyHealthBar)
+    private float CalcHealAmount(float damage, EnemyActions target)
     {
-        if (!enemy.animaData.Animadie && !ally.animaData.Animadie)
-        {
-            damage = CalcBossAttackDamage(enemy.animaData.Damage, ally);
-            ally.TakeSkillDamage(damage);
-            allyHealthBar.TakeDamage(damage);
-        }
-        return damage;
+        float a = damage * Random.Range(0.95f, 1.11f) * 1.13f;
+        float b = target.animaData.Maxstamina * 0.4f;
+        return a >= b ? b : a;
     }
-
-    public float BossSkill(EnemyActions enemy, AnimaActions ally, HealthBar allyHealthBar, int skillnum)
+    private float CalcBuffRatio(float damage)
     {
-        if (!enemy.animaData.Animadie && !ally.animaData.Animadie)
-        {
-            damage = CalcBossSkillDamage(enemy.animaData.Damage, ally , skillnum);
-            ally.TakeSkillDamage(damage);
-            allyHealthBar.TakeDamage(damage);
-        }
-        return damage;
+        return 0.0004f * damage + 1.02f;
     }
-    public float CalcBossAttackDamage(float damage, AnimaActions ally)
+    private float CalcDebuffRatio(float damage)
     {
-        return damage * (1 - ally.animaData.defense * 0.002f) * Random.Range(0.98f, 1.11f);
+        return -0.0002f * damage + 0.94f;
     }
-    public float CalcBossSkillDamage(float damage, AnimaActions ally , int skillnum)
+    public void TakeDamage(float damage)
     {
-        return damage * (1 - ally.animaData.defense * 0.002f) * Random.Range(0.98f, 1.11f);
-    }
-    public float TakeSkillDamage(float damage)
-    {
-        this.damage = damage;
-        this.animaData.Stamina -= damage;
-
-        if (animaData.Stamina <= 0)
-        {
-            Die();
-        }
-        return damage;
-    }
-    public float TakeDamage(float damage)
-    {
-        this.damage = damage;
         this.animaData.Stamina -= damage;
         
-        if (animaData.Stamina <= 0)
+        if (this.animaData.Stamina <= 0)
         {
             Die();
         }
-        return damage;
+        
+    }
+    public void TakeHeal(float heal)
+    {
+        this.animaData.Stamina += heal;
+        if (this.animaData.Stamina > animaData.Maxstamina)
+        {
+            animaData.Stamina = animaData.Maxstamina;
+        }
     }
     public void Die()
     {
+        this.animaData.Stamina = 0;
         this.animaData.Animadie = true;
     }
 }

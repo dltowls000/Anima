@@ -37,7 +37,7 @@ public class EliteStatusSync : MonoBehaviour
         }
         if (objname.StartsWith("A"))
         {
-            battleAlly = battleManager.getAlly();
+            battleAlly = battleManager.GetAllyActions();
             this.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = battleAlly[idx].animaData.Name;
             this.transform.Find("Level").GetComponent<TextMeshProUGUI>().text = "Lv. " + battleAlly[idx].animaData.level.ToString();
             this.transform.Find("Exp").GetComponent<TextMeshProUGUI>().text = battleAlly[idx].animaData.EXP.ToString();
@@ -45,7 +45,7 @@ public class EliteStatusSync : MonoBehaviour
         }
         else
         {
-            battleEnemy = battleManager.getEnemy();
+            battleEnemy = battleManager.GetEnemyActions();
             this.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = battleEnemy[idx].animaData.Name;
             this.transform.Find("Level").GetComponent<TextMeshProUGUI>().text = "Lv. " + battleEnemy[idx].animaData.level.ToString();
             this.transform.Find("Exp").GetComponent<TextMeshProUGUI>().text = battleEnemy[idx].animaData.EXP.ToString();

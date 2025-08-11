@@ -89,7 +89,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e53db4d1cb0412e4d88230918edab02c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parserBarController: {fileID: 0}
+  parserBarController: {fileID: 4282454315982092676}
   maxPoint: 0
   thisPoint: 0
 --- !u!114 &4282454315982092676
@@ -254,13 +254,14 @@ GameObject:
   - component: {fileID: 8977929977579130851}
   - component: {fileID: 8448711841131036551}
   - component: {fileID: 4069285162520203760}
+  - component: {fileID: 3684994945917990114}
   m_Layer: 5
   m_Name: E2Heal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &8977929977579130851
 RectTransform:
   m_ObjectHideFlags: 0
@@ -380,6 +381,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!225 &3684994945917990114
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5223278736960900397}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &5863584452634547926
 GameObject:
   m_ObjectHideFlags: 0
@@ -496,6 +509,7 @@ GameObject:
   - component: {fileID: 4991143628106255038}
   - component: {fileID: 2668710388756666435}
   - component: {fileID: 8018864510015463972}
+  - component: {fileID: 8525268698944314492}
   m_Layer: 5
   m_Name: E2Damage
   m_TagString: Untagged
@@ -622,3 +636,15 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!225 &8525268698944314492
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8717752447329972216}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0

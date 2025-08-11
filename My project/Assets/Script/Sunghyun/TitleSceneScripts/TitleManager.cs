@@ -21,6 +21,8 @@ public class TitleManager : MonoBehaviour
     [Header("옵션 설정")]
     [SerializeField] private GameObject optionsPanel;
 
+    [Header("씬 매니저")]
+    [SerializeField] private SceneManagerCorridor sceneManagerCorridor;
     private AudioSource _sfxSource;
 
     private void Awake()
@@ -60,6 +62,9 @@ public class TitleManager : MonoBehaviour
     private void OnCorridorClick()
     {
         PlayButtonSound();
+        SceneManager.sceneUnloaded -= sceneManagerCorridor.OnSceneUnloaded;
+        SceneManager.sceneUnloaded += sceneManagerCorridor.OnSceneUnloaded; 
+        sceneManagerCorridor.sceneName = "TitleScene";
         LoadScene("CorridorScene");
     }
 

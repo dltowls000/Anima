@@ -21,7 +21,8 @@ public class PlayerInfo : ScriptableObject
         
         var database = BGRepo.I;
         var animaTable = database.GetMeta("Anima");
-
+        battleAnima.Clear();
+        haveAnima.Clear();
         int a = Random.Range(0, 7);
         int b;
         do
@@ -66,5 +67,12 @@ public class PlayerInfo : ScriptableObject
     {
         haveAnima.Add(animaData);
     }
-
+    public void DieAnima(AnimaDataSO animaData)
+    {
+        if (battleAnima.Contains(animaData))
+        {
+            haveAnima.Add(animaData);
+            battleAnima.Remove(animaData);
+        }
+    }
 }

@@ -206,6 +206,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: 
+  tileSceneName: 
 --- !u!1 &311247921
 GameObject:
   m_ObjectHideFlags: 0
@@ -2416,6 +2417,7 @@ MonoBehaviour:
   buttonClickSound: {fileID: 0}
   fadeEffect: {fileID: 686756043}
   optionsPanel: {fileID: 1480515263}
+  sceneManagerCorridor: {fileID: 286856703}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

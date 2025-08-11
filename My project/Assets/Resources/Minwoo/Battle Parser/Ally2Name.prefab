@@ -11,13 +11,14 @@ GameObject:
   - component: {fileID: 7847287510895502028}
   - component: {fileID: 7858647496424284673}
   - component: {fileID: 180204448882047779}
+  - component: {fileID: 15994448484648643}
   m_Layer: 5
   m_Name: A2Heal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7847287510895502028
 RectTransform:
   m_ObjectHideFlags: 0
@@ -137,6 +138,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!225 &15994448484648643
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 621362277059810767}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &2260689915154014014
 GameObject:
   m_ObjectHideFlags: 0
@@ -469,7 +482,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e53db4d1cb0412e4d88230918edab02c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parserBarController: {fileID: 0}
+  parserBarController: {fileID: 7413818114286259180}
   maxPoint: 0
   thisPoint: 0
 --- !u!114 &7413818114286259180
@@ -496,6 +509,7 @@ GameObject:
   - component: {fileID: 4304730980626367998}
   - component: {fileID: 7595990429875602623}
   - component: {fileID: 3043778732941982061}
+  - component: {fileID: 4725060192308922719}
   m_Layer: 5
   m_Name: A2Damage
   m_TagString: Untagged
@@ -622,3 +636,15 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!225 &4725060192308922719
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8573951621094013215}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0

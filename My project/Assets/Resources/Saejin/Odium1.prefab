@@ -9549,7 +9549,7 @@ GameObject:
   - component: {fileID: 8502204663924668446}
   - component: {fileID: 7221307259871306178}
   m_Layer: 0
-  m_Name: VIllageArea 2
+  m_Name: VillageArea 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
